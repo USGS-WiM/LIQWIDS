@@ -1,0 +1,47 @@
+[
+  {
+    "name": "LIQWIDS",
+    "organization": "U.S. Geological Survey",
+    "description": "LIQWIDS Project",
+    "version": "v0.0.0",
+    "status": "Development",
+
+    "permissions": {
+      "usageType": "openSource",
+      "licenses": [
+        {
+          "name": "Public Domain, CC0-1.0",
+          "URL": "https://github.com/usgs/best-practices/blob/master/LICENSE.md"
+        }
+      ]
+    },
+
+    "homepageURL": "https://wim.usgs.gov",
+    "downloadURL": "https://github.com/USGS-WiM/LIQWIDS/archive/master.zip",
+    "disclaimerURL": "https://github.com/USGS-WiM/LIQWIDS/blob/master/DISCLAIMER.md",
+    "repositoryUrl": "https://github.com/USGS-WiM/LIQWIDS",
+    "vcs": "git",
+
+    "laborHours": null,
+
+    "tags": [
+      "webapp"
+    ],
+
+    "languages": [
+      "HTML",
+      "SCSS",
+      "CSS",
+      "Javascript"
+    ],
+
+    "contact": {
+      "name": "Martyn Smith",
+      "email": "marsmith@usgs.gov"
+    },
+
+    "date": {
+      "metadataLastUpdated": "2018-11-15"
+    }
+  }
+]
