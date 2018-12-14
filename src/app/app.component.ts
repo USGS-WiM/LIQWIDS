@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
             layers: "wqp_sites",
             format: "image/png",
             transparent: true,
-            searchParams: "characteristicname?text=nitrogen;countycode:US:36:059|US:36:103|US:36:081|US:36:047"
+            searchparams: "characteristicname?text=nitrogen;countycode:US:36:059|US:36:103|US:36:081|US:36:047"
             
         }).addTo(this.map);
   }
