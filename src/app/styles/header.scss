@@ -1,0 +1,88 @@
+header#main{
+
+    // Mobile sidebar toggle button
+    #sidebarToggle{
+        color: white;
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        margin-right: 20px;
+        transition: 0.2s;
+        font-size: 20px;
+        width: 24px;
+        text-align: center;
+
+        &:hover,
+        &:active{
+            cursor: pointer;
+            opacity: 0.6;
+            transition: 0.2s;
+        }
+
+        @media only screen and (max-width: 1200px) {
+            display: flex;
+        }
+    }
+
+    // Branding
+    #branding{
+        display: flex;
+        height: 100%;
+        box-sizing: border-box;
+        padding: 0 0 0 20px;
+
+        #usgsLogo{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-right: 20px;
+
+            img{
+                display: block;
+                height: 38px;
+                width: auto;
+            }
+        }
+    }
+
+    // Links on right
+    #headerLinks{
+        display: flex;
+        flex-grow: 3;
+        justify-content: flex-end;
+        box-sizing: border-box;
+        padding: 0 10px 0 0;
+
+        a{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-sizing: border-box;
+            padding: 0 10px;
+            margin: 12px 0;
+            color: $black;
+            font-family: $sans;
+            font-weight: 600;
+            font-size: 13px;
+            box-sizing: border-box;
+            padding-bottom: 2px;
+            transition: $transition;
+            background-color: $white;
+            border-radius: 4px;
+            margin-left: 10px;
+
+            &:hover{
+                text-decoration: underline;
+                cursor: pointer;
+            }
+            &:focus{
+                text-decoration: underline;
+            }
+            &:active{
+                text-decoration: none;
+                opacity: 0.75;
+                transition: $transition;
+            }
+        }
+    }
+}

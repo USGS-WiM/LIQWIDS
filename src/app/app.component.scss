@@ -2,15 +2,26 @@
 // Do not add anything directly to this file.
 // Find the appropriate file within the /styles folder
 
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Poppins:300,400,600,700');
+
 
 // Variables
-$black: #050920;
+$black: #101010;
 $white: #fff;
 $bg: #F9FAFE;
 $red: #F23D47;
 $blue: #3E3BFB;
+$primary: $blue;
+$text: fade-out($black, 0.1);
 
 $borderColor: fade-out($black, 0.85);
+$borderRadiusL: 16px;
+$borderRadius: 4px;
+
+// Fonts
+$poppins: 'Poppins', sans-serif;
+$sans: 'Open Sans', sans-serif;
 
 
 $transition: 0.15s;
@@ -21,7 +32,11 @@ $borderRadius: 4px;
 @import '/styles/structure.scss';
 @import '/styles/text.scss';
 @import '/styles/modals.scss';
+@import '/styles/inputs.scss';
+
 @import '/styles/header.scss';
 @import '/styles/sidebar.scss';
+
+@import '/styles/custom.scss';
 
 // Specific imports

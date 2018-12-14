@@ -1,0 +1,91 @@
+// Buttons
+// Buttons
+// Buttons
+button{
+    border: none;
+    box-sizing: border-box;
+    padding: 6px 16px;
+    font-family: $poppins;
+    background-color: $primary;
+    color: $white;
+    letter-spacing: 0.15px;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: $borderRadius;
+
+    &:hover{
+        cursor: pointer;
+        text-decoration: underline;
+        background-color: darken($primary, 5%);
+    }
+
+    &:focus{
+        text-decoration: underline;
+    }
+
+    &:active{
+        background-color: $primary;
+    }
+
+
+    // Colors
+    // Red
+    &.red{
+        background-color: $red;
+        &:hover{
+            background-color: darken($red, 5%);
+        }
+        &:active{
+            background-color: $red;
+        }
+    }
+}
+
+
+// Search Selector
+.search-select{
+    display: block;
+    position: relative;
+
+    input{
+        width: 100%;
+        border: 1px solid $borderColor;
+        border-radius: $borderRadius;
+        box-sizing: border-box;
+        padding: 6px 12px;
+        font-size: 15px;
+        font-family: $sans;
+        font-weight: 500;
+        color: $black;
+    }
+
+    .search-select-results{
+        display: none;
+        background-color: $black;
+        box-sizing: border-box;
+        padding: 10px 0;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        max-height: 180px;
+        overflow: auto;
+
+        div{
+            color: $white;
+            font-size: 15px;
+            line-height: 15px;
+            box-sizing: border-box;
+            padding: 4px 15px;
+
+            &:hover{
+                text-decoration: underline;
+                cursor: pointer;
+            }
+
+
+        }
+    }
+
+    input:focus ~ .search-select-results{
+        display: block;
+    }
+}

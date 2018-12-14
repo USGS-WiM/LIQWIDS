@@ -3,7 +3,7 @@
   Flex column
 -->
 
-<div id="outer">
+<div id="outer" [ngClass]="{'blur': aboutModal}">
   
 
   <!-- 
@@ -11,7 +11,38 @@
       - Nav, links, branding, etc
   -->
   <header id="main">
+    
+    <!-- Branding / Logo -->
+    <div id="branding">
 
+      <i class="far" id="sidebarToggle" (click)="expandSidebar =! expandSidebar" [ngClass]="{'fa-bars': !expandSidebar, 'fa-times': expandSidebar}"></i>
+      <!-- USGS Logo -->
+      <a href="https://usgs.gov" alt="USGS Home Page" title="USGS Home Page" target="_blank" id="usgsLogo">
+        <img src="https://www.usgs.gov/sites/all/themes/usgs_palladium/logo.png"/>
+      </a>
+      <!-- Title -->
+      <div id="title">
+        <span class="abbr">L</span>
+        <span class="expanded">ong</span>
+        <span class="abbr">I</span>
+        <span class="expanded">sland</span>
+        <span class="abbr">Q</span>
+        <span class="expanded">uality of</span>
+        <span class="abbr">W</span>
+        <span class="expanded">ater</span>
+        <span class="abbr">I</span>
+        <span class="expanded">ntegrated</span>
+        <span class="abbr">D</span>
+        <span class="expanded">ata</span>
+        <span class="abbr">S</span>
+        <span class="expanded">ystem</span>
+      </div>
+    </div>
+
+    <!-- Links on right -->
+    <nav id="headerLinks">
+      <a (click)="aboutModal = true">About</a>
+    </nav>
   </header>
 
 
@@ -26,9 +57,38 @@
       Sidebar
       Sidebar
      -->
-    <div id="sidebar">
+    <div id="sidebar" [ngClass]="{'expanded': expandSidebar}">
 
-      <b>Sidebar</b>
+      <!-- Basemap Header/Toggle -->
+      <div class="sidebar-header" (click)="showBasemaps =! showBasemaps" [ngClass]="{'expanded': showBasemaps}">
+        <i class="far fa-map"></i>
+        <b>Basemaps</b>
+      </div>
+      <!-- Basemap body -->
+      <div class="sidebar-content" [ngClass]="{'expanded': showBasemaps}">
+        <div id="sidebarBasemaps">
+          <div class="basemap active" id="basemap1">Satellite</div>
+          <div class="basemap" id="basemap2">Streets</div>
+          <div class="basemap" id="basemap3">Topograph</div>
+          <div class="basemap" id="basemap4">Water</div>
+          <div class="basemap" id="basemap5">Birds Eye</div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="sidebar-header" (click)="showFilters =! showFilters" [ngClass]="{'expanded': showFilters}">
+        <i class="far fa-filter"></i>
+        <b>Filters</b>
+      </div>
+      <!-- Filters body -->
+      <div class="sidebar-content" [ngClass]="{'expanded': showFilters}">
+        <div class="search-select">
+          <input [(ngModel)]="filterSearchInput"/>
+          <div class="search-select-results">
+            <div *ngFor="let option of filterSearch" [hidden]="!option.toLowerCase().includes(filterSearchInput.toLowerCase())">{{option}}</div>
+          </div>
+        </div>
+      </div>
 
     </div> <!-- End Sidebar -->
 
@@ -46,7 +106,7 @@
 
 
       <div class="block">
-        Main content
+        <h1>Data</h1>
       </div>
 
 
@@ -58,6 +118,37 @@
 
 
 </div>
+
+
+
+<!-- 
+  ================================================================
+  Modals
+  Modals
+  Modals - 1,000 z-index base
+  ================================================================
+ -->
+<!-- About Modal -->
+<div class="modal-wrapper" *ngIf="aboutModal" (click)="aboutModal = false">
+  <div class="modal" id="aboutModal" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div class="title">About</div>
+      <div class="modal-close" (click)="aboutModal = false">&times;</div>
+    </div>
+  
+    <div class="modal-content">
+      <h6>What is LIQWIDS?</h6>
+      <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat?</p>
+      <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat?</p>
+    </div>
+  
+    <div class="modal-actions right">
+      <button (click)="aboutModal = false">Close</button>
+    </div>
+  </div>
+</div>
+
 
 
 <router-outlet></router-outlet>

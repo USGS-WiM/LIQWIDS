@@ -7,4 +7,17 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'LIQWIDS';
+
+
+  showBasemaps = true;
+  showFilters = true;
+
+  expandSidebar = false;
+
+  filterSearchInput = "";
+  filterSearch = [
+    "One","Two","Three","Four","Five",
+    "Six","Seven","Eight","Nine","Ten"
+  ]
+
 }

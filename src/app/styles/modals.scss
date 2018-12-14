@@ -1,0 +1,179 @@
+// Lightbox - dark background
+// Click to close modal
+
+#modalLightbox{
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+// Add class blur to any element you want blurred
+// Best use: add to outer body wrapper when modal is visible
+.blur{
+    filter: blur(6px);
+    transition: 0s;
+}
+
+
+// Modal Structure
+// Modal Structure
+.modal-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    padding: 0 6%;
+    background-color: fade-out($black, 0.4);
+
+    @media only screen and (max-width: 460px) {
+        justify-content: flex-end;
+        padding: 0;
+    }
+
+    .modal{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-width: 400px;
+        max-width: 680px;
+        border-radius: $borderRadiusL;
+        background-color: $white;
+        min-height: 240px;
+        max-height: 90vh;
+        margin: 0 auto;
+
+        @media only screen and (max-width: 460px) {
+            width: 100%;
+            min-width: none;
+            max-width: none;
+            max-height: 85vh;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        
+
+        // Modal header - title and close button
+        .modal-header{
+            display: flex;
+            justify-content: space-between;
+            boxs-sizing: border-box;
+            padding: 15px 20px;
+            font-family: $poppins;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+
+            @media only screen and (max-width: 460px) {
+                padding: 15px 20px 5px 20px;
+            }
+
+            .title{
+            }
+
+            .modal-close{
+                font-weight: 500;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                font-size: 42px;
+                line-height: 0;
+                transition: 0.2s;
+                color: fade-out($black, 0.7);
+
+                &:hover{
+                    cursor: pointer;
+                    transition: 0.2s;
+                    color: $red;
+                }
+                &:active{
+                    opacity: 0.5;
+                }
+            }
+        }
+
+        // Modal content
+        .modal-content{
+            box-sizing: border-box;
+            padding: 0 20px;
+            margin-bottom: 10px;
+            flex-grow: 3;
+            max-height: 45vh;
+            overflow: auto;
+
+            &.nopadding{
+                padding: 0;
+            }
+
+            p{
+                &:last-child{
+                    padding-bottom: 0;
+                }
+            }
+
+            @media only screen and (max-width: 460px) {
+                max-height: 50vh;
+            }
+        }
+
+        // Modal Actions/buttons
+        .modal-actions{
+            display: flex;
+            justify-content: space-between;
+            box-sizing: border-box;
+            padding: 15px 17px;
+
+            @media only screen and (max-width: 460px) {
+                padding: 0;
+            }
+
+            &.left{
+                justify-content: flex-start;
+            }
+            &.right{
+                justify-content: flex-end;
+            }
+
+            button{
+                margin: 0 3px;
+
+                @media only screen and (max-width: 460px) {
+                    margin: 0;
+                    flex-grow: 3;
+                    border-radius: 0;
+                    padding: 12px 10px;
+                }
+            }
+        }
+
+
+        // A little bigger modal (on large screens)
+        // A little bigger modal (on large screens)
+        &.big{
+            max-width: 880px;
+        }
+
+        // A tiny modal - for confirmations
+        // A tiny modal - for confirmations
+        &.tiny{
+            max-width: 380px;
+            min-width: 340px;
+            min-height: 200px;
+            
+            @media only screen and (max-width: 460px) {
+                max-width: none;
+
+                .modal-content{
+                    margin-bottom: 20px;
+                }
+            }
+        }
+    }
+}
