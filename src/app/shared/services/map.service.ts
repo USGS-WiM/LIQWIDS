@@ -10,6 +10,7 @@ import * as L from 'leaflet';
 export class MapService {
     public map: Map;
     public baseMaps: any;
+    public mainLayers: any;
 
     constructor() { 
         this.baseMaps = {// {s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png  
@@ -40,6 +41,24 @@ export class MapService {
                 zIndex: 1,
                 attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
                 maxZoom: 16
+            })
+        };
+
+        //if typeScript complains about searchParams, add it to the class in the leaflet@types definition
+        this.mainLayers = {
+            WQP: L.tileLayer.wms('https://www.waterqualitydata.us/ogcservices/ows?', {
+                layers: "wqp_sites",
+                format: "image/png",
+                transparent: true,
+                zIndex: 2,
+                searchParams: "characteristicname?text=nitrogen;countycode:US:36:059|US:36:103|US:36:081|US:36:047"
+            }),
+            NWIS: L.tileLayer.wms("https://www.waterqualitydata.us/ogcservices/ows?", {
+                layers: "qw_portal_map:nwis_sites",
+                format: "image/png",
+                transparent: true,
+                zIndex: 2,
+                searchParams: "countycode:US:36:059|US:36:103"
             })
         };
    }

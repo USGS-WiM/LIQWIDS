@@ -19,7 +19,6 @@ export class AppComponent implements OnInit {
     public layer:any;
     private APIUrl: 'https://www.waterqualitydata.us/Codes/characteristicname?text=nitrogen&mimeType=json';
     public data: JsonPipe;
-    //private searchParams: "characteristicname?text=nitrogen;countycode:US:36:059|US:36:103|US:36:081|US:36:047";
 
     title = 'LIQWIDS';
     
@@ -34,31 +33,19 @@ export class AppComponent implements OnInit {
             maxZoom: 19,
             renderer: L.canvas()
         });
+        //baseMaps
         this.baseLayers = this._mapService.baseMaps;
         this.chosenBaseLayer = "Topo";
         this.map.addLayer(this._mapService.baseMaps[this.chosenBaseLayer]);
-       
-        //typescript complaining about the searchparams option.  Doesn't matter for right now as this isn't the angular way to load anyway.
-        this.WQP = L.tileLayer.wms('https://www.waterqualitydata.us/ogcservices/ows?', {
-                layers: "wqp_sites",
-                format: "image/png",
-                transparent: true,
-                zIndex: 2,
-                searchParams: "characteristicname?text=nitrogen;countycode:US:36:059|US:36:103|US:36:081|US:36:047"
-            }).addTo(this.map);
+        //main layers
+        this.map.addLayer(this._mapService.mainLayers.WQP);
+        this.map.addLayer(this._mapService.mainLayers.NWIS);
 
-        this.NWIS = L.tileLayer.wms("https://www.waterqualitydata.us/ogcservices/ows?", {
-                layers: "qw_portal_map:nwis_sites",
-                format: "image/png",
-                transparent: true,
-                zIndex: 2,
-                searchParams: "countycode:US:36:059|US:36:103"
-            }).addTo(this.map); 
     }//END NgOnInit
 
+    //called from basemap button click
     public toggleLayer(newVal: string){
         this.chosenBaseLayer = newVal;
-       
         this.map.removeLayer(this._mapService.baseMaps["OpenStreetMap"]);
         this.map.removeLayer(this._mapService.baseMaps["Topo"]);
         this.map.removeLayer(this._mapService.baseMaps["Terrain"]);
