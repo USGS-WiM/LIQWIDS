@@ -67,11 +67,12 @@
       <!-- Basemap body -->
       <div class="sidebar-content" [ngClass]="{'expanded': showBasemaps}">
         <div id="sidebarBasemaps">
-          <div class="basemap active" id="basemap1">Satellite</div>
-          <div class="basemap" id="basemap2">Streets</div>
-          <div class="basemap" id="basemap3">Topograph</div>
-          <div class="basemap" id="basemap4">Water</div>
-          <div class="basemap" id="basemap5">Birds Eye</div>
+          <div class="basemap" id="basemap1" (click)="toggleLayer('OpenStreetMap')">Streets</div>
+          <div class="basemap active" id="basemap2" (click)="toggleLayer('Topo')" >Topographic</div>
+          <div class="basemap" id="basemap3" (click)="toggleLayer('CartoDB')">CartoDB</div>
+          <div class="basemap" id="basemap4" (click)="toggleLayer('Terrain')">Terrain</div>
+          <div class="basemap" id="basemap5" (click)="toggleLayer('Satellite')" >Satellite</div>
+          <div class="basemap" id="basemap5" (click)="toggleLayer('Gray')" >Gray</div>
         </div>
       </div>
 
