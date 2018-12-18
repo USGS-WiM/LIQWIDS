@@ -92,6 +92,9 @@
 
     </div> <!-- End Sidebar -->
 
+    <!-- Sidebar lightbox for mobile -->
+    <div id="sidebarLightbox"  [ngClass]="{'visible': expandSidebar}" (click)="expandSidebar = false"></div>
+
 
     <!-- 
       Content 
@@ -107,6 +110,12 @@
 
       <div class="block">
         <h1>Data</h1>
+
+        <div id="chartWrapper">
+          <div id="wideChart"></div>
+          <div id="chart2"></div>
+        </div>
+
       </div>
 
 
@@ -125,7 +134,7 @@
   ================================================================
   Modals
   Modals
-  Modals - 1,000 z-index base
+  Modals - 1,0000 z-index base
   ================================================================
  -->
 <!-- About Modal -->

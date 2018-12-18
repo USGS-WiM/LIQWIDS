@@ -12,8 +12,8 @@
 
     header#main{
         display: flex;
-        height: 54px;
-        min-height: 54px;
+        height: $topBarHeight;
+        min-height: $topBarHeight;
         width: 100%;
         background-color: $black;
     }
@@ -25,6 +25,7 @@
         flex-grow: 3;
 
 
+        // 5000 Z-index
         #sidebar{
             display: block;
             width: 280px;
@@ -36,11 +37,12 @@
 
             @media only screen and (max-width: 1200px) {
                 position: fixed;
-                top: 54px;
+                top: $topBarHeight;
                 padding-bottom: 69px;
                 left: -280px;
                 height: 100vh;
                 border-right: 1px solid fade-out($black, 0.8);
+                z-index: 5000;
             }
 
             // Full Mobile - menu on bottom
