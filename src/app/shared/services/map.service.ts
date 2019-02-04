@@ -57,15 +57,15 @@ export class MapService {
                 layers: "wqp_sites",
                 format: "image/png",
                 transparent: true,
-                zIndex: 2,
-                searchParams: "characteristicname?text=nitrogen;countycode:US:36:059|US:36:103|US:36:081|US:36:047"
+                zIndex: 2
+                // searchParams: "characteristicname?text=nitrogen;countycode:US:36:059|US:36:103|US:36:081|US:36:047"
             }),
             NWIS: L.tileLayer.wms("https://www.waterqualitydata.us/ogcservices/ows?", {
                 layers: "qw_portal_map:nwis_sites",
                 format: "image/png",
                 transparent: true,
-                zIndex: 2,
-                searchParams: "countycode:US:36:059|US:36:103"
+                zIndex: 2
+                // searchParams: "countycode:US:36:059|US:36:103"
             })
         };
 

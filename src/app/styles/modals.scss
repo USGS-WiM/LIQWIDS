@@ -32,6 +32,7 @@
     box-sizing: border-box;
     padding: 0 6%;
     background-color: fade-out($black, 0.4);
+    z-index: 10000;
 
     @media only screen and (max-width: 460px) {
         justify-content: flex-end;
@@ -122,7 +123,6 @@
                 max-height: 50vh;
             }
         }
-
         // Modal Actions/buttons
         .modal-actions{
             display: flex;
@@ -133,7 +133,6 @@
             @media only screen and (max-width: 460px) {
                 padding: 0;
             }
-
             &.left{
                 justify-content: flex-start;
             }
@@ -145,7 +144,7 @@
                 margin: 0 3px;
 
                 @media only screen and (max-width: 460px) {
-                    margin: 0;
+                    margin: 0 0 0 0;
                     flex-grow: 3;
                     border-radius: 0;
                     padding: 12px 10px;

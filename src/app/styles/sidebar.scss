@@ -100,3 +100,26 @@
 
 
 }
+
+// Sidebar Lightbox
+// Sidebar Lightbox
+// Sidebar Lightbox
+// Sidebar Lightbox
+#sidebarLightbox{
+    display: block;
+    position: fixed;
+    top: $topBarHeight;
+    left: 0;
+    z-index: 4999;
+    background-color: fade-out($black, 0.6);
+    height: 0px;
+    width: 100vw;
+    opacity: 0;
+    transition: height 0s 0.2s, opacity 0.2s;
+
+    &.visible{
+        opacity: 1;
+        height: 100vh;
+        transition: height 0s, opacity 0.2s;
+    }
+}

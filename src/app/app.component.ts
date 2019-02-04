@@ -22,11 +22,7 @@ export class AppComponent implements OnInit {
     public data: JsonPipe;
 
     title = 'LIQWIDS';
-    
-    constructor(private _mapService: MapService){ }
-  
     ngOnInit(){
-
         this.map = L.map("map", {
             center: L.latLng(40.9, -73.0),
             zoom: 9,
@@ -34,6 +30,20 @@ export class AppComponent implements OnInit {
             maxZoom: 19,
             renderer: L.canvas()
         });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(this.map);
+
+        L.tileLayer.wms('https://www.waterqualitydata.us/ogcservices/ows?', {
+            layers: "wqp_sites",
+            format: "image/png",
+            transparent: true
+            // searchparams: "characteristicname?text=nitrogen;countycode:US:36:059|US:36:103|US:36:081|US:36:047"
+        }).addTo(this.map);
+
+
+
         //baseMaps
         this.baseLayers = this._mapService.baseMaps;
         this.chosenBaseLayer = "Topo";
@@ -42,8 +52,12 @@ export class AppComponent implements OnInit {
         this.map.addLayer(this._mapService.mainLayers.WQP);
         this.map.addLayer(this._mapService.mainLayers.NWIS);
 
-    }//END NgOnInit
 
+
+    }
+    
+    constructor(private _mapService: MapService){ }
+  
     //called from basemap button click
     public toggleLayer(newVal: string){
         this.chosenBaseLayer = newVal;
@@ -57,7 +71,6 @@ export class AppComponent implements OnInit {
     }
 
     
-    
     showBasemaps = true;
     showFilters = true;
 
@@ -68,5 +81,6 @@ export class AppComponent implements OnInit {
         "One","Two","Three","Four","Five",
         "Six","Seven","Eight","Nine","Ten"
     ]
+
 
 }
