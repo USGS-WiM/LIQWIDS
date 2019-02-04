@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
-import {Http, Response, RequestOptions } from '@angular/http';
+//import {Http, Response, RequestOptions } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Map } from 'leaflet';
 import * as L from 'leaflet';
+
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+import { CONFIG } from "./config";
+import { throwError } from 'rxjs';
 
 
 @Injectable({
@@ -12,7 +19,7 @@ export class MapService {
     public baseMaps: any;
     public mainLayers: any;
 
-    constructor() { 
+    constructor(private _http: HttpClient) { 
         this.baseMaps = {// {s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png  
             OpenStreetMap: L.tileLayer('https://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}', {
                 maxZoom: 20,
@@ -61,5 +68,13 @@ export class MapService {
                 searchParams: "countycode:US:36:059|US:36:103"
             })
         };
+
+        this.httpRequest();
+   }
+
+   private httpRequest(): void {
+        //let options = new RequestOptions({ headers: CONFIG.MIN_JSON_HEADERS });
+        this._http.get(CONFIG.WFS_URL)
+            .subscribe(response => console.log(response))
    }
 }

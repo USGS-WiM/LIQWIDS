@@ -4,6 +4,7 @@ import { JsonPipe } from '@angular/common';
 
 import * as L from 'leaflet';
 import { MapService } from './shared/services/map.service';
+/* import { LiqwidsService } './shared/services/liqwids.service'; */
 
 @Component({
   selector: 'app-root',
