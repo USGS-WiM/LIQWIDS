@@ -8,7 +8,7 @@
     height: 100vh;
     width: 100vw;
     overflow: hidden;
-    transition: 0.2s;
+    transition: 0.15s;
 
     header#main{
         display: flex;
@@ -33,7 +33,7 @@
             box-sizing: border-box;
             padding: 15px;
             overflow: auto;
-            transition: all 0.2s ease, width 0s 0.2s;
+            transition: all 0.15s ease, width 0s 0.15s;
 
             @media only screen and (max-width: 1200px) {
                 position: fixed;
@@ -53,11 +53,13 @@
                 left: 0;
                 height: 60vh;
                 border-right: none;
+                border-top-left-radius: $borderRadiusL;
+                border-top-right-radius: $borderRadiusL;
             }
 
             &.expanded{
                 left: 0px;
-                transition: all 0.2s ease, width 0s;
+                transition: all 0.15s ease, width 0s;
 
                 // Full Mobile
                 @media only screen and (max-width: 550px) {
