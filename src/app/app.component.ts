@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { JsonPipe } from '@angular/common';
 
 import * as L from 'leaflet';
 import { MapService } from './shared/services/map.service';
 /* import { LiqwidsService } './shared/services/liqwids.service'; */
+
 
 @Component({
   selector: 'app-root',
@@ -35,28 +36,33 @@ export class AppComponent implements OnInit {
             attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(this.map);
 
-        L.tileLayer.wms('https://www.waterqualitydata.us/ogcservices/ows?', {
+        /* L.tileLayer.wms('https://www.waterqualitydata.us/ogcservices/ows?', {
             layers: "wqp_sites",
             format: "image/png",
             transparent: true
             // searchparams: "characteristicname?text=nitrogen;countycode:US:36:059|US:36:103|US:36:081|US:36:047"
-        }).addTo(this.map);
-
-
+        }).addTo(this.map); */
 
         //baseMaps
         this.baseLayers = this._mapService.baseMaps;
         this.chosenBaseLayer = "Topo";
         this.map.addLayer(this._mapService.baseMaps[this.chosenBaseLayer]);
         //main layers
-        this.map.addLayer(this._mapService.mainLayers.WQP);
+        //this.map.addLayer(this._mapService.mainLayers.WQP);
         this.map.addLayer(this._mapService.mainLayers.NWIS);
-
-
-
+       
+    
     }
     
     constructor(private _mapService: MapService){ }
+
+    /* public addGeoJsonLayer(geoJson: any){
+        L.geoJSON(this._mapService.geoJson, {
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng);
+            }
+       }).addTo(this.map); 
+    } */
   
     //called from basemap button click
     public toggleLayer(newVal: string){
