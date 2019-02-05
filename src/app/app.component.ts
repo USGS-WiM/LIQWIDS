@@ -49,7 +49,11 @@ export class AppComponent implements OnInit {
         this.map.addLayer(this._mapService.baseMaps[this.chosenBaseLayer]);
         //main layers
         //this.map.addLayer(this._mapService.mainLayers.WQP);
-        this.map.addLayer(this._mapService.mainLayers.NWIS);
+
+
+        //this.map.addLayer(this._mapService.mainLayers.NWIS);
+
+        this.map.addLayer(this._mapService.mainLayers.GEOJSON);
        
     
     }

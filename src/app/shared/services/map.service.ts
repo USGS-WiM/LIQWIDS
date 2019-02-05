@@ -59,14 +59,20 @@ export class MapService {
                 format: "image/png",
                 transparent: true,
                 zIndex: 2,
-                searchParams: "characteristicname?text=nitrogen;countycode:US:36:059|US:36:103|US:36:081|US:36:047"
+                //searchParams: "characteristicname?text=nitrogen;countycode:US:36:059|US:36:103|US:36:081|US:36:047"
             }),
             NWIS: L.tileLayer.wms("https://www.waterqualitydata.us/ogcservices/ows?", {
                 layers: "qw_portal_map:nwis_sites",
                 format: "image/png",
                 transparent: true,
                 zIndex: 2,
-                searchParams: "countycode:US:36:059|US:36:103"
+                //searchParams: "countycode:US:36:059|US:36:103"
+            }),
+            //add temporary blank layer, replaced later
+            GEOJSON: L.geoJSON(null, {
+                pointToLayer: function (feature, latLng) {
+                    return L.circleMarker(latLng);
+                }
             })
         };
 
@@ -74,18 +80,9 @@ export class MapService {
    }
 
     private httpRequest(): void {
-        //let options = new RequestOptions({ headers: CONFIG.MIN_JSON_HEADERS });
-        //this._http.get("https://www.waterqualitydata.us/ogcservices/wfs/?request=GetFeature&service=wfs&version=2.0.0&typeNames=wqp_sites&SEARCHPARAMS=statecode%3AUS%3A36%3Bcountycode%3AUS%3A36%3A103%7CUS%3A36%3A059%3Bsiteid%3AUSGS-01302800%3BcharacteristicName%3ANitrate%7CNitrogen&outputFormat=application%2Fjson")
         this._http.get("../../../assets/NitrateSites.json")
             .subscribe(response => {
-                this.geoJson = response;
-                
-                /* var jsonLayer = L.geoJSON(this.geoJson, {
-                    pointToLayer: function (feature, latLng) {
-                        return L.circleMarker(latLng);
-                    }
-                }).addTo(L.map); */
-
+                this.mainLayers.GEOJSON.addData(response)
             });
    }  
 }
