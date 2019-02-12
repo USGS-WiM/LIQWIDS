@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 //import {Http, Response, RequestOptions } from '@angular/http';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Map } from 'leaflet';
 import * as L from 'leaflet';
 
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 export interface Options {
     label: string;
@@ -21,6 +21,8 @@ export class MapService {
     public mainLayers: any;
     public geoJson:any;
     public filterOptions: any;
+
+    private _geoJsonURL = "https://www.waterqualitydata.us/ogcservices/wfs/?request=GetFeature&service=wfs&version=2.0.0&typeNames=wqp_sites&SEARCHPARAMS=countrycode%3AUS%3Bstatecode%3AUS%3A36%3Bcountycode%3AUS%3A36%3A059%7CUS%3A36%3A103%3BcharacteristicName%3ANitrate&outputFormat=application%2Fjson";
 
 
     constructor(private _http: HttpClient) { 
@@ -84,27 +86,41 @@ export class MapService {
     }
 
     public getData(): Observable<any> {
-        return this._http.get<any>("https://www.waterqualitydata.us/ogcservices/wfs/?request=GetFeature&service=wfs&version=2.0.0&typeNames=wqp_sites&SEARCHPARAMS=countrycode%3AUS%3Bstatecode%3AUS%3A36%3Bcountycode%3AUS%3A36%3A059%7CUS%3A36%3A103%3BcharacteristicName%3ANitrate&outputFormat=application%2Fjson")
-        .pipe(map(response => {
-            this.geoJson = response;
-            console.log("geoJson", this.geoJson);
+        return this._http.get<any>(this._geoJsonURL)
+        .pipe(
+            map(response => {
+                this.geoJson = response;
+                console.log("geoJson", this.geoJson);
 
 
-            this.filterOptions = {};
-            this.geoJson.features.forEach(feature => {
-                for (var property in feature.properties){
-                    if (!this.filterOptions.hasOwnProperty(property)){
-                        this.filterOptions[property] = [];
+                this.filterOptions = {};
+                this.geoJson.features.forEach(feature => {
+                    for (var property in feature.properties){
+                        if (!this.filterOptions.hasOwnProperty(property)){
+                            this.filterOptions[property] = [];
+                        }
+                        if (this.filterOptions[property].indexOf(feature.properties[property]) === -1 && property !== 'bbox') {
+                            this.filterOptions[property].push(feature.properties[property]);
+                        }
                     }
-                    if (this.filterOptions[property].indexOf(feature.properties[property]) === -1 && property !== 'bbox') {
-                        this.filterOptions[property].push(feature.properties[property]);
-                    }
-                }
-            })
-            console.log('filterOptions', this.filterOptions);
-            return this.filterOptions;
-         }))
-            
+                })
+                console.log('filterOptions', this.filterOptions);
+                return this.filterOptions;
+            }),
+            catchError(this.handleError)
 
+        )
+        
+    }
+
+    private handleError(err: HttpErrorResponse){
+        if(err.error instanceof ErrorEvent) {
+            //client side
+            console.error("An error occurred:", err.error.message);
+        } else{
+            //server error message
+            console.error("Server returned code ${err.status, body ${err.error}");
+        }
+        return throwError("HTTPClient error.");
     }
 }

@@ -35,7 +35,13 @@ export class AppComponent implements OnInit {
     ngOnInit(){
         this.dropDownGroup = this.formBuilder.group({
             huc8: '',
-            type: ''
+            location: '',
+            name: '',
+            orgId: 'Organization Id',
+            orgName: '',
+            provider: '',
+            searchType: '',
+            type: '',
         });
 
         this._mapService.getData().subscribe(response => {
