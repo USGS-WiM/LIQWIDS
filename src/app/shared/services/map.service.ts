@@ -91,7 +91,7 @@ export class MapService {
             map(response => {
                 this.geoJson = response;
                 console.log("geoJson", this.geoJson);
-
+                this.mainLayers.GEOJSON.addData(this.geoJson);
 
                 this.filterOptions = {};
                 this.geoJson.features.forEach(feature => {

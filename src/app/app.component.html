@@ -125,42 +125,42 @@
     <div class="sidebar-content" [ngClass]="{ expanded: showFilters }">
             <form *ngIf="allData" [formGroup]="dropDownGroup">
                 <label for="huc8">Huc8</label>
-                <select formControlName="huc8">
+                <select class="form-control" formControlName="huc8">
                     <option *ngFor="let huc of allData.huc8" [value]="huc">{{huc}}</option>
                 </select>
                 <br>
                 <label for="location">Location Name</label>
-                <select formControlName="location">
+                <select class="form-control" formControlName="location">
                     <option *ngFor="let locName of allData.locName" [value]="locName">{{locName}}</option>
                 </select>
                 <br>
                 <label for="name">Site Name</label>
-                <select formControlName="name">
+                <select class="form-control" formControlName="name">
                     <option *ngFor="let name of allData.name" [value]="name">{{name}}</option>
                 </select>
                 <br>
                 <label for="orgId">Organization Id</label>
-                <select formControlName="orgId">
+                <select class="form-control" formControlName="orgId">
                     <option *ngFor="let orgId of allData.orgId" [value]="orgId">{{orgId}}</option>
                 </select>
                 <br>
                 <label for="orgName">Organization Name</label>
-                <select formControlName="orgName">
+                <select class="form-control" formControlName="orgName">
                     <option *ngFor="let orgName of allData.orgName" [value]="orgName">{{orgName}}</option>
                 </select>
                 <br>
                 <label for="provider">Data Provider</label>
-                <select formControlName="provider">
+                <select class="form-control" formControlName="provider">
                     <option *ngFor="let provider of allData.provider" [value]="provider">{{provider}}</option>
                 </select>
                 <br>
                 <label for="searchType">Keyword</label>
-                <select formControlName="searchType">
+                <select class="form-control" formControlName="searchType">
                     <option *ngFor="let sType of allData.searchType" [value]="sType">{{sType}}</option>
                 </select>
                 <br>
                 <label for="type">Site Type</label>
-                <select formControlName="type">
+                <select class="form-control" formControlName="type">
                     <option *ngFor="let type of allData.type" [value]="type">{{type}}</option>
                 </select>
                    
