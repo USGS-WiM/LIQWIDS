@@ -5,11 +5,12 @@ import { Map } from 'leaflet';
 import * as L from 'leaflet';
 
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
-//import { CONFIG } from "./config";
-import { throwError } from 'rxjs';
-
+export interface Options {
+    label: string;
+    option: string[];
+}
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +20,11 @@ export class MapService {
     public baseMaps: any;
     public mainLayers: any;
     public geoJson:any;
+    public filterOptions: any;
+
 
     constructor(private _http: HttpClient) { 
+        
         this.baseMaps = {// {s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png  
             OpenStreetMap: L.tileLayer('https://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}', {
                 maxZoom: 20,
@@ -76,13 +80,31 @@ export class MapService {
             })
         };
 
-        this.httpRequest();
-   }
+        
+    }
 
-    private httpRequest(): void {
-        this._http.get("../../../assets/NitrateSites.json")
-            .subscribe(response => {
-                this.mainLayers.GEOJSON.addData(response)
-            });
-   }  
+    public getData(): Observable<any> {
+        return this._http.get<any>("https://www.waterqualitydata.us/ogcservices/wfs/?request=GetFeature&service=wfs&version=2.0.0&typeNames=wqp_sites&SEARCHPARAMS=countrycode%3AUS%3Bstatecode%3AUS%3A36%3Bcountycode%3AUS%3A36%3A059%7CUS%3A36%3A103%3BcharacteristicName%3ANitrate&outputFormat=application%2Fjson")
+        .pipe(map(response => {
+            this.geoJson = response;
+            console.log("geoJson", this.geoJson);
+
+
+            this.filterOptions = {};
+            this.geoJson.features.forEach(feature => {
+                for (var property in feature.properties){
+                    if (!this.filterOptions.hasOwnProperty(property)){
+                        this.filterOptions[property] = [];
+                    }
+                    if (this.filterOptions[property].indexOf(feature.properties[property]) === -1 && property !== 'bbox') {
+                        this.filterOptions[property].push(feature.properties[property]);
+                    }
+                }
+            })
+            console.log('filterOptions', this.filterOptions);
+            return this.filterOptions;
+         }))
+            
+
+    }
 }
