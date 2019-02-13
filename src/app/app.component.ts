@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 
 import * as L from 'leaflet';
 import { MapService, Options } from './shared/services/map.service';
+import { NgOnChangesFeature } from '@angular/core/src/render3';
 
 /* import { LiqwidsService } './shared/services/liqwids.service'; */
 
@@ -30,26 +31,29 @@ export class AppComponent implements OnInit {
 
     title = 'LIQWIDS';
 
-    constructor(private _mapService: MapService, private formBuilder: FormBuilder){ }
+    constructor(private _mapService: MapService, private formBuilder: FormBuilder){
+        
+     }
 
     ngOnInit(){
         this.dropDownGroup = this.formBuilder.group({
             huc8: '',
             location: '',
             name: '',
-            orgId: 'Organization Id',
+            orgId: '',
             orgName: '',
             provider: '',
             searchType: '',
-            type: '',
+            type: ''
         });
+
+        this.onChanges();
+        
 
         this._mapService.getData().subscribe(response => {
             this.allData = response;
             console.log('allData in component:', this.allData)
         });
-
-        
 
         this.map = L.map("map", {
             center: L.latLng(40.9, -73.0),
@@ -75,7 +79,20 @@ export class AppComponent implements OnInit {
     
     }
     
-    
+    private onChanges(): void {
+        this.dropDownGroup.valueChanges.subscribe(val => {
+            console.log("change Value: ", val);
+        });
+
+        //alternative
+        this.dropDownGroup.get('huc8').valueChanges.subscribe(val => {
+            console.log('huc8 changed', val);
+          });
+          this.dropDownGroup.get('type').valueChanges.subscribe(val => {
+            console.log('type changed', val);
+          });
+
+    }
   
     //called from basemap button click
     public toggleLayer(newVal: string){

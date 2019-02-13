@@ -90,9 +90,11 @@ export class MapService {
         .pipe(
             map(response => {
                 this.geoJson = response;
-                console.log("geoJson", this.geoJson);
+                //console.log("geoJson", this.geoJson);
+                //add data to geoJson layer to render markers
                 this.mainLayers.GEOJSON.addData(this.geoJson);
 
+                //get unique values for filterOptions
                 this.filterOptions = {};
                 this.geoJson.features.forEach(feature => {
                     for (var property in feature.properties){
@@ -104,7 +106,7 @@ export class MapService {
                         }
                     }
                 })
-                console.log('filterOptions', this.filterOptions);
+                //console.log('filterOptions', this.filterOptions);
                 return this.filterOptions;
             }),
             catchError(this.handleError)
