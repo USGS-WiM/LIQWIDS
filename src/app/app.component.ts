@@ -6,9 +6,8 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 
 import * as L from 'leaflet';
 import { MapService, Options } from './shared/services/map.service';
-import { NgOnChangesFeature } from '@angular/core/src/render3';
-
-/* import { LiqwidsService } './shared/services/liqwids.service'; */
+import { Ioptions} from "./shared/interfaces/options.interface";
+/* import { LiqwidsService } './shared/services/liqwids.service';  */
 
 
 @Component({
@@ -75,18 +74,19 @@ export class AppComponent implements OnInit {
         //this.map.addLayer(this._mapService.mainLayers.WQP);
         this.map.addLayer(this._mapService.mainLayers.NWIS);
         this.map.addLayer(this._mapService.mainLayers.GEOJSON);
+        this.map.addLayer(this._mapService.mainLayers.FILTERTEST);
        
     
     }
     
     private onChanges(): void {
-        this.dropDownGroup.valueChanges.subscribe(val => {
+        /* this.dropDownGroup.valueChanges.subscribe(val => {
             console.log("change Value: ", val);
-        });
-
+        }); */
         //alternative
         this.dropDownGroup.get('huc8').valueChanges.subscribe(val => {
             console.log('huc8 changed', val);
+            this._mapService.filterChange('huc8', val);
           });
           this.dropDownGroup.get('type').valueChanges.subscribe(val => {
             console.log('type changed', val);
