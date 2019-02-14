@@ -1,4 +1,4 @@
 export interface Ioptions {
-    value : string;
-    providers : string;
+    label : string;
+    option : string[];
 }

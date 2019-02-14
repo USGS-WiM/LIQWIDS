@@ -111,13 +111,13 @@ export class MapService {
     public updateFilteredSites(which: string, val:any){
         console.log('inUpdateFilteredSites which ', which, ' : ', val);
 
-       this._filterTest = L.geoJSON(this.geoJson, {
+       /* this._filterTest = L.geoJSON(this.geoJson, {
             filter: function(feature) {
                 return feature.properties.huc8 == val;
             }
        })
        console.log('filterTest geoJSON: ', this._filterTest);
-       this.mainLayers.GEOJSON.addData(this._filterTest);
+       this.mainLayers.GEOJSON.addData(this._filterTest); */
        
     }
     

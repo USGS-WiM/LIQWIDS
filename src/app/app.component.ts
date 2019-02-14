@@ -74,7 +74,7 @@ export class AppComponent implements OnInit {
         //this.map.addLayer(this._mapService.mainLayers.WQP);
         this.map.addLayer(this._mapService.mainLayers.NWIS);
         this.map.addLayer(this._mapService.mainLayers.GEOJSON);
-        this.map.addLayer(this._mapService.mainLayers.FILTERTEST);
+        //this.map.addLayer(this._mapService.mainLayers.FILTERTEST);
        
     
     }
@@ -87,9 +87,29 @@ export class AppComponent implements OnInit {
         this.dropDownGroup.get('huc8').valueChanges.subscribe(val => {
             console.log('huc8 changed', val);
             this._mapService.filterChange('huc8', val);
+            let testLayer = L.geoJSON(this._mapService.geoJson,{
+                /* filter: function(feature){
+                    return feature.properties.huc8 == val;
+                }, */
+                pointToLayer: function(feature, latLng){
+                    return L.circleMarker(latLng);
+                }
+            }).addTo(this.map);
           });
           this.dropDownGroup.get('type').valueChanges.subscribe(val => {
             console.log('type changed', val);
+            //c heck doesn't work!!!
+            /* if(this.map.hasLayer("testLayer")){
+                this.map.removeLayer("testLayer");
+            } */    
+            let testLayer = L.geoJSON(this._mapService.geoJson,{
+                filter: function(feature){
+                    return feature.properties.type == val;
+                }
+                /* pointToLayer: function(feature, latLng){
+                    return L.circleMarker(latLng);
+                } */
+            }).addTo(this.map);
           });
 
     }
