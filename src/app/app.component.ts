@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import * as L from 'leaflet';
 import { MapService, Options } from './shared/services/map.service';
 import { Ioptions} from "./shared/interfaces/options.interface";
+import { NgOnChangesFeature } from '@angular/core/src/render3';
 /* import { LiqwidsService } './shared/services/liqwids.service';  */
 
 
@@ -74,46 +75,28 @@ export class AppComponent implements OnInit {
         //this.map.addLayer(this._mapService.mainLayers.WQP);
         this.map.addLayer(this._mapService.mainLayers.NWIS);
         this.map.addLayer(this._mapService.mainLayers.GEOJSON);
-        //this.map.addLayer(this._mapService.mainLayers.FILTERTEST);
-       
-    
-    }
+    } //END ngOnInit()
     
     private onChanges(): void {
-        /* this.dropDownGroup.valueChanges.subscribe(val => {
-            console.log("change Value: ", val);
-        }); */
-        //alternative
+        //need to do as a layergroup to clear() and update() json in layers.
         this.dropDownGroup.get('huc8').valueChanges.subscribe(val => {
             console.log('huc8 changed', val);
-            this._mapService.filterChange('huc8', val);
-           /* let testLayer = L.geoJSON(this._mapService.geoJson,{
-                filter: function(feature){
-                    return feature.properties.huc8 == val;
-                },
-                pointToLayer: function(feature, latLng){
-                    return L.circleMarker(latLng);
-                }
-            }).addTo(this.map); */
+            let test = this._mapService.updateFilteredSites('huc8', val);
+            this.map.addLayer(this._mapService.mainLayers.FILTERJSON);
+            this._mapService.mainLayers.FILTERJSON.addData(test);
+
           });
           this.dropDownGroup.get('type').valueChanges.subscribe(val => {
             console.log('type changed', val);
-            //check doesn't work!!!
-            let testLayer;
-            if(this.map.hasLayer(testLayer)){
-                this.map.removeLayer("testLayer");
-            }  
-            testLayer = L.geoJSON(this._mapService.geoJson,{
-                filter: function(feature){
-                    return feature.properties.type == val;
-                }
-                /* pointToLayer: function(feature, latLng){
-                    return L.circleMarker(latLng);
-                } */
-            }).addTo(this.map);
+            this._mapService.updateFilteredSites('type', val);
+            let test = this._mapService.updateFilteredSites('type', val);
+            this.map.addLayer(this._mapService.mainLayers.FILTERJSON);
+            this._mapService.mainLayers.FILTERJSON.addData(test);
           });
 
     }
+
+    
   
     //called from basemap button click
     public toggleLayer(newVal: string){

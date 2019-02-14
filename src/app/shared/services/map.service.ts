@@ -25,8 +25,8 @@ export class MapService {
     public baseMaps: any;
     public mainLayers: any;
     public geoJson:any;
+    public filterJson: any;
     public filterOptions: any;
-    private _filteredGeoJson: any;
     private _geoJsonURL = "https://www.waterqualitydata.us/ogcservices/wfs/?request=GetFeature&service=wfs&version=2.0.0&typeNames=wqp_sites&SEARCHPARAMS=countrycode%3AUS%3Bstatecode%3AUS%3A36%3Bcountycode%3AUS%3A36%3A059%7CUS%3A36%3A103%3BcharacteristicName%3ANitrate&outputFormat=application%2Fjson";
 
     private _filterTest: any;
@@ -87,6 +87,11 @@ export class MapService {
                 pointToLayer: function (feature, latLng) {
                     return L.circleMarker(latLng);
                 }
+            }),
+            FILTERJSON: L.geoJSON(null, {
+                pointToLayer: function (feature, latLng) {
+                    return L.circleMarker(latLng);
+                }
             })
         };
 
@@ -108,27 +113,26 @@ export class MapService {
         return this._allsiteView;
     } */
 
-    public updateFilteredSites(which: string, val:any){
-        console.log('inUpdateFilteredSites which ', which, ' : ', val);
-
+    public updateFilteredSites(which: string, val:any): any{
        this._filterTest = L.geoJSON(this.geoJson, {
             filter: function(feature) {
                 return feature.properties[which] == val;
             }
        })
-       let filterJson = this._filterTest.toGeoJSON();
-       console.log("filterJSON: ", filterJson);
+       this.filterJson = this._filterTest.toGeoJSON();
+       //console.log("filterJSON: ", this.filterJson);
+       return this.filterJson;
        //console.log('filterTest geoJSON: ', this._filterTest);
        //this.mainLayers.GEOJSON.addData(this._filterTest);
        
     }
     
-    public filterChange(which: string, val: any): void {
+/*     public filterChange(which: string, val: any): void {
         console.log('which ', which, ' : ', val);
         
         this.updateFilteredSites(which, val);
         
-    }
+    } */
 
     
     public getData(): Observable<any> {
@@ -137,8 +141,6 @@ export class MapService {
             map(response => {
                 this.geoJson = response;
                 this._allsiteView = this.geoJson;
-                this._filteredGeoJson = this.geoJson;
-                //this.setFilteredSites(this.geoJson);
                 console.log("AllSiteView", this._allsiteView);
                 //add data to geoJson layer to render markers
                 //this.mainLayers.GEOJSON.addData(this.geoJson);
