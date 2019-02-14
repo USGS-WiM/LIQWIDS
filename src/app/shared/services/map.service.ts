@@ -115,7 +115,7 @@ export class MapService {
     } */
 
     public updateFilteredSites(which: string, val:any): any{
-       this._filterTest = L.geoJSON(this.filterJson, {
+       this._filterTest = L.geoJSON(this.geoJson, {
             filter: function(feature) {
                 return feature.properties[which] == val;
             }

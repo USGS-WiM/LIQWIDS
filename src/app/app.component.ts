@@ -82,12 +82,13 @@ export class AppComponent implements OnInit {
     } //END ngOnInit()
     
     private onChanges(): void {
-
+        let filterjson;
         //need to do as a layergroup to clear() and update() json in layers.
         this.dropDownGroup.get('huc8').valueChanges.subscribe(val => {
             console.log('huc8 changed', val);
             this.sitesLayer.clearLayers();
-            let filterjson = this._mapService.updateFilteredSites('huc8', val);
+            
+            filterjson = this._mapService.updateFilteredSites('huc8', val);
             L.geoJSON(filterjson, {
                 pointToLayer: function (feature, latLng) {
                     return L.circleMarker(latLng);
