@@ -92,7 +92,8 @@ export class MapService {
                 pointToLayer: function (feature, latLng) {
                     return L.circleMarker(latLng);
                 }
-            })
+            }),
+            SITESLAYER: L.featureGroup()
         };
 
         
@@ -114,7 +115,7 @@ export class MapService {
     } */
 
     public updateFilteredSites(which: string, val:any): any{
-       this._filterTest = L.geoJSON(this.geoJson, {
+       this._filterTest = L.geoJSON(this.filterJson, {
             filter: function(feature) {
                 return feature.properties[which] == val;
             }
@@ -141,6 +142,7 @@ export class MapService {
             map(response => {
                 this.geoJson = response;
                 this._allsiteView = this.geoJson;
+                this.filterJson = this.geoJson; // set filtered object to all on init.
                 console.log("AllSiteView", this._allsiteView);
                 //add data to geoJson layer to render markers
                 //this.mainLayers.GEOJSON.addData(this.geoJson);

@@ -28,6 +28,8 @@ export class AppComponent implements OnInit {
     public filterSearch: Array<string>;
     public allData; 
     public dropDownGroup: FormGroup;
+    public sitesLayer: L.FeatureGroup<any>;
+    //private currentLayer: any;
 
     title = 'LIQWIDS';
 
@@ -75,28 +77,40 @@ export class AppComponent implements OnInit {
         //this.map.addLayer(this._mapService.mainLayers.WQP);
         this.map.addLayer(this._mapService.mainLayers.NWIS);
         this.map.addLayer(this._mapService.mainLayers.GEOJSON);
+        //this.sitesLayer = this.map.addLayer(this._mapService.mainLayers.SITESLAYER);
+        this.sitesLayer = L.featureGroup().addTo(this.map);
     } //END ngOnInit()
     
     private onChanges(): void {
+
         //need to do as a layergroup to clear() and update() json in layers.
         this.dropDownGroup.get('huc8').valueChanges.subscribe(val => {
             console.log('huc8 changed', val);
-            let test = this._mapService.updateFilteredSites('huc8', val);
-            this.map.addLayer(this._mapService.mainLayers.FILTERJSON);
-            this._mapService.mainLayers.FILTERJSON.addData(test);
+            this.sitesLayer.clearLayers();
+            let filterjson = this._mapService.updateFilteredSites('huc8', val);
+            L.geoJSON(filterjson, {
+                pointToLayer: function (feature, latLng) {
+                    return L.circleMarker(latLng);
+                }
+            }).addTo(this.sitesLayer);
+            
+
+
+
+
+/*             this.map.addLayer(this._mapService.mainLayers.FILTERJSON);
+            this._mapService.mainLayers.FILTERJSON.addData(test); */
 
           });
           this.dropDownGroup.get('type').valueChanges.subscribe(val => {
             console.log('type changed', val);
             this._mapService.updateFilteredSites('type', val);
             let test = this._mapService.updateFilteredSites('type', val);
-            this.map.addLayer(this._mapService.mainLayers.FILTERJSON);
-            this._mapService.mainLayers.FILTERJSON.addData(test);
+            /* this.map.addLayer(this._mapService.mainLayers.FILTERJSON);
+            this._mapService.mainLayers.FILTERJSON.addData(test); */
           });
 
     }
-
-    
   
     //called from basemap button click
     public toggleLayer(newVal: string){
