@@ -87,28 +87,25 @@ export class AppComponent implements OnInit {
         this.dropDownGroup.get('huc8').valueChanges.subscribe(val => {
             console.log('huc8 changed', val);
             this.sitesLayer.clearLayers();
-            
             filterjson = this._mapService.updateFilteredSites('huc8', val);
             L.geoJSON(filterjson, {
                 pointToLayer: function (feature, latLng) {
                     return L.circleMarker(latLng);
                 }
             }).addTo(this.sitesLayer);
-            
-
-
-
-
-/*             this.map.addLayer(this._mapService.mainLayers.FILTERJSON);
-            this._mapService.mainLayers.FILTERJSON.addData(test); */
+        
 
           });
           this.dropDownGroup.get('type').valueChanges.subscribe(val => {
             console.log('type changed', val);
             this._mapService.updateFilteredSites('type', val);
-            let test = this._mapService.updateFilteredSites('type', val);
-            /* this.map.addLayer(this._mapService.mainLayers.FILTERJSON);
-            this._mapService.mainLayers.FILTERJSON.addData(test); */
+            this.sitesLayer.clearLayers();
+            filterjson = this._mapService.updateFilteredSites('type', val);
+            L.geoJSON(filterjson, {
+                pointToLayer:function(feature, latLng){
+                    return L.circleMarker(latLng);
+                }
+            }).addTo(this.sitesLayer);
           });
 
     }
