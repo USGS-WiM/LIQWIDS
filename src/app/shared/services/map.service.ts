@@ -86,13 +86,7 @@ export class MapService {
                 pointToLayer: function (feature, latLng) {
                     return L.circleMarker(latLng);
                 }
-            }),
-            FILTERJSON: L.geoJSON(null, {
-                pointToLayer: function (feature, latLng) {
-                    return L.circleMarker(latLng);
-                }
-            }),
-            SITESLAYER: L.featureGroup()
+            })
         };
 
         
@@ -140,12 +134,11 @@ export class MapService {
         .pipe(
             map(response => {
                 this.geoJson = response;
-                this._allsiteView = this.geoJson;
+                //this._allsiteView = this.geoJson;
                 this.filterJson = this.geoJson; // set filtered object to all on init.
-                console.log("AllSiteView", this._allsiteView);
+                //console.log("AllSiteView", this._allsiteView);
                 //add data to geoJson layer to render markers
-                this.mainLayers.GEOJSON.addData(this.geoJson);
-                
+                //this.mainLayers.GEOJSON.addData(this.geoJson);
 
                 //get unique values for filterOptions
                 this.filterOptions = {};

@@ -8,6 +8,7 @@ import * as L from 'leaflet';
 import { MapService, Options } from './shared/services/map.service';
 import { Ioptions} from "./shared/interfaces/options.interface";
 import { NgOnChangesFeature } from '@angular/core/src/render3';
+import { timingSafeEqual } from 'crypto';
 /* import { LiqwidsService } './shared/services/liqwids.service';  */
 
 
@@ -54,7 +55,8 @@ export class AppComponent implements OnInit {
 
         this._mapService.getData().subscribe(response => {
             this.allData = response;
-            console.log('allData in component:', this.allData)
+            //add all geojson sites after they've loaded.
+            this.addToSitesLayer(this._mapService.geoJson); 
         });
 
         this.map = L.map("map", {
@@ -76,38 +78,21 @@ export class AppComponent implements OnInit {
         //main layers
         //this.map.addLayer(this._mapService.mainLayers.WQP);
         this.map.addLayer(this._mapService.mainLayers.NWIS);
-        //this.map.addLayer(this._mapService.mainLayers.GEOJSON);
-        //this.sitesLayer = this.map.addLayer(this._mapService.mainLayers.SITESLAYER);
+        //add the featureGroup w/out data.
         this.sitesLayer = L.featureGroup().addTo(this.map);
     } //END ngOnInit()
     
     private onChanges(): void {
         let filterjson;
         //need to do as a layergroup to clear() and update() json in layers.
-        this.dropDownGroup.get('huc8').valueChanges.subscribe(val => {
-            console.log('huc8 changed', val);
-            this.sitesLayer.clearLayers();
-            filterjson = this._mapService.updateFilteredSites('huc8', val);
-            L.geoJSON(filterjson, {
-                pointToLayer: function (feature, latLng) {
-                    return L.circleMarker(latLng);
-                }
-            }).addTo(this.sitesLayer);
-        
-
-          });
-          this.dropDownGroup.get('type').valueChanges.subscribe(val => {
-            console.log('type changed', val);
-            this._mapService.updateFilteredSites('type', val);
-            this.sitesLayer.clearLayers();
-            filterjson = this._mapService.updateFilteredSites('type', val);
-            L.geoJSON(filterjson, {
-                pointToLayer:function(feature, latLng){
-                    return L.circleMarker(latLng);
-                }
-            }).addTo(this.sitesLayer);
-          });
-
+        Object.keys(this.dropDownGroup.controls).forEach(key => {
+            this.dropDownGroup.get(key).valueChanges.subscribe(val => {
+                console.log(key, 'Changed to ', val);
+                this.sitesLayer.clearLayers();
+                filterjson = this._mapService.updateFilteredSites(key, val);
+                this.addToSitesLayer(filterjson);
+            })
+        })
     }
 
     public clearForm():void {
@@ -115,12 +100,26 @@ export class AppComponent implements OnInit {
         this.sitesLayer.clearLayers();
         //set filtergeoJson back to original
         this._mapService.filterJson = this._mapService.geoJson;
-        L.geoJSON(this._mapService.filterJson, {
-            pointToLayer:function(feature, latLng){
-                return L.circleMarker(latLng);
-            }
-        }).addTo(this.sitesLayer);
+        this.addToSitesLayer(this._mapService.filterJson);
+    }
 
+    public addToSitesLayer(geoJson: any){
+        let geojsonMarkerOptions = {
+            radius: 5,
+            fillColor: '#9b0004',
+            weight: 0,
+            opacity: 1,
+            fillOpacity: 0.5
+        };
+        L.geoJSON(geoJson, {
+            pointToLayer:function(feature, latLng){
+                return L.circleMarker(latLng, geojsonMarkerOptions);
+            },
+            onEachFeature: (feature, layer) => {
+                layer.bindPopup("<b>Site Name: <b>" + feature.properties.name + "<br/><b>Location Name: <b>" + feature.properties.locName + "<br/><b>Organization Name: <b>" + feature.properties.orgName);
+            }
+            
+        }).addTo(this.sitesLayer);
     }
   
     //called from basemap button click
