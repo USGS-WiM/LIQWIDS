@@ -76,7 +76,7 @@ export class AppComponent implements OnInit {
         //main layers
         //this.map.addLayer(this._mapService.mainLayers.WQP);
         this.map.addLayer(this._mapService.mainLayers.NWIS);
-        this.map.addLayer(this._mapService.mainLayers.GEOJSON);
+        //this.map.addLayer(this._mapService.mainLayers.GEOJSON);
         //this.sitesLayer = this.map.addLayer(this._mapService.mainLayers.SITESLAYER);
         this.sitesLayer = L.featureGroup().addTo(this.map);
     } //END ngOnInit()
@@ -107,6 +107,19 @@ export class AppComponent implements OnInit {
                 }
             }).addTo(this.sitesLayer);
           });
+
+    }
+
+    public clearForm():void {
+        this.dropDownGroup.reset();
+        this.sitesLayer.clearLayers();
+        //set filtergeoJson back to original
+        this._mapService.filterJson = this._mapService.geoJson;
+        L.geoJSON(this._mapService.filterJson, {
+            pointToLayer:function(feature, latLng){
+                return L.circleMarker(latLng);
+            }
+        }).addTo(this.sitesLayer);
 
     }
   

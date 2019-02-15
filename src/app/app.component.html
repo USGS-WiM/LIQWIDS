@@ -129,16 +129,16 @@
                     <option *ngFor="let huc of allData.huc8" [value]="huc">{{huc}}</option>
                 </select>
                 <br>
-                <label for="location">Location Name</label>
+                <!-- <label for="location">Location Name</label>
                 <select class="form-control" formControlName="location">
                     <option *ngFor="let locName of allData.locName" [value]="locName">{{locName}}</option>
                 </select>
-                <br>
-                <label for="name">Site Name</label>
+                <br> -->
+                <!-- <label for="name">Site Name</label>
                 <select class="form-control" formControlName="name">
                     <option *ngFor="let name of allData.name" [value]="name">{{name}}</option>
                 </select>
-                <br>
+                <br> -->
                 <label for="orgId">Organization Id</label>
                 <select class="form-control" formControlName="orgId">
                     <option *ngFor="let orgId of allData.orgId" [value]="orgId">{{orgId}}</option>
@@ -165,6 +165,9 @@
                 </select>
                    
             </form>
+
+
+            <button class="clearForm" title="Clear All Selections" (click)="clearForm()">Clear Selections </button>
       </div>
       
     

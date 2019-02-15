@@ -28,8 +28,7 @@ export class MapService {
     public filterJson: any;
     public filterOptions: any;
     private _geoJsonURL = "https://www.waterqualitydata.us/ogcservices/wfs/?request=GetFeature&service=wfs&version=2.0.0&typeNames=wqp_sites&SEARCHPARAMS=countrycode%3AUS%3Bstatecode%3AUS%3A36%3Bcountycode%3AUS%3A36%3A059%7CUS%3A36%3A103%3BcharacteristicName%3ANitrate&outputFormat=application%2Fjson";
-
-    private _filterTest: any;
+    private _filterData: any;
     //subjects
     private _filteredSiteSubject: BehaviorSubject<any> = <BehaviorSubject<any>> new BehaviorSubject(""); 
 
@@ -115,17 +114,16 @@ export class MapService {
     } */
 
     public updateFilteredSites(which: string, val:any): any{
-       //TODO figure out how to continue filtering on the filtered json for multiple dropdown selections.
-        this._filterTest = L.geoJSON(this.geoJson, {
+       //TODO figure out how to clear if a new filter is selected i.e huc8 --> huc8  
+
+        this._filterData = L.geoJSON(this.filterJson, {
             filter: function(feature) {
                 return feature.properties[which] == val;
             }
        })
-       this.filterJson = this._filterTest.toGeoJSON();
-       //console.log("filterJSON: ", this.filterJson);
+       this.filterJson = this._filterData.toGeoJSON();
        return this.filterJson;
-       //console.log('filterTest geoJSON: ', this._filterTest);
-       //this.mainLayers.GEOJSON.addData(this._filterTest);
+
        
     }
     
@@ -146,7 +144,7 @@ export class MapService {
                 this.filterJson = this.geoJson; // set filtered object to all on init.
                 console.log("AllSiteView", this._allsiteView);
                 //add data to geoJson layer to render markers
-                //this.mainLayers.GEOJSON.addData(this.geoJson);
+                this.mainLayers.GEOJSON.addData(this.geoJson);
                 
 
                 //get unique values for filterOptions
