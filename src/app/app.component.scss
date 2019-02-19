@@ -14,6 +14,7 @@ $red: #F23D47;
 $blue: #3E3BFB;
 $primary: $blue;
 $text: fade-out($black, 0.1);
+$subtle: fade-out($black, 0.5);
 
 $borderColor: fade-out($black, 0.85);
 $borderRadiusL: 16px;
@@ -31,6 +32,8 @@ $borderRadius: 4px;
 // Heights and measurements
 $topBarHeight: 54px;
 
+// SASS helpers/mixins
+@import '/styles/helpers.scss';
 
 // Universal Imports
 @import '/styles/structure.scss';

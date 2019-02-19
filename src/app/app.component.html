@@ -57,12 +57,17 @@
       Sidebar
      -->
     <div id="sidebar" [ngClass]="{ expanded: expandSidebar }">
-      <!-- Basemap Header/Toggle -->
+
+      <!-- 
+        Sidebar Basemaps
+        Sidebar Basemaps
+        Sidebar Basemaps
+       -->
       <div class="sidebar-header" (click)="showBasemaps = !showBasemaps" [ngClass]="{ expanded: showBasemaps }">
         <i class="far fa-map"></i>
         <b>Basemaps</b>
       </div>
-      <!-- Basemap body -->
+      <!-- Basemaps content -->
       <div class="sidebar-content" [ngClass]="{ expanded: showBasemaps }">
         <div id="sidebarBasemaps">
           <div
@@ -116,58 +121,70 @@
         </div>
       </div>
 
-      <!-- Filters -->
+      <!-- 
+        Sidebar Filters
+        Sidebar Filters
+        Sidebar Filters
+       -->
       <div class="sidebar-header" (click)="showFilters = !showFilters" [ngClass]="{ expanded: showFilters }">
         <i class="far fa-filter"></i>
         <b>Filters</b>
       </div>
-      <!-- Filters body -->
-    <div class="sidebar-content" [ngClass]="{ expanded: showFilters }">
-            <form *ngIf="allData" [formGroup]="dropDownGroup">
-                <label for="huc8">Huc8</label>
-                <select class="form-control" formControlName="huc8">
-                    <option *ngFor="let huc of allData.huc8" [value]="huc">{{huc}}</option>
-                </select>
-                <br>
-                <!-- <label for="location">Location Name</label>
-                <select class="form-control" formControlName="location">
-                    <option *ngFor="let locName of allData.locName" [value]="locName">{{locName}}</option>
-                </select>
-                <br> -->
-                <!-- <label for="name">Site Name</label>
-                <select class="form-control" formControlName="name">
-                    <option *ngFor="let name of allData.name" [value]="name">{{name}}</option>
-                </select>
-                <br> -->
-                <label for="orgId">Organization Id</label>
-                <select class="form-control" formControlName="orgId">
-                    <option *ngFor="let orgId of allData.orgId" [value]="orgId">{{orgId}}</option>
-                </select>
-                <br>
-                <label for="orgName">Organization Name</label>
-                <select class="form-control" formControlName="orgName">
-                    <option *ngFor="let orgName of allData.orgName" [value]="orgName">{{orgName}}</option>
-                </select>
-                <br>
-                <label for="provider">Data Provider</label>
-                <select class="form-control" formControlName="provider">
-                    <option *ngFor="let provider of allData.provider" [value]="provider">{{provider}}</option>
-                </select>
-                <br>
-                <label for="searchType">Keyword</label>
-                <select class="form-control" formControlName="searchType">
-                    <option *ngFor="let sType of allData.searchType" [value]="sType">{{sType}}</option>
-                </select>
-                <br>
-                <label for="type">Site Type</label>
-                <select class="form-control" formControlName="type">
-                    <option *ngFor="let type of allData.type" [value]="type">{{type}}</option>
-                </select>
-                   
-            </form>
+      <!-- 
+        Filters Content
+       -->
+      <div class="sidebar-content" [ngClass]="{ expanded: showFilters }">
+        <form *ngIf="allData" [formGroup]="dropDownGroup" id="sidebarFilters">
 
+          <!-- Huc8 -->
+          <label for="huc8">Huc8</label>
+          <select class="form-control" formControlName="huc8" multiple>
+              <option *ngFor="let huc of allData.huc8" [value]="huc">{{huc}}</option>
+          </select>
+            
 
-            <button class="clearForm" title="Clear All Selections" (click)="clearForm()">Clear Selections </button>
+          <!-- <label for="location">Location Name</label>
+            <select class="form-control" formControlName="location">
+                <option *ngFor="let locName of allData.locName" [value]="locName">{{locName}}</option>
+            </select>
+            <br> -->
+            <!-- <label for="name">Site Name</label>
+            <select class="form-control" formControlName="name">
+                <option *ngFor="let name of allData.name" [value]="name">{{name}}</option>
+            </select>
+            <br> -->
+
+          <!-- Org IF -->
+          <label for="orgId">Organization Id</label>
+          <select class="form-control" formControlName="orgId" multiple>
+              <option *ngFor="let orgId of allData.orgId" [value]="orgId">{{orgId}}</option>
+          </select>
+
+          <!-- Org Name -->
+          <label for="orgName">Organization Name</label>
+          <select class="form-control" formControlName="orgName" multiple>
+              <option *ngFor="let orgName of allData.orgName" [value]="orgName">{{orgName}}</option>
+          </select>
+
+          <!-- Data Provider -->
+          <label for="provider">Data Provider</label>
+          <select class="form-control" formControlName="provider" multiple>
+              <option *ngFor="let provider of allData.provider" [value]="provider">{{provider}}</option>
+          </select>
+
+          <label for="searchType">Keyword</label>
+          <select class="form-control" formControlName="searchType" multiple>
+              <option *ngFor="let sType of allData.searchType" [value]="sType">{{sType}}</option>
+          </select>
+
+          <label for="type">Site Type</label>
+          <select class="form-control" formControlName="type" multiple>
+              <option *ngFor="let type of allData.type" [value]="type">{{type}}</option>
+          </select>
+              
+        </form>
+
+        <button class="clearForm" title="Clear All Selections" (click)="clearForm()">Clear Selections </button>
       </div>
       
     
@@ -189,7 +206,103 @@
 
       <div class="block">
         <h1>Data</h1>
+        <div id="fakeData">This data is made up.</div>
+
+        <div id="chartWrapper">
+          <div id="chart1"></div>
+          <div id="chart2"></div>
+        </div>
+
+        <div id="dataTable">
+
+          <div class="row header">
+            <div>Date</div>
+            <div>Site</div>
+            <div>State</div>
+            <div>Color</div>
+            <div>Distance</div>
+            <div>Size</div>
+            <div>Status</div>
+            <div>Amount</div>
+            <div>Notes</div>
+          </div>
+
+          <div class="row">
+            <div>10/11/18</div>
+            <div>12512</div>
+            <div>NY</div>
+            <div>Red</div>
+            <div>10mi</div>
+            <div>8</div>
+            <div>Off</div>
+            <div>9</div>
+            <div></div>
+          </div>
+
+          <div class="row">
+            <div>10/19/18</div>
+            <div>535235</div>
+            <div>NY</div>
+            <div>Black</div>
+            <div>1mi</div>
+            <div>81</div>
+            <div>On</div>
+            <div>5</div>
+            <div>End</div>
+          </div>
+
+          <div class="row">
+            <div>11/9/18</div>
+            <div>623532</div>
+            <div>NY</div>
+            <div>Black</div>
+            <div>2mi</div>
+            <div>1</div>
+            <div>On</div>
+            <div>0</div>
+            <div>None</div>
+          </div>
+
+          <div class="row">
+            <div>11/19/18</div>
+            <div>73453</div>
+            <div>NY</div>
+            <div>Purple</div>
+            <div>22mi</div>
+            <div>51</div>
+            <div>Off</div>
+            <div>10</div>
+            <div></div>
+          </div>
+
+          <div class="row">
+            <div>12/15/18</div>
+            <div>51214</div>
+            <div>NY</div>
+            <div>Black</div>
+            <div>2mi</div>
+            <div>61</div>
+            <div>Off</div>
+            <div>1</div>
+            <div></div>
+          </div>
+
+          <div class="row">
+            <div>12/25/18</div>
+            <div>61214</div>
+            <div>NY</div>
+            <div>Purple</div>
+            <div>3mi</div>
+            <div>66</div>
+            <div>Off</div>
+            <div>1</div>
+            <div></div>
+          </div>
+
+        </div>
+
       </div>
+
     </main>
     <!-- End Main Content -->
   </div>
