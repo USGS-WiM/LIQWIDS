@@ -1,8 +1,16 @@
 import { Injectable } from '@angular/core';
-import {Http, Response, RequestOptions } from '@angular/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Map } from 'leaflet';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+
 import * as L from 'leaflet';
 
+export interface chartSeries{
+    name: string;
+    data: number[];
+    
+}
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +19,13 @@ export class MapService {
     public map: Map;
     public baseMaps: any;
     public mainLayers: any;
+    public geoJson:any;
+    public filterJson: any;
+    public filterOptions: any;
+    private _geoJsonURL = "https://www.waterqualitydata.us/ogcservices/wfs/?request=GetFeature&service=wfs&version=2.0.0&typeNames=wqp_sites&SEARCHPARAMS=countrycode%3AUS%3Bstatecode%3AUS%3A36%3Bcountycode%3AUS%3A36%3A059%7CUS%3A36%3A103%3BcharacteristicName%3ANitrate&outputFormat=application%2Fjson";
 
-    constructor() { 
+    constructor(private _http: HttpClient) { 
+        
         this.baseMaps = {// {s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png  
             OpenStreetMap: L.tileLayer('https://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}', {
                 maxZoom: 20,
@@ -50,16 +63,62 @@ export class MapService {
                 layers: "wqp_sites",
                 format: "image/png",
                 transparent: true,
-                zIndex: 2
-                // searchParams: "characteristicname?text=nitrogen;countycode:US:36:059|US:36:103|US:36:081|US:36:047"
+                zIndex: 2,
+                //searchParams: "characteristicname?text=nitrogen;countycode:US:36:059|US:36:103|US:36:081|US:36:047"
             }),
             NWIS: L.tileLayer.wms("https://www.waterqualitydata.us/ogcservices/ows?", {
                 layers: "qw_portal_map:nwis_sites",
                 format: "image/png",
                 transparent: true,
-                zIndex: 2
-                // searchParams: "countycode:US:36:059|US:36:103"
+                zIndex: 2,
+                //searchParams: "countycode:US:36:059|US:36:103"
+            }),
+            //add temporary blank layer, replaced later
+            GEOJSON: L.geoJSON(null, {
+                pointToLayer: function (feature, latLng) {
+                    return L.circleMarker(latLng);
+                }
             })
         };
-   }
+
+        
+    }
+
+    public getData(): Observable<any> {
+        return this._http.get<any>(this._geoJsonURL)
+        .pipe(
+            map(response => {
+                this.geoJson = response;
+                this.filterJson = this.geoJson; // set filtered object to all on init.
+
+                //get unique values for filterOptions
+                this.filterOptions = {};
+                this.geoJson.features.forEach(feature => {
+                    for (var property in feature.properties){
+                        if (!this.filterOptions.hasOwnProperty(property)){
+                            this.filterOptions[property] = [];
+                        }
+                        if (this.filterOptions[property].indexOf(feature.properties[property]) === -1 && property !== 'bbox') {
+                            this.filterOptions[property].push(feature.properties[property]);
+                        }
+                    }
+                })
+                //console.log('filterOptions', this.filterOptions);
+                return this.filterOptions;
+            }),
+            catchError(this.handleError)
+
+        )   
+    }
+
+    private handleError(err: HttpErrorResponse){
+        if(err.error instanceof ErrorEvent) {
+            //client side
+            console.error("An error occurred:", err.error.message);
+        } else{
+            //server error message
+            console.error("Server returned code ${err.status, body ${err.error}");
+        }
+        return throwError("HTTPClient error.");
+    }
 }
