@@ -16,6 +16,12 @@ export interface Options {
     option: string[];
 }
 
+export interface chartSeries{
+    name: string;
+    data: number[];
+    
+}
+
 @Injectable({
   providedIn: 'root'
 })
