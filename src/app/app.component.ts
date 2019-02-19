@@ -1,18 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { JsonPipe } from '@angular/common';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 import * as L from 'leaflet';
 import * as Highcharts from 'highcharts';
-import { chartSeries } from './shared/services/map.service';
-import { MapService, Options } from './shared/services/map.service';
-import { Ioptions} from "./shared/interfaces/options.interface";
-import { NgOnChangesFeature } from '@angular/core/src/render3';
-import { timingSafeEqual } from 'crypto';
-/* import { LiqwidsService } './shared/services/liqwids.service';  */
-
+import { MapService } from './shared/services/map.service';
 
 @Component({
   selector: 'app-root',
@@ -26,16 +18,13 @@ export class AppComponent implements OnInit {
     public baseLayers: any;
     public chosenBaseLayer: string;
     public layer:any;
-    private APIUrl: 'https://www.waterqualitydata.us/Codes/characteristicname?text=nitrogen&mimeType=json';
     public data: JsonPipe;
     public filterSearch: Array<string>;
     public allData; 
     public dropDownGroup: FormGroup;
     public sitesLayer: L.FeatureGroup<any>;
-    //private currentLayer: any;
 
-    // HighCharts
-    
+    // HighCharts  
     public chart1: any;
     private _chart1Options: any;
     public chart2: any;
@@ -49,7 +38,6 @@ export class AppComponent implements OnInit {
 
     ngOnInit(){
         
-
         this.dropDownGroup = this.formBuilder.group({
             huc8: [[]],
             location: [[]],
@@ -62,7 +50,6 @@ export class AppComponent implements OnInit {
         });
 
         this.onChanges();
-        
 
         this._mapService.getData().subscribe(response => {
             this.allData = response;
@@ -344,7 +331,6 @@ export class AppComponent implements OnInit {
 
             });
 
-            
             filterJson.totalFeatures = filterJson.features.length;
             console.log('new json length',filterJson.totalFeatures);
             this.addToSitesLayer(filterJson);
@@ -398,10 +384,6 @@ export class AppComponent implements OnInit {
 
     showBasemaps = true;
     showFilters = true;
-
     expandSidebar = false;
-
-    
-
 
 }
