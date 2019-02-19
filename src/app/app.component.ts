@@ -47,14 +47,14 @@ export class AppComponent implements OnInit {
 
     ngOnInit(){
         this.dropDownGroup = this.formBuilder.group({
-            huc8: '',
-            location: '',
-            name: '',
-            orgId: '',
-            orgName: '',
-            provider: '',
-            searchType: '',
-            type: ''
+            huc8: [[]],
+            location: [[]],
+            name: [[]],
+            orgId: [[]],
+            orgName: [[]],
+            provider: [[]],
+            searchType: [[]],
+            type: [[]]
         });
 
         this.onChanges();
@@ -93,7 +93,7 @@ export class AppComponent implements OnInit {
         // Charts
         // Charts
         // Charts
-        this.chart1 = Highcharts.chart('chart1', {
+        this.chart1 = this.Highcharts.chart('chart1', {
             chart: {
                 type: 'line'
             },
@@ -128,7 +128,7 @@ export class AppComponent implements OnInit {
 
 
         
-        this.chart2 = Highcharts.chart('chart2', {
+        this.chart2 = this.Highcharts.chart('chart2', {
             chart: {
                 type: 'scatter',
                 zoomType: 'xy'
@@ -159,7 +159,7 @@ export class AppComponent implements OnInit {
                 x: 100,
                 y: 70,
                 floating: true,
-                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+                backgroundColor: (this.Highcharts.theme && this.Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
                 borderWidth: 1
             },
             plotOptions: {
@@ -300,20 +300,60 @@ export class AppComponent implements OnInit {
     } //END ngOnInit()
     
     private onChanges(): void {
-        let filterjson;
-        //need to do as a layergroup to clear() and update() json in layers.
-        Object.keys(this.dropDownGroup.controls).forEach(key => {
-            this.dropDownGroup.get(key).valueChanges.subscribe(val => {
-                console.log(key, 'Changed to ', val);
-                this.sitesLayer.clearLayers();
-                filterjson = this._mapService.updateFilteredSites(key, val);
-                this.addToSitesLayer(filterjson);
-            })
+
+        let filterJson;
+        
+        this.dropDownGroup.valueChanges.subscribe(selections => {
+            //console.log("dropdown changed: ", selections);
+            this.sitesLayer.clearLayers();
+
+            //make copy of geojson
+            filterJson = JSON.parse(JSON.stringify(this._mapService.geoJson));
+            filterJson.totalFeatures = 0;
+            filterJson.features = [];
+
+            //main loop over all features
+            this._mapService.geoJson.features.forEach(feature => {
+
+              //assume we have a match for this feature until proven otherwise
+              var match = true;
+
+              //need to check if the site matches all the selected values
+              for (var selection in selections) {
+
+                //make sure this selection has a value
+                if (selections[selection].length > 0) {
+
+                  //check if this feature DOESN'T MATCH the selection
+                  if (selections[selection].indexOf(feature.properties[selection]) === -1) {
+                    //doesnt meet this selection so set flag to false
+                    match = false;
+                  }
+                }
+              }
+
+              //if we still have a match, its a keeper
+              if (match) filterJson.features.push(feature)
+
+            });
+
+            
+            filterJson.totalFeatures = filterJson.features.length;
+            console.log('new json length',filterJson.totalFeatures);
+            this.addToSitesLayer(filterJson);
+
         })
     }
 
     public clearForm():void {
-        this.dropDownGroup.reset();
+
+        //this.dropDownGroup.reset();
+
+        //reset values to empty arrays if set
+        Object.keys(this.dropDownGroup.controls).forEach(key => {
+            if (this.dropDownGroup.get(key).value.length > 0) this.dropDownGroup.get(key).setValue([])
+        });
+
         this.sitesLayer.clearLayers();
         //set filtergeoJson back to original
         this._mapService.filterJson = this._mapService.geoJson;
@@ -333,7 +373,7 @@ export class AppComponent implements OnInit {
                 return L.circleMarker(latLng, geojsonMarkerOptions);
             },
             onEachFeature: (feature, layer) => {
-                layer.bindPopup("<b>Site Name: <b>" + feature.properties.name + "<br/><b>Location Name: <b>" + feature.properties.locName + "<br/><b>Organization Name: <b>" + feature.properties.orgName);
+                layer.bindPopup("<b>Site Name: </b>" + feature.properties.name + "<br/><b>Location Name: </b>" + feature.properties.locName + "<br/><b>Organization Name: </b>" + feature.properties.orgName + "<br/><b>Result Count: </b>" + feature.properties.resultCnt);
             }
             
         }).addTo(this.sitesLayer);
