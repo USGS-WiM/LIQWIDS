@@ -98,43 +98,6 @@ export class MapService {
         
     }
 
-    //set all sites and keep for resetting later
-    public setAllSites(geoJson: any){
-        this._allsiteView = geoJson;
-    }
-
-    //used to set filtered sites
-    public setFilteredSites(geoJson: any){
-        this._filteredSiteSubject.next(geoJson);
-    }
-
-    /* //use to reset original json
-    public get AllSiteView(): Observable<any> {
-        return this._allsiteView;
-    } */
-
-    public updateFilteredSites(which: string, val:any): any{
-       //TODO figure out how to clear if a new filter is selected i.e huc8 --> huc8  
-
-        this._filterData = L.geoJSON(this.filterJson, {
-            filter: function(feature) {
-                return feature.properties[which] == val;
-            }
-       })
-       this.filterJson = this._filterData.toGeoJSON();
-       return this.filterJson;
-
-       
-    }
-    
-/*     public filterChange(which: string, val: any): void {
-        console.log('which ', which, ' : ', val);
-        
-        this.updateFilteredSites(which, val);
-        
-    } */
-
-    
     public getData(): Observable<any> {
         return this._http.get<any>(this._geoJsonURL)
         .pipe(

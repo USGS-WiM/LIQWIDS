@@ -94,6 +94,9 @@ export class AppComponent implements OnInit {
 
         // Charts
         this._chart1Options = {
+            credits: {
+                enabled: false
+            },
             chart: {
                 type: 'line'
             },
@@ -127,6 +130,9 @@ export class AppComponent implements OnInit {
         }
 
         this._chart2Options = {
+            credits: {
+                enabled: false
+            },
             chart: {
                 type: 'scatter',
                 zoomType: 'xy'
@@ -157,7 +163,7 @@ export class AppComponent implements OnInit {
                 x: 100,
                 y: 70,
                 floating: true,
-                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+                //backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
                 borderWidth: 1
             },
             plotOptions: {
@@ -347,8 +353,6 @@ export class AppComponent implements OnInit {
     }
 
     public clearForm():void {
-
-        //this.dropDownGroup.reset();
 
         //reset values to empty arrays if set
         Object.keys(this.dropDownGroup.controls).forEach(key => {
