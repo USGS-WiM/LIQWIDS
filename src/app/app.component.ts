@@ -35,13 +35,11 @@ export class AppComponent implements OnInit {
     //private currentLayer: any;
 
     // HighCharts
-    public Highcharts: any;
-    public chart1: any;
-    public chart2: any;
     
-    public chartSeries1: Highcharts.SeriesLineDataOptions; //TODO  need to  figure out what type to use to create the series array.
-
-
+    public chart1: any;
+    private _chart1Options: any;
+    public chart2: any;
+    private _chart2Options: any;
 
     title = 'LIQWIDS';
 
@@ -50,22 +48,7 @@ export class AppComponent implements OnInit {
      }
 
     ngOnInit(){
-        this.chartSeries1 = [{
-            name: 'Site 1',
-            data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-        }, {
-            name: 'Site 2',
-            data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-        }, {
-            name: 'Site 3',
-            data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
-        }, {
-            name: 'Site 4',
-            data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
-        }, {
-            name: 'Site 5',
-            data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
-        }]
+        
 
         this.dropDownGroup = this.formBuilder.group({
             huc8: [[]],
@@ -109,12 +92,8 @@ export class AppComponent implements OnInit {
         //add the featureGroup w/out data.
         this.sitesLayer = L.featureGroup().addTo(this.map);
 
-
-
         // Charts
-        // Charts
-        // Charts
-        this.chart1 = this.Highcharts.chart('chart1', {
+        this._chart1Options = {
             chart: {
                 type: 'line'
             },
@@ -129,12 +108,25 @@ export class AppComponent implements OnInit {
                     text: ''
                 }
             },
-            series: this.chartSeries1
-        });
+            series: [{
+                name: 'Site 1',
+                data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
+            }, {
+                name: 'Site 2',
+                data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
+            }, {
+                name: 'Site 3',
+                data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
+            }, {
+                name: 'Site 4',
+                data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
+            }, {
+                name: 'Site 5',
+                data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
+            }]
+        }
 
-
-        
-        this.chart2 = this.Highcharts.chart('chart2', {
+        this._chart2Options = {
             chart: {
                 type: 'scatter',
                 zoomType: 'xy'
@@ -165,7 +157,7 @@ export class AppComponent implements OnInit {
                 x: 100,
                 y: 70,
                 floating: true,
-                backgroundColor: (this.Highcharts.theme && this.Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
                 borderWidth: 1
             },
             plotOptions: {
@@ -302,7 +294,10 @@ export class AppComponent implements OnInit {
                     [170.2, 62.3], [177.8, 82.7], [179.1, 79.1], [190.5, 98.2], [177.8, 84.1],
                     [180.3, 83.2], [180.3, 83.2]]
             }]
-        });
+        }
+        this.chart1 = new Highcharts.Chart('chart1',  this._chart1Options );
+        this.chart2 = new Highcharts.Chart('chart2', this._chart2Options);
+
     } //END ngOnInit()
     
     private onChanges(): void {
