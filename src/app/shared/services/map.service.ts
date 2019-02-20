@@ -1,26 +1,15 @@
 import { Injectable } from '@angular/core';
-//import {Http, Response, RequestOptions } from '@angular/http';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Map } from 'leaflet';
-import * as L from 'leaflet';
-
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Feature } from 'geojson';
 
-
-
-/* import { Ioptions } from "../interfaces/options.interface"; */
-export interface Options {
-    label: string;
-    option: string[];
-}
+import * as L from 'leaflet';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MapService {
-    private _allsiteView: any;
     public map: Map;
     public baseMaps: any;
     public mainLayers: any;
@@ -28,9 +17,6 @@ export class MapService {
     public filterJson: any;
     public filterOptions: any;
     private _geoJsonURL = "https://www.waterqualitydata.us/ogcservices/wfs/?request=GetFeature&service=wfs&version=2.0.0&typeNames=wqp_sites&SEARCHPARAMS=countrycode%3AUS%3Bstatecode%3AUS%3A36%3Bcountycode%3AUS%3A36%3A059%7CUS%3A36%3A103%3BcharacteristicName%3ANitrate&outputFormat=application%2Fjson";
-    private _filterData: any;
-    //subjects
-    private _filteredSiteSubject: BehaviorSubject<any> = <BehaviorSubject<any>> new BehaviorSubject(""); 
 
     constructor(private _http: HttpClient) { 
         
@@ -86,53 +72,12 @@ export class MapService {
         
     }
 
- /*    //set all sites and keep for resetting later
-    public setAllSites(geoJson: any){
-        this._allsiteView = geoJson;
-    }
-
-    //used to set filtered sites
-    public setFilteredSites(geoJson: any){
-        this._filteredSiteSubject.next(geoJson);
-    }
-
-    /* //use to reset original json
-    public get AllSiteView(): Observable<any> {
-        return this._allsiteView;
-    } */
-
-   /*  public updateFilteredSites(which: string, val:any): any{
-       //TODO figure out how to clear if a new filter is selected i.e huc8 --> huc8  
-
-        this._filterData = L.geoJSON(this.filterJson, {
-            filter: function(feature) {
-                return feature.properties[which] == val;
-            }
-       })
-       this.filterJson = this._filterData.toGeoJSON();
-       return this.filterJson;
-
-       
-    } */ 
-    
-/*     public filterChange(which: string, val: any): void {
-        console.log('which ', which, ' : ', val);
-        
-        this.updateFilteredSites(which, val);
-        
-    } */
-
-    
     public getData(): Observable<any> {
         return this._http.get<any>(this._geoJsonURL)
         .pipe(
             map(response => {
                 this.geoJson = response;
-                //this._allsiteView = this.geoJson;
                 this.filterJson = this.geoJson; // set filtered object to all on init.
-                //console.log("AllSiteView", this._allsiteView);
-                //add data to geoJson layer to render markers
-                //this.mainLayers.GEOJSON.addData(this.geoJson);
 
                 //get unique values for filterOptions
                 this.filterOptions = {};
@@ -151,8 +96,7 @@ export class MapService {
             }),
             catchError(this.handleError)
 
-        )
-        
+        )   
     }
 
     private handleError(err: HttpErrorResponse){
