@@ -6,8 +6,7 @@ import { DataviewComponent } from './dataview/dataview.component';
 
 @NgModule({
   declarations: [MapComponent, SidebarComponent, DataviewComponent],
-  imports: [
-    CommonModule
-  ]
+  imports: [ CommonModule ],
+  exports: [MapComponent, SidebarComponent, DataviewComponent]
 })
 export class MainviewModule { }

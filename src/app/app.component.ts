@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import * as L from 'leaflet';
 import * as Highcharts from 'highcharts';
 import { MapService } from './shared/services/map.service';
+import { DataviewComponent } from "./mainview/dataview/dataview.component";
 
 @Component({
   selector: 'app-root',
@@ -32,9 +33,10 @@ export class AppComponent implements OnInit {
 
     title = 'LIQWIDS';
 
-    constructor(private _mapService: MapService, private formBuilder: FormBuilder){
-        
-     }
+    constructor(private _mapService: MapService, private formBuilder: FormBuilder){   
+    }
+     
+    @ViewChild(DataviewComponent) dataviewComponent: DataviewComponent;
 
     ngOnInit(){
         
