@@ -6,7 +6,6 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 
 import * as L from 'leaflet';
 import * as Highcharts from 'highcharts';
-import { chartSeries } from './shared/services/map.service';
 import { MapService, Options } from './shared/services/map.service';
 import { Ioptions} from "./shared/interfaces/options.interface";
 import { NgOnChangesFeature } from '@angular/core/src/render3';
@@ -77,10 +76,6 @@ export class AppComponent implements OnInit {
             maxZoom: 19,
             renderer: L.canvas()
         });
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(this.map);
 
         //baseMaps
         this.baseLayers = this._mapService.baseMaps;
@@ -157,7 +152,6 @@ export class AppComponent implements OnInit {
                 x: 100,
                 y: 70,
                 floating: true,
-                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
                 borderWidth: 1
             },
             plotOptions: {

@@ -16,12 +16,6 @@ export interface Options {
     option: string[];
 }
 
-export interface chartSeries{
-    name: string;
-    data: number[];
-    
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -41,7 +35,7 @@ export class MapService {
     constructor(private _http: HttpClient) { 
         
         this.baseMaps = {// {s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png  
-            OpenStreetMap: L.tileLayer('https://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}', {
+            OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 20,
                 zIndex: 1,
                 attribution: 'Imagery from <a href="https://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -86,19 +80,13 @@ export class MapService {
                 transparent: true,
                 zIndex: 2,
                 //searchParams: "countycode:US:36:059|US:36:103"
-            }),
-            //add temporary blank layer, replaced later
-            GEOJSON: L.geoJSON(null, {
-                pointToLayer: function (feature, latLng) {
-                    return L.circleMarker(latLng);
-                }
             })
         };
 
         
     }
 
-    //set all sites and keep for resetting later
+ /*    //set all sites and keep for resetting later
     public setAllSites(geoJson: any){
         this._allsiteView = geoJson;
     }
@@ -113,7 +101,7 @@ export class MapService {
         return this._allsiteView;
     } */
 
-    public updateFilteredSites(which: string, val:any): any{
+   /*  public updateFilteredSites(which: string, val:any): any{
        //TODO figure out how to clear if a new filter is selected i.e huc8 --> huc8  
 
         this._filterData = L.geoJSON(this.filterJson, {
@@ -125,7 +113,7 @@ export class MapService {
        return this.filterJson;
 
        
-    }
+    } */ 
     
 /*     public filterChange(which: string, val: any): void {
         console.log('which ', which, ' : ', val);
