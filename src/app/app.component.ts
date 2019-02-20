@@ -65,10 +65,6 @@ export class AppComponent implements OnInit {
             renderer: L.canvas()
         });
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(this.map);
-
         //baseMaps
         this.baseLayers = this._mapService.baseMaps;
         this.chosenBaseLayer = "Topo";

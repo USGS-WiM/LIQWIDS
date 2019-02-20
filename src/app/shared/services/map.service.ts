@@ -6,12 +6,6 @@ import { map, catchError } from 'rxjs/operators';
 
 import * as L from 'leaflet';
 
-export interface chartSeries{
-    name: string;
-    data: number[];
-    
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -27,7 +21,7 @@ export class MapService {
     constructor(private _http: HttpClient) { 
         
         this.baseMaps = {// {s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png  
-            OpenStreetMap: L.tileLayer('https://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}', {
+            OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 20,
                 zIndex: 1,
                 attribution: 'Imagery from <a href="https://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -72,12 +66,6 @@ export class MapService {
                 transparent: true,
                 zIndex: 2,
                 //searchParams: "countycode:US:36:059|US:36:103"
-            }),
-            //add temporary blank layer, replaced later
-            GEOJSON: L.geoJSON(null, {
-                pointToLayer: function (feature, latLng) {
-                    return L.circleMarker(latLng);
-                }
             })
         };
 
