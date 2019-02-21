@@ -17,6 +17,9 @@ export class MapService {
     public filterJson: any;
     public filterOptions: any;
     private _geoJsonURL = "https://www.waterqualitydata.us/ogcservices/wfs/?request=GetFeature&service=wfs&version=2.0.0&typeNames=wqp_sites&SEARCHPARAMS=countrycode%3AUS%3Bstatecode%3AUS%3A36%3Bcountycode%3AUS%3A36%3A059%7CUS%3A36%3A103%3BcharacteristicName%3ANitrate&outputFormat=application%2Fjson";
+    public sitesLayer: L.FeatureGroup<any>;
+    public allData; 
+
 
     constructor(private _http: HttpClient) { 
         
@@ -64,7 +67,7 @@ export class MapService {
                 layers: "qw_portal_map:nwis_sites",
                 format: "image/png",
                 transparent: true,
-                zIndex: 2,
+                zIndex: 2
                 //searchParams: "countycode:US:36:059|US:36:103"
             })
         };
@@ -108,5 +111,24 @@ export class MapService {
             console.error("Server returned code ${err.status, body ${err.error}");
         }
         return throwError("HTTPClient error.");
+    }
+
+    public addToSitesLayer(geoJson: any){
+        let geojsonMarkerOptions = {
+            radius: 5,
+            fillColor: '#9b0004',
+            weight: 0,
+            opacity: 1,
+            fillOpacity: 0.5
+        };
+        L.geoJSON(geoJson, {
+            pointToLayer:function(feature, latLng){
+                return L.circleMarker(latLng, geojsonMarkerOptions);
+            },
+            onEachFeature: (feature, layer) => {
+                layer.bindPopup("<b>Site Name: </b>" + feature.properties.name + "<br/><b>Location Name: </b>" + feature.properties.locName + "<br/><b>Organization Name: </b>" + feature.properties.orgName + "<br/><b>Result Count: </b>" + feature.properties.resultCnt);
+            }
+            
+        }).addTo(this.sitesLayer);
     }
 }

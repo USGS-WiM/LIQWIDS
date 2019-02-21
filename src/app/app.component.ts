@@ -13,7 +13,7 @@ import { DataviewComponent } from "./mainview/dataview/dataview.component";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-    public map: any;
+/*     public map: any;
     public WQP: any;
     public NWIS: any;
     public baseLayers: any;
@@ -23,18 +23,18 @@ export class AppComponent implements OnInit {
     public filterSearch: Array<string>;
     public allData; 
     public dropDownGroup: FormGroup;
-    public sitesLayer: L.FeatureGroup<any>;
+    //public sitesLayer: L.FeatureGroup<any>; */
 
     title = 'LIQWIDS';
 
-    constructor(private _mapService: MapService, private formBuilder: FormBuilder){   
+    constructor(){   
     }
      
-    @ViewChild(DataviewComponent) dataviewComponent: DataviewComponent;
+    /* @ViewChild(DataviewComponent) dataviewComponent: DataviewComponent; */
 
     ngOnInit(){
-        
-        this.dropDownGroup = this.formBuilder.group({
+        //moved to sidebar
+        /* this.dropDownGroup = this.formBuilder.group({
             huc8: [[]],
             location: [[]],
             name: [[]],
@@ -45,23 +45,23 @@ export class AppComponent implements OnInit {
             type: [[]]
         });
 
-        this.onChanges();
+        this.onChanges(); */
 
-        this._mapService.getData().subscribe(response => {
+        /* this._mapService.getData().subscribe(response => {
             this.allData = response;
             //add all geojson sites after they've loaded.
             this.addToSitesLayer(this._mapService.geoJson); 
-        });
+        }); */
 
-        this.map = L.map("map", {
+        /* this.map = L.map("map", {
             center: L.latLng(40.9, -73.0),
             zoom: 9,
             minZoom: 4,
             maxZoom: 19,
             renderer: L.canvas()
-        });
+        }); */
 
-        //baseMaps
+       /*  //baseMaps
         this.baseLayers = this._mapService.baseMaps;
         this.chosenBaseLayer = "Topo";
         this.map.addLayer(this._mapService.baseMaps[this.chosenBaseLayer]);
@@ -69,12 +69,13 @@ export class AppComponent implements OnInit {
         //this.map.addLayer(this._mapService.mainLayers.WQP);
         this.map.addLayer(this._mapService.mainLayers.NWIS);
         //add the featureGroup w/out data.
-        this.sitesLayer = L.featureGroup().addTo(this.map);
+        this.sitesLayer = L.featureGroup().addTo(this.map); */
 
        
     } //END ngOnInit()
     
-    private onChanges(): void {
+    //in sidebar
+    /* private onChanges(): void {
 
         let filterJson;
         
@@ -117,9 +118,9 @@ export class AppComponent implements OnInit {
             this.addToSitesLayer(filterJson);
 
         })
-    }
+    } */
 
-    public clearForm():void {
+   /*  public clearForm():void {
 
         //reset values to empty arrays if set
         Object.keys(this.dropDownGroup.controls).forEach(key => {
@@ -130,9 +131,9 @@ export class AppComponent implements OnInit {
         //set filtergeoJson back to original
         this._mapService.filterJson = this._mapService.geoJson;
         this.addToSitesLayer(this._mapService.filterJson);
-    }
+    } */
 
-    public addToSitesLayer(geoJson: any){
+    /* public addToSitesLayer(geoJson: any){
         let geojsonMarkerOptions = {
             radius: 5,
             fillColor: '#9b0004',
@@ -149,9 +150,9 @@ export class AppComponent implements OnInit {
             }
             
         }).addTo(this.sitesLayer);
-    }
+    } */
   
-    //called from basemap button click
+    /* //called from basemap button click
     public toggleLayer(newVal: string){
         this.chosenBaseLayer = newVal;
         this.map.removeLayer(this._mapService.baseMaps["OpenStreetMap"]);
@@ -161,10 +162,10 @@ export class AppComponent implements OnInit {
         this.map.removeLayer(this._mapService.baseMaps["Gray"]); 
 
         this.map.addLayer(this._mapService.baseMaps[newVal]);
-    }
+    } */
 
-    showBasemaps = true;
+    /* showBasemaps = true;
     showFilters = true;
-    expandSidebar = false;
+    expandSidebar = false; */
 
 }

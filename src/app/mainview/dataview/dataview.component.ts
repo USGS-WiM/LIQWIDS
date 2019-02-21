@@ -226,6 +226,7 @@ export class DataviewComponent implements OnInit {
     this.chart1 = new Highcharts.Chart('chart1',  this._chart1Options );
     this.chart2 = new Highcharts.Chart('chart2', this._chart2Options);
 
-  }
+  } //End NgOnInit
 
-}
+}// END class
+

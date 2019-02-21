@@ -1,3 +1,139 @@
-<p>
-  sidebar works!
-</p>
+<div id="sidebar" [ngClass]="{ expanded: expandSidebar }">
+
+        <!-- 
+          Sidebar Basemaps
+          Sidebar Basemaps
+          Sidebar Basemaps
+         -->
+        <div class="sidebar-header" (click)="showBasemaps = !showBasemaps" [ngClass]="{ expanded: showBasemaps }">
+          <i class="far fa-map"></i>
+          <b>Basemaps</b>
+        </div>
+        <!-- Basemaps content -->
+        <div class="sidebar-content" [ngClass]="{ expanded: showBasemaps }">
+          <div id="sidebarBasemaps">
+            <div
+              class="basemap"
+              id="basemap1"
+              (click)="toggleLayer('OpenStreetMap')"
+              [ngClass]="{ active: chosenBaseLayer == 'OpenStreetMap' }"
+            >
+              Streets
+            </div>
+            <div
+              class="basemap"
+              id="basemap2"
+              (click)="toggleLayer('Topo')"
+              [ngClass]="{ active: chosenBaseLayer == 'Topo' }"
+            >
+              Topographic
+            </div>
+            <div
+              class="basemap"
+              id="basemap3"
+              (click)="toggleLayer('CartoDB')"
+              [ngClass]="{ active: chosenBaseLayer == 'CartoDB' }"
+            >
+              CartoDB
+            </div>
+            <div
+              class="basemap"
+              id="basemap4"
+              (click)="toggleLayer('Terrain')"
+              [ngClass]="{ active: chosenBaseLayer == 'Terrain' }"
+            >
+              Terrain
+            </div>
+            <div
+              class="basemap"
+              id="basemap5"
+              (click)="toggleLayer('Satellite')"
+              [ngClass]="{ active: chosenBaseLayer == 'Satellite' }"
+            >
+              Satellite
+            </div>
+            <div
+              class="basemap"
+              id="basemap5"
+              (click)="toggleLayer('Gray')"
+              [ngClass]="{ active: chosenBaseLayer == 'Gray' }"
+            >
+              Gray
+            </div>
+          </div>
+        </div>
+  
+        <!-- 
+          Sidebar Filters
+          Sidebar Filters
+          Sidebar Filters
+         -->
+        <div class="sidebar-header" (click)="showFilters = !showFilters" [ngClass]="{ expanded: showFilters }">
+          <i class="far fa-filter"></i>
+          <b>Filters</b>
+        </div>
+        <!-- 
+          Filters Content
+         -->
+         
+        <div class="sidebar-content" [ngClass]="{ expanded: showFilters }">
+          <form *ngIf="allData" [formGroup]="dropDownGroup" id="sidebarFilters">
+  
+            <!-- Huc8 -->
+            <label for="huc8">Huc8</label>
+            <select class="form-control" formControlName="huc8" multiple>
+                <option *ngFor="let huc of allData.huc8" [value]="huc">{{huc}}</option>
+            </select>
+              
+  
+            <!-- <label for="location">Location Name</label>
+              <select class="form-control" formControlName="location">
+                  <option *ngFor="let locName of allData.locName" [value]="locName">{{locName}}</option>
+              </select>
+              <br> -->
+              <!-- <label for="name">Site Name</label>
+              <select class="form-control" formControlName="name">
+                  <option *ngFor="let name of allData.name" [value]="name">{{name}}</option>
+              </select>
+              <br> -->
+  
+            <!-- Org IF -->
+            <label for="orgId">Organization Id</label>
+            <select class="form-control" formControlName="orgId" multiple>
+                <option *ngFor="let orgId of allData.orgId" [value]="orgId">{{orgId}}</option>
+            </select>
+  
+            <!-- Org Name -->
+            <label for="orgName">Organization Name</label>
+            <select class="form-control" formControlName="orgName" multiple>
+                <option *ngFor="let orgName of allData.orgName" [value]="orgName">{{orgName}}</option>
+            </select>
+  
+            <!-- Data Provider -->
+            <label for="provider">Data Provider</label>
+            <select class="form-control" formControlName="provider" multiple>
+                <option *ngFor="let provider of allData.provider" [value]="provider">{{provider}}</option>
+            </select>
+  
+            <label for="searchType">Keyword</label>
+            <select class="form-control" formControlName="searchType" multiple>
+                <option *ngFor="let sType of allData.searchType" [value]="sType">{{sType}}</option>
+            </select>
+  
+            <label for="type">Site Type</label>
+            <select class="form-control" formControlName="type" multiple>
+                <option *ngFor="let type of allData.type" [value]="type">{{type}}</option>
+            </select>
+                
+          </form>
+  
+          <button class="clearForm" title="Clear All Selections" (click)="clearForm()">Clear Selections </button>
+        </div>
+        
+      
+      
+      </div>
+      <!-- End Sidebar -->
+  
+      <!-- Sidebar lightbox for mobile -->
+      <div id="sidebarLightbox" [ngClass]="{ visible: expandSidebar }" (click)="expandSidebar = false"></div>
