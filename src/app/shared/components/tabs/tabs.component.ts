@@ -28,10 +28,9 @@ export class TabsComponent implements AfterContentInit {
       }
       //set initial tab to other than first
       /* if (activeTabs.length === 0){
-          this.selectTab(this.tabs.toArray().forEach(function (tab, index) {
-            
-          }));
-      } */
+          this.selectTab(this.tabs.filter((tab) => tab.title == "test2"));
+
+        } */
   }
 
   selectTab(tab: any){
