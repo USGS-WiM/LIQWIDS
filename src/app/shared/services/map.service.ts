@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Map } from 'leaflet';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { LoaderService } from '../../shared/services/loader.service';
 
 import * as L from 'leaflet';
 
@@ -32,7 +33,7 @@ export class MapService {
     public sitesLayer: L.FeatureGroup<any>;
     public nwisLayer: L.FeatureGroup<any>;
 
-    constructor(private _http: HttpClient) { 
+    constructor(private _http: HttpClient, private _loaderService: LoaderService) { 
 
         this.chosenBaseLayer = "Topo";
         
@@ -89,7 +90,7 @@ export class MapService {
     }
 
     public getData(): Observable<any> {
-
+        this._loaderService.showFullPageLoad();
         return this._http.get<any>(this.geoJsonURL, {params: this.URLparams})
         .pipe(
             map(response => {
@@ -108,6 +109,7 @@ export class MapService {
                         }
                     }
                 })
+                this._loaderService.hideFullPageLoad();
                 return this.filterOptions;
             }),
             catchError(this.handleError)
@@ -116,6 +118,7 @@ export class MapService {
     }
 
     private handleError(err: HttpErrorResponse){
+        this._loaderService.hideFullPageLoad();
         if(err.error instanceof ErrorEvent) {
             //client side
             console.error("An error occurred:", err.error.message);
