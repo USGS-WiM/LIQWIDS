@@ -1,14 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-/* import { MapService } from '../shared/services/map.service';
-import { LiqwidsService } from '../shared/services/liqwids.service'; */
 import { fromEventPattern } from 'rxjs';
+import { TabsComponent } from './components/tabs/tabs.component';
+import { TabComponent } from './components/tab/tab.component';
+import { LoaderComponent } from './components/loader/loader.component';
+import { MapService } from './services/map.service';
+import { LoaderService } from './services/loader.service';
 
 @NgModule({
-  declarations: [],
-
-  imports: [
-    CommonModule
-  ]
+  declarations: [TabsComponent, TabComponent, LoaderComponent],
+  imports: [ CommonModule ],
+  exports: [TabsComponent, TabComponent, LoaderComponent],
+  providers: [MapService, LoaderService]
 })
 export class SharedModule { }
