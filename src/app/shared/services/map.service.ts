@@ -17,10 +17,19 @@ export class MapService {
     public geoJson:any;
     public filterJson: any;
     public filterOptions: any;
-    private _geoJsonURL = "https://www.waterqualitydata.us/ogcservices/wfs/?request=GetFeature&service=wfs&version=2.0.0&typeNames=wqp_sites&SEARCHPARAMS=countrycode%3AUS%3Bstatecode%3AUS%3A36%3Bcountycode%3AUS%3A36%3A059%7CUS%3A36%3A103%3BcharacteristicName%3ANitrate&outputFormat=application%2Fjson";
-    public sitesLayer: L.FeatureGroup<any>;
-    public allData; 
 
+    public geoJsonURL = 'https://www.waterqualitydata.us/ogcservices/wfs/';
+
+    public URLparams = {
+        request: 'GetFeature',
+        service: 'wfs',
+        version: '2.0.0',
+        typeNames: 'wqp_sites',
+        SEARCHPARAMS: 'countrycode:US;statecode:US:36;countycode:US:36:059|US:36:103;characteristicName:Nitrate',
+        outputFormat: 'application/json'
+    };
+
+    public sitesLayer: L.FeatureGroup<any>;
 
     constructor(private _http: HttpClient) { 
 
@@ -79,7 +88,8 @@ export class MapService {
     }
 
     public getData(): Observable<any> {
-        return this._http.get<any>(this._geoJsonURL)
+
+        return this._http.get<any>(this.geoJsonURL, {params: this.URLparams})
         .pipe(
             map(response => {
                 this.geoJson = response;
@@ -97,7 +107,6 @@ export class MapService {
                         }
                     }
                 })
-                //console.log('filterOptions', this.filterOptions);
                 return this.filterOptions;
             }),
             catchError(this.handleError)

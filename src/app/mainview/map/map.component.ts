@@ -11,15 +11,9 @@ import * as L from 'leaflet';
 export class MapComponent implements OnInit {
   //public WQP: any;
    
-
   constructor(private _mapService: MapService) { }
 
   ngOnInit() {
-    this._mapService.getData().subscribe(response => {
-        //add all geojson sites after they've loaded.
-        this._mapService.addToSitesLayer(this._mapService.geoJson); 
-    });
-
     //init map
     this._mapService.map = L.map("map", {
         center: L.latLng(40.9, -73.0),

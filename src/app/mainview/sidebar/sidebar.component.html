@@ -1,14 +1,11 @@
 <div id="sidebar" [ngClass]="{ expanded: expandSidebar }">
 
-        <!-- 
-          Sidebar Basemaps
-          Sidebar Basemaps
-          Sidebar Basemaps
-         -->
+        <!--  Sidebar Basemaps  -->
         <div class="sidebar-header" (click)="showBasemaps = !showBasemaps" [ngClass]="{ expanded: showBasemaps }">
           <i class="far fa-map"></i>
           <b>Basemaps</b>
         </div>
+
         <!-- Basemaps content -->
         <div class="sidebar-content" [ngClass]="{ expanded: showBasemaps }">
           <div id="sidebarBasemaps">
@@ -62,67 +59,84 @@
             </div>
           </div>
         </div>
-  
-        <!-- 
-          Sidebar Filters
-          Sidebar Filters
-          Sidebar Filters
-         -->
-        <div class="sidebar-header" (click)="showFilters = !showFilters" [ngClass]="{ expanded: showFilters }">
+
+        <!--  Sidebar Parameter Filters  -->
+
+        <div class="sidebar-header" (click)="showParameterFilters = !showParameterFilters" [ngClass]="{ expanded: showParameterFilters }">
           <i class="far fa-filter"></i>
-          <b>Filters</b>
+          <b>Parameter Filters</b>
         </div>
-        <!-- 
-          Filters Content
-         -->
+        <!-- Filters Parameter Content -->
+          
+        <div class="sidebar-content" [ngClass]="{ expanded: showParameterFilters }">
+          <form *ngIf="siteFilterData" [formGroup]="parameterDropDownGroup" id="sidebarParameterFilters">
+  
+            <!-- characteristic -->
+            <label for="characteristic">Characteristic</label>
+            <select class="form-control" formControlName="characteristic" multiple>
+                <option *ngFor="let characteristic of parameterFilterData.characteristics" [value]="characteristic">{{characteristic}}</option>
+            </select>
+            
+          </form>
+  
+          <!-- <button class="clearForm" title="reQuery" (click)="reQuery()">Re-Query </button> -->
+        </div>
+  
+        <!--  Sidebar Site Filters  -->
+
+        <div class="sidebar-header" (click)="showSiteFilters = !showSiteFilters" [ngClass]="{ expanded: showSiteFilters }">
+          <i class="far fa-filter"></i>
+          <b>Site Filters</b>
+        </div>
+        <!-- Filters Site Content -->
          
-        <div class="sidebar-content" [ngClass]="{ expanded: showFilters }">
-          <form *ngIf="allData" [formGroup]="dropDownGroup" id="sidebarFilters">
+        <div class="sidebar-content" [ngClass]="{ expanded: showSiteFilters }">
+          <form *ngIf="siteFilterData" [formGroup]="siteDropDownGroup" id="sidebarSiteFilters">
   
             <!-- Huc8 -->
             <label for="huc8">Huc8</label>
             <select class="form-control" formControlName="huc8" multiple>
-                <option *ngFor="let huc of allData.huc8" [value]="huc">{{huc}}</option>
+                <option *ngFor="let huc of siteFilterData.huc8" [value]="huc">{{huc}}</option>
             </select>
               
   
             <!-- <label for="location">Location Name</label>
               <select class="form-control" formControlName="location">
-                  <option *ngFor="let locName of allData.locName" [value]="locName">{{locName}}</option>
+                  <option *ngFor="let locName of siteFilterData.locName" [value]="locName">{{locName}}</option>
               </select>
               <br> -->
               <!-- <label for="name">Site Name</label>
               <select class="form-control" formControlName="name">
-                  <option *ngFor="let name of allData.name" [value]="name">{{name}}</option>
+                  <option *ngFor="let name of siteFilterData.name" [value]="name">{{name}}</option>
               </select>
               <br> -->
   
             <!-- Org IF -->
             <label for="orgId">Organization Id</label>
             <select class="form-control" formControlName="orgId" multiple>
-                <option *ngFor="let orgId of allData.orgId" [value]="orgId">{{orgId}}</option>
+                <option *ngFor="let orgId of siteFilterData.orgId" [value]="orgId">{{orgId}}</option>
             </select>
   
             <!-- Org Name -->
             <label for="orgName">Organization Name</label>
             <select class="form-control" formControlName="orgName" multiple>
-                <option *ngFor="let orgName of allData.orgName" [value]="orgName">{{orgName}}</option>
+                <option *ngFor="let orgName of siteFilterData.orgName" [value]="orgName">{{orgName}}</option>
             </select>
   
             <!-- Data Provider -->
             <label for="provider">Data Provider</label>
             <select class="form-control" formControlName="provider" multiple>
-                <option *ngFor="let provider of allData.provider" [value]="provider">{{provider}}</option>
+                <option *ngFor="let provider of siteFilterData.provider" [value]="provider">{{provider}}</option>
             </select>
   
             <label for="searchType">Keyword</label>
             <select class="form-control" formControlName="searchType" multiple>
-                <option *ngFor="let sType of allData.searchType" [value]="sType">{{sType}}</option>
+                <option *ngFor="let sType of siteFilterData.searchType" [value]="sType">{{sType}}</option>
             </select>
   
             <label for="type">Site Type</label>
             <select class="form-control" formControlName="type" multiple>
-                <option *ngFor="let type of allData.type" [value]="type">{{type}}</option>
+                <option *ngFor="let type of siteFilterData.type" [value]="type">{{type}}</option>
             </select>
                 
           </form>
