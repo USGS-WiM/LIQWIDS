@@ -30,6 +30,7 @@ export class MapService {
     };
 
     public sitesLayer: L.FeatureGroup<any>;
+    public nwisLayer: L.FeatureGroup<any>;
 
     constructor(private _http: HttpClient) { 
 
@@ -142,5 +143,52 @@ export class MapService {
             }
             
         }).addTo(this.sitesLayer);
+    }
+
+    //use extent to get NWIS rt gages based on bounding box, display on map
+    public queryNWISrtGages(bbox:string): Observable<any> {
+        var NWISmarkers = {};
+
+        //NWIS query options from http://waterservices.usgs.gov/rest/IV-Test-Tool.html
+        var parameterCodeList = '00065,62619,62620,63160,72214';
+        var siteTypeList = 'OC,OC-CO,ES,LK,ST,ST-CA,ST-DCH,ST-TS';
+        var siteStatus = 'active';
+        var url = 'https://waterservices.usgs.gov/nwis/site/?format=mapper&bBox=' + bbox + '&parameterCd=' + parameterCodeList + '&siteType=' + siteTypeList + '&siteStatus=' + siteStatus;
+
+
+        console.log('here',url)
+
+        return this._http.get(url,{responseType: 'text'})
+        .pipe(
+            map(response => {
+                return response;
+            })
+        );
+
+        
+        // $.ajax({
+        //     url: url,
+        //     dataType: "xml",
+        //     success: function(xml){
+        //         $(xml).find('site').each(function(){
+
+        //             var siteID = $(this).attr('sno');
+        //             var siteName = $(this).attr('sna');
+        //             var lat = $(this).attr('lat');
+        //             var lng = $(this).attr('lng');
+        //             NWISmarkers[siteID] = L.marker([lat, lng], {icon: nwisMarkerIcon});
+        //             NWISmarkers[siteID].data = {siteName:siteName,siteCode:siteID};
+        //             NWISmarkers[siteID].data.parameters = {};
+
+        //             //add point to featureGroup
+        //             USGSrtGages.addLayer(NWISmarkers[siteID]);
+
+        //             $( "#nwisLoadingAlert" ).fadeOut(2000);
+        //         });
+        //     },
+        //     error : function(xml) {
+        //         $( "#nwisLoadingAlert" ).fadeOut(2000);
+        //     }
+        // });
     }
 }
