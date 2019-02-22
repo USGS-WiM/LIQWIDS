@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
 
+import {TabsComponent} from "../../shared/components/tabs/tabs.component";
+
 @Component({
   selector: 'app-dataview',
   templateUrl: './dataview.component.html',

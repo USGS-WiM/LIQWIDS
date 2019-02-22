@@ -1,0 +1,21 @@
+.tab-close {
+    color: gray;
+    text-align: right;
+    cursor: pointer;
+  }
+
+  .tab-ul {
+      list-style: none;
+      padding: 0 0 0 10px;
+      min-width: 300px;
+  }
+
+  .tab-ul > li {
+      float:left;
+      padding: 0 0 0 10px;
+  }
+
+  .tab-ul li.active{
+      background-color: #ccc;
+  }
+
