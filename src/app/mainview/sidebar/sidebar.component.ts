@@ -14,6 +14,7 @@ export class SidebarComponent implements OnInit {
   public siteFilterData;
   public parameterFilterData;
   public defaultParameterFilter;
+  public geoJSONsiteCount;
 
   constructor(private _mapService: MapService, private formBuilder: FormBuilder) { }
 
@@ -49,6 +50,7 @@ export class SidebarComponent implements OnInit {
       
       this.siteFilterData = response;
       this._mapService.addToSitesLayer(this._mapService.geoJson);
+      this.geoJSONsiteCount = this._mapService.geoJson.totalFeatures;
     });
 
     //set up filter listeners
@@ -59,7 +61,7 @@ export class SidebarComponent implements OnInit {
 
     //requery on wfs data on any parameter filter dropdown change
     this.parameterDropDownGroup.valueChanges.subscribe(selections => {
-      this.reQuery()
+      this.reQuery();
     });
 
     //on site dropdown change just re-filter geojson
@@ -81,7 +83,7 @@ export class SidebarComponent implements OnInit {
       //clearForm function clears layer and readds geojson
       this.clearForm();
     });
-    console.log('requery', this._mapService.URLparams.SEARCHPARAMS);
+    //console.log('requery', this._mapService.URLparams.SEARCHPARAMS);
   }
 
   public filterGeoJSON(selections: any): void {
@@ -122,6 +124,7 @@ export class SidebarComponent implements OnInit {
     });
 
     filterJson.totalFeatures = filterJson.features.length;
+    this.geoJSONsiteCount = filterJson.totalFeatures;
     //console.log('new json length',filterJson.totalFeatures);
     this._mapService.addToSitesLayer(filterJson);
 
@@ -135,8 +138,10 @@ export class SidebarComponent implements OnInit {
     });
 
     this._mapService.sitesLayer.clearLayers();
+
     //set filtergeoJson back to original
     this._mapService.filterJson = this._mapService.geoJson;
+    this.geoJSONsiteCount = this._mapService.geoJson.totalFeatures;
     this._mapService.addToSitesLayer(this._mapService.filterJson);
   }
 
