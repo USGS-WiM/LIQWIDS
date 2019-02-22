@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { MapService } from '../../shared/services/map.service';
+import { MapService } from 'src/app/shared/services/map.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -91,8 +91,19 @@ export class SidebarComponent implements OnInit {
         this._mapService.addToSitesLayer(this._mapService.filterJson);
     }
     
-    showBasemaps = true;
-    showFilters = true;
-    expandSidebar = false;
+    //called from basemap button click
+    public toggleLayer(newVal: string){
+      this._mapService.chosenBaseLayer = newVal;
+      this._mapService.map.removeLayer(this._mapService.baseMaps["OpenStreetMap"]);
+      this._mapService.map.removeLayer(this._mapService.baseMaps["Topo"]);
+      this._mapService.map.removeLayer(this._mapService.baseMaps["Terrain"]);
+      this._mapService.map.removeLayer(this._mapService.baseMaps["Satellite"]);
+      this._mapService.map.removeLayer(this._mapService.baseMaps["Gray"]); 
+      this._mapService.map.addLayer(this._mapService.baseMaps[newVal]);
+  }
+
+  showBasemaps = true;
+  showFilters = true;
+  expandSidebar = false;
 
 }

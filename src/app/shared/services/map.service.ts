@@ -11,6 +11,7 @@ import * as L from 'leaflet';
 })
 export class MapService {
     public map: Map;
+    public chosenBaseLayer: string;
     public baseMaps: any;
     public mainLayers: any;
     public geoJson:any;
@@ -22,6 +23,8 @@ export class MapService {
 
 
     constructor(private _http: HttpClient) { 
+
+        this.chosenBaseLayer = "Topo";
         
         this.baseMaps = {// {s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png  
             OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
