@@ -73,6 +73,7 @@ export class SidebarComponent implements OnInit {
 
   public reQuery(): void {
 
+    //pull values from form
     let characteristic = this.parameterDropDownGroup.get('characteristic').value.join('|')
 
     //update URL params
