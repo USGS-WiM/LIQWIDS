@@ -80,10 +80,12 @@ export class SidebarComponent implements OnInit {
 
     //issue new request with updated URL params
     this._mapService.getData().subscribe(response => {
+      //repopulate site filter dropdowns
+      this.siteFilterData = response;
+
       //clearForm function clears layer and readds geojson
       this.clearForm();
     });
-    //console.log('requery', this._mapService.URLparams.SEARCHPARAMS);
   }
 
   public filterGeoJSON(selections: any): void {
