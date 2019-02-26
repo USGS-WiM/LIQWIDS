@@ -52,13 +52,13 @@
     Main body wrapper 
   -->
   <div id="body">
-      <loading-screen></loading-screen>
+    <loading-screen></loading-screen>
     <!-- 
       Sidebar
       Sidebar
      -->
+     <app-sidebar></app-sidebar>
     
-    <app-sidebar></app-sidebar>
     
     
 
@@ -97,27 +97,68 @@
     </div>
 
     <div class="modal-content">
-      <h6>What is LIQWIDS?</h6>
-      <p>
-        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque
-        corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in
-        culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et
-        expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id
-        quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem
-        quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et
-        molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus
-        maiores alias consequatur aut perferendis doloribus asperiores repellat?
-      </p>
-      <p>
-        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque
-        corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in
-        culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et
-        expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id
-        quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem
-        quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et
-        molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus
-        maiores alias consequatur aut perferendis doloribus asperiores repellat?
-      </p>
+      
+
+      <tabs>
+        <tab [tabTitle]="'About LIQWIDS'">
+            <h6>What is LIQWIDS?</h6>
+
+            <p>
+                At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque
+                corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in
+                culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et
+                expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id
+                quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem
+                quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et
+                molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus
+                maiores alias consequatur aut perferendis doloribus asperiores repellat?
+              </p>
+        </tab>
+        <tab [tabTitle]="'Dashboard'">
+            <h6>Summary of Data Submission</h6>
+            <div id="dashboardTable">
+                <div class="row header">
+                    <div>Date</div>
+                    <div>Site</div>
+                    <div>State</div>
+                    <div>Color</div>
+                    <div>Distance</div>
+                    <div>Size</div>
+                    <div>Status</div>
+                    <div>Amount</div>
+                    <div>Notes</div>
+                </div>
+            
+                <div class="row">
+                    <div>10/11/18</div>
+                    <div>12512</div>
+                    <div>NY</div>
+                    <div>Red</div>
+                    <div>10mi</div>
+                    <div>8</div>
+                    <div>Off</div>
+                    <div>9</div>
+                    <div></div>
+                </div>
+            </div>
+        </tab>
+        <tab [tabTitle]="'FAQ'">
+                <h6>Frequently Asked Questions</h6>
+    
+                <p>
+                    At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque
+                    corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in
+                    culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et
+                    expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id
+                    quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem
+                    quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et
+                    molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus
+                    maiores alias consequatur aut perferendis doloribus asperiores repellat?
+                  </p>
+            </tab>
+    </tabs>
+      
+      
     </div>
 
     <div class="modal-actions right">
