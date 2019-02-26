@@ -137,7 +137,7 @@ export class MapService {
             opacity: 1,
             fillOpacity: 0.5
         };
-        L.geoJSON(geoJson, {
+        let layer = L.geoJSON(geoJson, {
             pointToLayer:function(feature, latLng){
                 return L.circleMarker(latLng, geojsonMarkerOptions);
             },
@@ -146,6 +146,9 @@ export class MapService {
             }
             
         }).addTo(this.sitesLayer);
+
+        //zoom
+        this.map.fitBounds(this.sitesLayer.getBounds());
     }
 
     //use extent to get NWIS rt gages based on bounding box, display on map
