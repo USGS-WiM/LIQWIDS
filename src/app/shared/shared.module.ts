@@ -6,11 +6,21 @@ import { TabComponent } from './components/tab/tab.component';
 import { LoaderComponent } from './components/loader/loader.component';
 import { MapService } from './services/map.service';
 import { LoaderService } from './services/loader.service';
+import { SummaryComponent } from './components/summary/summary.component';
+import { SummariesService } from './services/summaries.service';
+
+//Temporarily use NG Material
+import { MatInputModule } from '@angular/material';
+import { MatTableModule} from '@angular/material/table';
+import { MatSortModule } from '@angular/material';
+import { MatFormFieldModule } from '@angular/material';
+import { MatExpansionModule} from '@angular/material/expansion';
+import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
-  declarations: [TabsComponent, TabComponent, LoaderComponent],
-  imports: [ CommonModule ],
-  exports: [TabsComponent, TabComponent, LoaderComponent],
-  providers: [MapService, LoaderService]
+  declarations: [TabsComponent, TabComponent, LoaderComponent, SummaryComponent],
+  imports: [ CommonModule, MatInputModule, MatTableModule, MatSortModule, MatFormFieldModule, MatExpansionModule, BrowserAnimationsModule ],
+  exports: [TabsComponent, TabComponent, LoaderComponent, SummaryComponent],
+  providers: [MapService, LoaderService, SummariesService]
 })
 export class SharedModule { }

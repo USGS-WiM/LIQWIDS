@@ -1,0 +1,30 @@
+<div class="title">
+    <p id="count">Count: {{summaries_count}}</p>
+</div>
+<mat-form-field class="filter">
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+</mat-form-field>
+<div class="example-container mat-elevation-z8">
+    <mat-table #summariesTable="matSort" [dataSource]="dataSource" matSort>
+        <!--org_name-->
+        <ng-container matColumnDef="org_name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Organization Name</mat-header-cell>
+        <mat-cell *matCellDef="let sum">{{sum.org_name}}</mat-cell>
+        </ng-container>
+
+        <!--last_submit-->
+        <ng-container matColumnDef="last_submit">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Last Data Submission Date</mat-header-cell>
+        <mat-cell *matCellDef="let sum">{{sum.last_submit | date: 'MM-dd-yyyy'}}</mat-cell>
+        </ng-container>
+
+        <!--num_samples-->
+        <ng-container matColumnDef="num_samples">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Number of Samples Submitted</mat-header-cell>
+        <mat-cell *matCellDef="let sum">{{sum.num_samples}}</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let sum; columns: displayedColumns"></mat-row>
+    </mat-table>
+</div>

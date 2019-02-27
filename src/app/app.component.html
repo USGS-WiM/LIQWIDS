@@ -108,13 +108,15 @@
                 There are more than 60 organizations and agencies collecting water-quality data on Long Island. As a result, those interested 
                 in analyzing data may be unaware of what data exist and how those data can be obtained without a Freedom of 
                 Information Law request. This web tool is intended to provide a unified view of the water-quality data available, in support of 
-                ongoing efforts such as LINAP, LICAP, and other State and local environmental and human health initiatives.
+                ongoing efforts such as LINAP, LICAP, and other State and local environmental and human health initiatives. This product was developed by USGS 
+                in partnership with New York State Department of Environmental Conservation
               </p>
         </tab>
         <tab [tabTitle]="'Dashboard'">
             <br/>
             <h6>Summary of Data Submission</h6>
-            <div id="dashboardTable">
+            <app-summary></app-summary>
+            <!-- <div id="dashboardTable">
                 <div class="row header">
                     <div>Date</div>
                     <div>Site</div>
@@ -138,7 +140,7 @@
                     <div>9</div>
                     <div></div>
                 </div>
-            </div>
+            </div> -->
         </tab>
         <tab [tabTitle]="'Disclaimers'">
                 <br/>
