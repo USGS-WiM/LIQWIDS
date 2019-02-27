@@ -275,3 +275,28 @@
     }
 
 }
+
+
+// About Modal
+#aboutModal{
+
+    .modal-content{
+        width: 620px;
+        overflow: hidden;
+        display: flex;
+
+        tabs{
+            display: flex;
+            flex-direction: column;
+        }
+
+        tab{
+            flex-grow: 3;
+            overflow: auto;
+        }
+
+        .pane{
+            padding: 0;
+        }
+    }
+}
