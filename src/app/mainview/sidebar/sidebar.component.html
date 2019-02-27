@@ -1,155 +1,179 @@
-<div id="sidebar" [ngClass]="{ expanded: expandSidebar }">
+<i
+  class="far"
+  id="sidebarToggle"
+  (click)="expandSidebar = !expandSidebar"
+  [ngClass]="{ 'fa-bars': !expandSidebar, 'fa-times': expandSidebar }"
+  ></i>
 
-        <!--  Sidebar Basemaps  -->
-        <div class="sidebar-header" (click)="showBasemaps = !showBasemaps" [ngClass]="{ expanded: showBasemaps }">
-          <i class="far fa-map"></i>
-          <b>Basemaps</b>
-        </div>
+<div id="sidebar" [ngClass]="{ 'expanded': expandSidebar }">
 
-        <!-- Basemaps content -->
-        <div class="sidebar-content" [ngClass]="{ expanded: showBasemaps }">
-          <div id="sidebarBasemaps">
-            <div
-              class="basemap"
-              id="basemap1"
-              (click)="toggleLayer('OpenStreetMap')"
-              [ngClass]="{ active: chosenBaseLayer == 'OpenStreetMap' }"
-            >
-              Streets
-            </div>
-            <div
-              class="basemap"
-              id="basemap2"
-              (click)="toggleLayer('Topo')"
-              [ngClass]="{ active: chosenBaseLayer == 'Topo' }"
-            >
-              Topographic
-            </div>
-            <div
-              class="basemap"
-              id="basemap3"
-              (click)="toggleLayer('CartoDB')"
-              [ngClass]="{ active: chosenBaseLayer == 'CartoDB' }"
-            >
-              CartoDB
-            </div>
-            <div
-              class="basemap"
-              id="basemap4"
-              (click)="toggleLayer('Terrain')"
-              [ngClass]="{ active: chosenBaseLayer == 'Terrain' }"
-            >
-              Terrain
-            </div>
-            <div
-              class="basemap"
-              id="basemap5"
-              (click)="toggleLayer('Satellite')"
-              [ngClass]="{ active: chosenBaseLayer == 'Satellite' }"
-            >
-              Satellite
-            </div>
-            <div
-              class="basemap"
-              id="basemap5"
-              (click)="toggleLayer('Gray')"
-              [ngClass]="{ active: chosenBaseLayer == 'Gray' }"
-            >
-              Gray
-            </div>
-          </div>
-        </div>
+  <!--  Sidebar Basemaps  -->
+  <div class="sidebar-header" (click)="showBasemaps = !showBasemaps" [ngClass]="{ expanded: showBasemaps }">
+    <i class="far fa-map"></i>
+    <b>Basemaps</b>
+  </div>
 
-        <!--  Sidebar Parameter Filters  -->
-
-        <h4>{{geoJSONsiteCount}} sites showing</h4>
-
-        <div class="sidebar-header" (click)="showParameterFilters = !showParameterFilters" [ngClass]="{ expanded: showParameterFilters }">
-          <i class="far fa-filter"></i>
-          <b>Parameter Filters</b>
-        </div>
-        <!-- Filters Parameter Content -->
-          
-        <div class="sidebar-content" [ngClass]="{ expanded: showParameterFilters }">
-          <form *ngIf="siteFilterData" [formGroup]="parameterDropDownGroup" id="sidebarParameterFilters">
-  
-            <!-- characteristic -->
-            <label for="characteristic">Characteristic</label>
-            <select class="form-control" formControlName="characteristic" multiple>
-                <option *ngFor="let characteristic of parameterFilterData.characteristics" [value]="characteristic">{{characteristic}}</option>
-            </select>
-            
-          </form>
-  
-          <!-- <button class="clearForm" title="reQuery" (click)="reQuery()">Re-Query </button> -->
-        </div>
-  
-        <!--  Sidebar Site Filters  -->
-
-        <div class="sidebar-header" (click)="showSiteFilters = !showSiteFilters" [ngClass]="{ expanded: showSiteFilters }">
-          <i class="far fa-filter"></i>
-          <b>Site Filters</b>
-        </div>
-        <!-- Filters Site Content -->
-         
-        <div class="sidebar-content" [ngClass]="{ expanded: showSiteFilters }">
-          <form *ngIf="siteFilterData" [formGroup]="siteDropDownGroup" id="sidebarSiteFilters">
-  
-            <!-- Huc8 -->
-            <label for="huc8">Huc8</label>
-            <select class="form-control" formControlName="huc8" multiple>
-                <option *ngFor="let huc of siteFilterData.huc8" [value]="huc">{{huc}}</option>
-            </select>
-              
-  
-            <!-- <label for="location">Location Name</label>
-              <select class="form-control" formControlName="location">
-                  <option *ngFor="let locName of siteFilterData.locName" [value]="locName">{{locName}}</option>
-              </select>
-              <br> -->
-              <!-- <label for="name">Site Name</label>
-              <select class="form-control" formControlName="name">
-                  <option *ngFor="let name of siteFilterData.name" [value]="name">{{name}}</option>
-              </select>
-              <br> -->
-  
-            <!-- Org IF -->
-            <label for="orgId">Organization Id</label>
-            <select class="form-control" formControlName="orgId" multiple>
-                <option *ngFor="let orgId of siteFilterData.orgId" [value]="orgId">{{orgId}}</option>
-            </select>
-  
-            <!-- Org Name -->
-            <label for="orgName">Organization Name</label>
-            <select class="form-control" formControlName="orgName" multiple>
-                <option *ngFor="let orgName of siteFilterData.orgName" [value]="orgName">{{orgName}}</option>
-            </select>
-  
-            <!-- Data Provider -->
-            <label for="provider">Data Provider</label>
-            <select class="form-control" formControlName="provider" multiple>
-                <option *ngFor="let provider of siteFilterData.provider" [value]="provider">{{provider}}</option>
-            </select>
-  
-            <label for="searchType">Keyword</label>
-            <select class="form-control" formControlName="searchType" multiple>
-                <option *ngFor="let sType of siteFilterData.searchType" [value]="sType">{{sType}}</option>
-            </select>
-  
-            <label for="type">Site Type</label>
-            <select class="form-control" formControlName="type" multiple>
-                <option *ngFor="let type of siteFilterData.type" [value]="type">{{type}}</option>
-            </select>
-                
-          </form>
-  
-          <button class="clearForm" title="Clear All Selections" (click)="clearForm()">Clear Selections </button>
-        </div>
-        
-      
-      
+  <!-- Basemaps content -->
+  <div class="sidebar-content" [ngClass]="{ expanded: showBasemaps }">
+    <div id="sidebarBasemaps">
+      <div
+        class="basemap"
+        id="basemap1"
+        (click)="toggleLayer('OpenStreetMap')"
+        [ngClass]="{ active: chosenBaseLayer == 'OpenStreetMap' }"
+      >
+        Streets
       </div>
-      <!-- End Sidebar -->
+      <div
+        class="basemap"
+        id="basemap2"
+        (click)="toggleLayer('Topo')"
+        [ngClass]="{ active: chosenBaseLayer == 'Topo' }"
+      >
+        Topographic
+      </div>
+      <div
+        class="basemap"
+        id="basemap3"
+        (click)="toggleLayer('CartoDB')"
+        [ngClass]="{ active: chosenBaseLayer == 'CartoDB' }"
+      >
+        CartoDB
+      </div>
+      <div
+        class="basemap"
+        id="basemap4"
+        (click)="toggleLayer('Terrain')"
+        [ngClass]="{ active: chosenBaseLayer == 'Terrain' }"
+      >
+        Terrain
+      </div>
+      <div
+        class="basemap"
+        id="basemap5"
+        (click)="toggleLayer('Satellite')"
+        [ngClass]="{ active: chosenBaseLayer == 'Satellite' }"
+      >
+        Satellite
+      </div>
+      <div
+        class="basemap"
+        id="basemap5"
+        (click)="toggleLayer('Gray')"
+        [ngClass]="{ active: chosenBaseLayer == 'Gray' }"
+      >
+        Gray
+      </div>
+    </div>
+  </div>
+
+  <!--  Sidebar Parameter Filters  -->
+
+  <div id="siteCount"><b>{{geoJSONsiteCount}}</b> sites showing</div>
+
+  <div class="sidebar-header" (click)="showParameterFilters = !showParameterFilters" [ngClass]="{ expanded: showParameterFilters }">
+    <i class="far fa-filter"></i>
+    <b>Parameter Filters</b>
+  </div>
+
+
+  <!-- Filters Parameter Content -->
+  <div class="sidebar-content" [ngClass]="{ expanded: showParameterFilters }">
+
+    <form *ngIf="siteFilterData" [formGroup]="parameterDropDownGroup" id="sidebarParameterFilters">
+
+      <!-- characteristic -->
+      <label for="characteristic">Characteristic</label>
+      <div class="filter-select">
+          <select class="form-control" formControlName="characteristic" multiple>
+            <option *ngFor="let characteristic of parameterFilterData.characteristics" [value]="characteristic">{{characteristic}}</option>
+          </select>
+      </div>
+      
+    </form>
+
+    <!-- <button class="clearForm" title="reQuery" (click)="reQuery()">Re-Query </button> -->
+  </div>
+
+  <!--  Sidebar Site Filters  -->
+
+  <div class="sidebar-header" (click)="showSiteFilters = !showSiteFilters" [ngClass]="{ expanded: showSiteFilters }">
+    <i class="far fa-filter"></i>
+    <b>Site Filters</b>
+  </div>
+  <!-- Filters Site Content -->
+    
+  <div class="sidebar-content" [ngClass]="{ expanded: showSiteFilters }">
+    <form *ngIf="siteFilterData" [formGroup]="siteDropDownGroup" id="sidebarSiteFilters">
+
+      <!-- Huc8 -->
+      <label for="huc8">Huc8</label>
+      <div class="filter-select">
+          <select class="form-control" formControlName="huc8" multiple>
+              <option *ngFor="let huc of siteFilterData.huc8" [value]="huc">{{huc}}</option>
+          </select>
+      </div>
+        
+
+      <!-- <label for="location">Location Name</label>
+        <select class="form-control" formControlName="location">
+            <option *ngFor="let locName of siteFilterData.locName" [value]="locName">{{locName}}</option>
+        </select>
+        <br> -->
+        <!-- <label for="name">Site Name</label>
+        <select class="form-control" formControlName="name">
+            <option *ngFor="let name of siteFilterData.name" [value]="name">{{name}}</option>
+        </select>
+        <br> -->
+
+      <!-- Org IF -->
+      <label for="orgId">Organization Id</label>
+      <div class="filter-select">
+          <select class="form-control" formControlName="orgId" multiple>
+              <option *ngFor="let orgId of siteFilterData.orgId" [value]="orgId">{{orgId}}</option>
+          </select>
+      </div>
+
+      <!-- Org Name -->
+      <label for="orgName">Organization Name</label>
+      <div class="filter-select">
+          <select class="form-control" formControlName="orgName" multiple>
+              <option *ngFor="let orgName of siteFilterData.orgName" [value]="orgName">{{orgName}}</option>
+          </select>
+      </div>
+
+      <!-- Data Provider -->
+      <label for="provider">Data Provider</label>
+      <div class="filter-select">
+          <select class="form-control" formControlName="provider" multiple>
+              <option *ngFor="let provider of siteFilterData.provider" [value]="provider">{{provider}}</option>
+          </select>
+      </div>
+
+      <label for="searchType">Keyword</label>
+      <div class="filter-select">
+          <select class="form-control" formControlName="searchType" multiple>
+              <option *ngFor="let sType of siteFilterData.searchType" [value]="sType">{{sType}}</option>
+          </select>
+      </div>
+
+      <label for="type">Site Type</label>
+      <div class="filter-select">
+          <select class="form-control" formControlName="type" multiple>
+              <option *ngFor="let type of siteFilterData.type" [value]="type">{{type}}</option>
+          </select>
+      </div>
+
+
+    </form>
+
+    <button class="clearForm" title="Clear All Selections" (click)="clearForm()">Clear Selections</button>
+  </div>
   
-      <!-- Sidebar lightbox for mobile -->
-      <div id="sidebarLightbox" [ngClass]="{ visible: expandSidebar }" (click)="expandSidebar = false"></div>
+
+
+</div>
+<!-- End Sidebar -->
+
+<!-- Sidebar lightbox for mobile -->
+<div id="sidebarLightbox" [ngClass]="{ visible: expandSidebar }" (click)="expandSidebar = false"></div>

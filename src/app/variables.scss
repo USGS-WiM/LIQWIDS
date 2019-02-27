@@ -13,8 +13,9 @@ $text: fade-out($black, 0.1);
 $subtle: fade-out($black, 0.5);
 
 $borderColor: fade-out($black, 0.85);
-$borderRadiusL: 16px;
 $borderRadius: 4px;
+$borderRadiusM: 8px;
+$borderRadiusL: 16px;
 
 // Fonts
 $poppins: 'Poppins', sans-serif;
@@ -26,3 +27,7 @@ $borderRadius: 4px;
 
 // Heights and measurements
 $topBarHeight: 54px;
+
+
+// Responsiveness
+$fullMobile: 460px;
