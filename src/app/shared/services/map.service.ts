@@ -148,7 +148,7 @@ export class MapService {
         }).addTo(this.sitesLayer);
 
         //zoom
-        this.map.fitBounds(this.sitesLayer.getBounds());
+        this.map.fitBounds(this.sitesLayer.getBounds(), {padding:[20,20]});
     }
 
     //use extent to get NWIS rt gages based on bounding box, display on map
