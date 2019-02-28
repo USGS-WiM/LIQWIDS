@@ -21,6 +21,9 @@
       <a href="https://usgs.gov" alt="USGS Home Page" title="USGS Home Page" target="_blank" id="usgsLogo">
         <img src="https://www.usgs.gov/sites/all/themes/usgs_palladium/logo.png" />
       </a>
+      <a href="https://www.dec.ny.gov/" alt="New York State Department of Environmental Conservation Home Page" title="NY DEC Home Page" target="_blank" id="nydecLogo">
+        <img src="./assets/nydec.png" />
+      </a>
       <!-- Title -->
       <div id="title">
         <span class="abbr">L</span>
@@ -80,6 +83,49 @@
   </div>
   <!-- End Main Body Wrapper-->
 </div>
+
+
+<!-- 
+  ================================================================
+  Toast
+  Toast
+  Toast - 1,001 z-index base
+  ================================================================
+ -->
+<div id="toast" class="blue" [ngClass]="{ visible: showToast }">
+  <i class="far fa-surprise" id="toastIcon"></i>
+  <div id="toastText">
+    <div id="toastTitle">Oops!</div>
+    <div id="toastBody"> Something went wrong - try again later.</div>
+  </div>
+</div>
+
+<!-- $scope.showToast = false;
+
+$scope.toast = function(class, icon, title, body){
+  $scope.toastClass = class;
+  $scope.toastIcon = icon;
+  $scope.toastTitle = title;
+  $scope.toastBody = body;
+  $scope.showToast = true;
+
+  $timeout( function(){
+    $scope.showToast = false;
+  }, 3500 );
+
+}
+
+
+$scope.toast("red", "fa-exclamation", "Toast Title", "Toast Body"); -->
+
+
+<!-- <div id="toast" class="{{toastClass}}" [ngClass]="{ visible: showToast }">
+  <i class="far {{toastIcon}}" id="toastIcon"></i>
+  <div id="toastText">
+    <div id="toastTitle">{{toastTitle}}!</div>
+    <div id="toastBody"> {{toastBody}}.</div>
+  </div>
+</div> -->
 
 <!-- 
   ================================================================

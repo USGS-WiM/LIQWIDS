@@ -13,6 +13,8 @@ body,html{
 }
 
 *{
+    -webkit-overflow-scrolling: touch;
+    text-rendering: optimizeLegibility;
     outline: none;
     
     &:hover{

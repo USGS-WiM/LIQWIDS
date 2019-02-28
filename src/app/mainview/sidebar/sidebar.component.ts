@@ -18,7 +18,9 @@ export class SidebarComponent implements OnInit {
 
   constructor(private _mapService: MapService, private formBuilder: FormBuilder) { }
 
+
   ngOnInit() {
+
 
     //for now we can keep this a static list but ultimately could pull from here in a service
     // https://www.waterqualitydata.us/Codes/Characteristicname?mimeType=xml
@@ -159,7 +161,7 @@ export class SidebarComponent implements OnInit {
     this._mapService.map.addLayer(this._mapService.baseMaps[newVal]);
   }
 
-  showBasemaps = true;
+  showBasemaps = false;
   showSiteFilters = true;
   showParameterFilters = true;
   expandSidebar = false;
