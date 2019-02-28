@@ -47,7 +47,7 @@ export class SidebarComponent implements OnInit {
 
     //this is the main data request
     this._mapService.getData().subscribe(response => {
-      
+
       this.siteFilterData = response;
       this._mapService.addToSitesLayer(this._mapService.geoJson);
       this.geoJSONsiteCount = this._mapService.geoJson.totalFeatures;
@@ -61,6 +61,7 @@ export class SidebarComponent implements OnInit {
 
     //requery on wfs data on any parameter filter dropdown change
     this.parameterDropDownGroup.valueChanges.subscribe(selections => {
+      this._mapService._characteristicFilterSubject.next(selections.characteristic);
       this.reQuery();
     });
 

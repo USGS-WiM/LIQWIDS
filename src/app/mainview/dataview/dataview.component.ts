@@ -1,123 +1,140 @@
 import { Component, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
 
-import {TabsComponent} from "../../shared/components/tabs/tabs.component";
+import { TabsComponent } from '../../shared/components/tabs/tabs.component';
+import { MapService } from 'src/app/shared/services/map.service';
+import { LoaderService } from '../../shared/services/loader.service';
+import { validateConfig } from '@angular/router/src/config';
+import { Http } from '@angular/http';
 
 @Component({
-  selector: 'app-dataview',
-  templateUrl: './dataview.component.html',
-  styleUrls: ['./dataview.component.scss']
+    selector: 'app-dataview',
+    templateUrl: './dataview.component.html',
+    styleUrls: ['./dataview.component.scss']
 })
 export class DataviewComponent implements OnInit {
-     // HighCharts  
-     public chart1: any;
-     private _chart1Options: any;
-     public chart2: any;
-     private _chart2Options: any;
-  constructor() { }
+    // HighCharts
+    public siteChart: any;
+    private _siteChartOptions: any;
+    public chart1: any;
+    private _chart1Options: any;
+    public chart2: any;
+    private _chart2Options: any;
+    public result;
+    public resultJson;
+    public filterSelections;
+    public characteristic = 'Nitrate';
+    constructor(private _mapService: MapService, private _http: Http, private _loaderService: LoaderService) { }
 
-  ngOnInit() {
-    this._chart1Options = {
-        credits: {
-            enabled: false
-        },
-        chart: {
-            type: 'line'
-        },
-        title: {
-            text: 'Example Data One'
-        },
-        subtitle: {
-            text: 'Line Plot'
-        },
-        yAxis: {
-            title: {
-                text: ''
-            }
-        },
-        series: [{
-            name: 'Site 1',
-            data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-        }, {
-            name: 'Site 2',
-            data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-        }, {
-            name: 'Site 3',
-            data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
-        }, {
-            name: 'Site 4',
-            data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
-        }, {
-            name: 'Site 5',
-            data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
-        }]
-    }
+    ngOnInit() {
+        this._mapService.SelectedSite.subscribe((Response) => {
+            this.getResultData(Response.name);
+        });
+        this._mapService.SelectedChar.subscribe((Response) => {
+            this.characteristic = Response;
+        });
 
-    this._chart2Options = {
-        credits: {
-            enabled: false
-        },
-        chart: {
-            type: 'scatter',
-            zoomType: 'xy'
-        },
-        title: {
-            text: 'Example Data Two'
-        },
-        subtitle: {
-            text: 'Scatter Plot'
-        },
-        xAxis: {
-            title: {
-                enabled: false,
+        /*this._chart1Options = {
+            credits: {
+                enabled: false
             },
-            startOnTick: true,
-            endOnTick: true,
-            showLastLabel: true
-        },
-        yAxis: {
+            chart: {
+                type: 'line'
+            },
             title: {
-                text: ''
-            }
-        },
-        legend: {
-            layout: 'vertical',
-            align: 'left',
-            verticalAlign: 'top',
-            x: 100,
-            y: 70,
-            floating: true,
-            //backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
-            borderWidth: 1
-        },
-        plotOptions: {
-            scatter: {
-                marker: {
-                    radius: 5,
+                text: 'Example Data One'
+            },
+            subtitle: {
+                text: 'Line Plot'
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+            },
+            series: [{
+                name: 'Site 1',
+                data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
+            }, {
+                name: 'Site 2',
+                data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
+            }, {
+                name: 'Site 3',
+                data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
+            }, {
+                name: 'Site 4',
+                data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
+            }, {
+                name: 'Site 5',
+                data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
+            }]
+        };*/
+
+        this._chart2Options = {
+            credits: {
+                enabled: false
+            },
+            chart: {
+                type: 'scatter',
+                zoomType: 'xy'
+            },
+            title: {
+                text: 'Example Data Two'
+            },
+            subtitle: {
+                text: 'Scatter Plot'
+            },
+            xAxis: {
+                title: {
+                    enabled: false,
+                },
+                startOnTick: true,
+                endOnTick: true,
+                showLastLabel: true
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                verticalAlign: 'top',
+                x: 100,
+                y: 70,
+                floating: true,
+                //backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+                borderWidth: 1
+            },
+            plotOptions: {
+                scatter: {
+                    marker: {
+                        radius: 5,
+                        states: {
+                            hover: {
+                                enabled: true,
+                                lineColor: 'rgb(100,100,100)'
+                            }
+                        }
+                    },
                     states: {
                         hover: {
-                            enabled: true,
-                            lineColor: 'rgb(100,100,100)'
+                            marker: {
+                                enabled: false
+                            }
                         }
+                    },
+                    tooltip: {
+                        headerFormat: '<b>{series.name}</b><br>',
+                        pointFormat: '{point.x}in, {point.y} days'
                     }
-                },
-                states: {
-                    hover: {
-                        marker: {
-                            enabled: false
-                        }
-                    }
-                },
-                tooltip: {
-                    headerFormat: '<b>{series.name}</b><br>',
-                    pointFormat: '{point.x}in, {point.y} days'
                 }
-            }
-        },
-        series: [{
-            name: 'Site One',
-            color: 'rgba(223, 83, 83, .5)',
-            data: [[161.2, 51.6], [167.5, 59.0], [159.5, 49.2], [157.0, 63.0], [155.8, 53.6],
+            },
+            series: [{
+                name: 'Site One',
+                color: 'rgba(223, 83, 83, .5)',
+                data: [[161.2, 51.6], [167.5, 59.0], [159.5, 49.2], [157.0, 63.0], [155.8, 53.6],
                 [170.0, 59.0], [159.1, 47.6], [166.0, 69.8], [176.2, 66.8], [160.2, 75.2],
                 [172.5, 55.2], [170.9, 54.2], [172.9, 62.5], [153.4, 42.0], [160.0, 50.0],
                 [147.2, 49.8], [168.2, 49.2], [175.0, 73.2], [157.0, 47.8], [167.6, 68.8],
@@ -169,11 +186,11 @@ export class DataviewComponent implements OnInit {
                 [156.2, 60.0], [149.9, 46.8], [169.5, 57.3], [160.0, 64.1], [175.3, 63.6],
                 [169.5, 67.3], [160.0, 75.5], [172.7, 68.2], [162.6, 61.4], [157.5, 76.8],
                 [176.5, 71.8], [164.4, 55.5], [160.7, 48.6], [174.0, 66.4], [163.8, 67.3]]
-    
-        }, {
-            name: 'Site Two',
-            color: 'rgba(119, 152, 191, .5)',
-            data: [[174.0, 65.6], [175.3, 71.8], [193.5, 80.7], [186.5, 72.6], [187.2, 78.8],
+
+            }, {
+                name: 'Site Two',
+                color: 'rgba(119, 152, 191, .5)',
+                data: [[174.0, 65.6], [175.3, 71.8], [193.5, 80.7], [186.5, 72.6], [187.2, 78.8],
                 [181.5, 74.8], [184.0, 86.4], [184.5, 78.4], [175.0, 62.0], [184.0, 81.6],
                 [180.0, 76.6], [177.8, 83.6], [192.0, 90.0], [176.0, 74.6], [174.0, 71.0],
                 [184.0, 79.6], [192.7, 93.8], [171.5, 70.0], [173.0, 72.4], [176.0, 85.9],
@@ -223,12 +240,134 @@ export class DataviewComponent implements OnInit {
                 [180.3, 73.2], [167.6, 76.3], [183.0, 65.9], [183.0, 90.9], [179.1, 89.1],
                 [170.2, 62.3], [177.8, 82.7], [179.1, 79.1], [190.5, 98.2], [177.8, 84.1],
                 [180.3, 83.2], [180.3, 83.2]]
-        }]
-    }
-    this.chart1 = new Highcharts.Chart('chart1',  this._chart1Options );
-    this.chart2 = new Highcharts.Chart('chart2', this._chart2Options);
+            }]
+        };
+        // this.chart1 = new Highcharts.Chart('chart1', this._chart1Options);
+        this.chart2 = new Highcharts.Chart('chart2', this._chart2Options);
 
-  } //End NgOnInit
+    } // End NgOnInit
+
+    public getResultData(site) {
+        // this._loaderService.showFullPageLoad(); // want to have smaller loading component
+        let resultUrl = 'https://www.waterqualitydata.us/data/Result/search?mimeType=csv&countrycode=US';
+        resultUrl += '&siteid=' + site + '&characteristicName=' + this.characteristic;
+        this._http.get(resultUrl)
+            .subscribe(csv => {
+                this.result = csv;
+                this.result = this.csvJSON(this.result._body);
+                this.resultJson = JSON.parse(this.result);
+                this.createChart(site);
+            });
+    }
+
+    public csvJSON(csv) {
+        const lines = csv.split('\n');
+        const result = [];
+        const headers = lines[0].split(',');
+        for (let i = 1; i < lines.length; i++) {
+            const obj = {};
+            const currentline = lines[i].split(',');
+            for (let j = 0; j < headers.length; j++) {
+                obj[headers[j]] = currentline[j];
+            }
+            result.push(obj);
+        }
+        return JSON.stringify(result);
+    }
+
+    public createChart(site) {
+        this._siteChartOptions = {
+            credits: {
+                enabled: false
+            },
+            chart: {
+                type: 'scatter',
+                zoomType: 'xy'
+            },
+            title: {
+                text: site
+            },
+            subtitle: {
+                text: 'Scatter Plot'
+            },
+            xAxis: {
+                title: {
+                    text: 'Activity Start Date'
+                },
+                startOnTick: true,
+                endOnTick: true,
+                showLastLabel: true,
+                labels: {
+                    formatter: function() {
+                        const date = new Date(this.value);
+                        return date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
+                    }
+                },
+                type: 'datetime'
+            },
+            yAxis: {
+                title: {
+                    text: 'mg/l'
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                verticalAlign: 'top',
+                floating: true,
+                borderWidth: 1
+            },
+            plotOptions: {
+                scatter: {
+                    marker: {
+                        radius: 5,
+                        states: {
+                            hover: {
+                                enabled: true,
+                                lineColor: 'rgb(100,100,100)'
+                            }
+                        }
+                    },
+                    states: {
+                        hover: {
+                            marker: {
+                                enabled: false
+                            }
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<b>{point.x:%Y-%m-%d}<b><br>',
+                        pointFormat: '{point.y} mg/l'
+                    }
+                }
+            }
+        };
+        this.siteChart = new Highcharts.Chart('siteChart', this._siteChartOptions);
+        const depthValues = [];
+        for (let i = 0; i < this.resultJson.length; i++ ) { // creating separate series based on properties
+            const value = this.resultJson[i]['ActivityBottomDepthHeightMeasure/MeasureValue']; // can replace this with other properties
+            if (value !== '' && depthValues.indexOf(value) === -1) { depthValues.push(value);
+            } else if (value === '' && depthValues.indexOf('N/A') === -1) {depthValues.push('N/A'); }
+        }
+        for (let depth = 0; depth < depthValues.length; depth++) {
+            const data = new Array();
+            for (let i = 0; i < this.resultJson.length; i++ ) {
+                const currentSite = this.resultJson[i];
+                const currentValue = currentSite['ActivityBottomDepthHeightMeasure/MeasureValue'];
+                if (currentValue === depthValues[depth] || (currentValue === '' && depthValues[depth] === 'N/A')) {
+                    let resultVal;
+                    if (/\d/.test(currentSite.ResultMeasureValue)) {resultVal = Number(currentSite.ResultMeasureValue);
+                    } else if (/\d/.test(currentSite['ResultMeasure/MeasureUnitCode'])) {
+                        resultVal = Number(currentSite['ResultMeasure/MeasureUnitCode']); // makes up for some (not all) csv mistakes
+                    } else {resultVal = 0; }
+                    let date = currentSite.ActivityStartDate.split('-');
+                    date = Date.UTC(date[0], date[1], Number(date[2]) + 1);
+                    data.push([date, resultVal]);
+                }
+            }
+            this.siteChart.addSeries({name: 'Depth: ' + depthValues[depth], data: data});
+        }
+        // this._loaderService.hideFullPageLoad();
+    }
 
 }// END class
-
