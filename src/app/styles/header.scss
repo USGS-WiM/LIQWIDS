@@ -1,46 +1,36 @@
 header#main{
 
-    // Mobile sidebar toggle button
-    #sidebarToggle{
-        color: white;
-        display: none;
-        flex-direction: column;
-        justify-content: center;
-        margin-right: 20px;
-        transition: 0.2s;
-        font-size: 20px;
-        width: 24px;
-        text-align: center;
-
-        &:hover,
-        &:active{
-            cursor: pointer;
-            opacity: 0.6;
-            transition: 0.2s;
-        }
-
-        @media only screen and (max-width: 1200px) {
-            display: flex;
-        }
-    }
-
     // Branding
     #branding{
         display: flex;
         height: 100%;
         box-sizing: border-box;
-        padding: 0 0 0 20px;
+        padding: 0 0 0 15px;
 
+        @media only screen and (max-width: 1200px) {
+            padding: 0 0 0 40px;
+        }
+
+        #nydecLogo,
         #usgsLogo{
             display: flex;
             flex-direction: column;
             justify-content: center;
-            margin-right: 20px;
+            margin-right: 8px;
 
             img{
                 display: block;
                 height: 38px;
                 width: auto;
+            }
+        }
+
+        #nydecLogo{
+            filter: invert(100%);
+            margin-right: 10px;
+
+            img{
+                height: 50px;
             }
         }
     }

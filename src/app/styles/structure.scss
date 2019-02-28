@@ -1,6 +1,6 @@
 // Structure.scss
 // Scaffolding and flex styles for basic structure of page
-
+// Including Sidebar
 
 #outer{
     display: flex;
@@ -23,6 +23,7 @@
     #body{
         display: flex;
         flex-grow: 3;
+        height: 100%;
 
 
         // 5000 Z-index
@@ -68,7 +69,7 @@
                     border-top: 1px solid fade-out($black, 0.8);
                 }
             }
-        }
+        } 
 
         main{
             display: block;
@@ -79,18 +80,26 @@
 }
 
 
-
-// Spcific to this project
-#map{
+// Sidebar Lightbox
+// Sidebar Lightbox
+// Sidebar Lightbox
+// Sidebar Lightbox
+#sidebarLightbox{
     display: block;
-    width: 100%;
-    height: 400px;
-    background-color: fade-out($black, 0.8);
-    border-bottom-left-radius: $borderRadiusL;
+    position: fixed;
+    top: $topBarHeight;
+    left: 0;
+    z-index: 4999;
+    background-color: fade-out($black, 0.6);
+    height: 0px;
+    width: 100vw;
+    opacity: 0;
+    transition: height 0s 0.2s, opacity 0.2s;
+
+    &.visible{
+        opacity: 1;
+        height: 100vh;
+        transition: height 0s, opacity 0.2s;
+    }
 }
 
-.block{
-    display: block;
-    box-sizing: border-box;
-    padding: 15px;
-}

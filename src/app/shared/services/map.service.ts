@@ -3,31 +3,42 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Map } from 'leaflet';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { LoaderService } from '../../shared/services/loader.service';
 
 import * as L from 'leaflet';
-
-export interface chartSeries{
-    name: string;
-    data: number[];
-    
-}
 
 @Injectable({
   providedIn: 'root'
 })
 export class MapService {
     public map: Map;
+    public chosenBaseLayer: string;
     public baseMaps: any;
     public mainLayers: any;
     public geoJson:any;
     public filterJson: any;
     public filterOptions: any;
-    private _geoJsonURL = "https://www.waterqualitydata.us/ogcservices/wfs/?request=GetFeature&service=wfs&version=2.0.0&typeNames=wqp_sites&SEARCHPARAMS=countrycode%3AUS%3Bstatecode%3AUS%3A36%3Bcountycode%3AUS%3A36%3A059%7CUS%3A36%3A103%3BcharacteristicName%3ANitrate&outputFormat=application%2Fjson";
 
-    constructor(private _http: HttpClient) { 
+    public geoJsonURL = 'https://www.waterqualitydata.us/ogcservices/wfs/';
+
+    public URLparams = {
+        request: 'GetFeature',
+        service: 'wfs',
+        version: '2.0.0',
+        typeNames: 'wqp_sites',
+        SEARCHPARAMS: 'countrycode:US;statecode:US:36;countycode:US:36:059|US:36:103;characteristicName:Nitrate',
+        outputFormat: 'application/json'
+    };
+
+    public sitesLayer: L.FeatureGroup<any>;
+    public nwisLayer: L.FeatureGroup<any>;
+
+    constructor(private _http: HttpClient, private _loaderService: LoaderService) { 
+
+        this.chosenBaseLayer = "Topo";
         
         this.baseMaps = {// {s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png  
-            OpenStreetMap: L.tileLayer('https://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}', {
+            OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 20,
                 zIndex: 1,
                 attribution: 'Imagery from <a href="https://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -70,14 +81,8 @@ export class MapService {
                 layers: "qw_portal_map:nwis_sites",
                 format: "image/png",
                 transparent: true,
-                zIndex: 2,
+                zIndex: 2
                 //searchParams: "countycode:US:36:059|US:36:103"
-            }),
-            //add temporary blank layer, replaced later
-            GEOJSON: L.geoJSON(null, {
-                pointToLayer: function (feature, latLng) {
-                    return L.circleMarker(latLng);
-                }
             })
         };
 
@@ -85,7 +90,8 @@ export class MapService {
     }
 
     public getData(): Observable<any> {
-        return this._http.get<any>(this._geoJsonURL)
+        this._loaderService.showFullPageLoad();
+        return this._http.get<any>(this.geoJsonURL, {params: this.URLparams})
         .pipe(
             map(response => {
                 this.geoJson = response;
@@ -103,7 +109,7 @@ export class MapService {
                         }
                     }
                 })
-                //console.log('filterOptions', this.filterOptions);
+                this._loaderService.hideFullPageLoad();
                 return this.filterOptions;
             }),
             catchError(this.handleError)
@@ -112,6 +118,7 @@ export class MapService {
     }
 
     private handleError(err: HttpErrorResponse){
+        this._loaderService.hideFullPageLoad();
         if(err.error instanceof ErrorEvent) {
             //client side
             console.error("An error occurred:", err.error.message);
@@ -120,5 +127,74 @@ export class MapService {
             console.error("Server returned code ${err.status, body ${err.error}");
         }
         return throwError("HTTPClient error.");
+    }
+
+    public addToSitesLayer(geoJson: any){
+        let geojsonMarkerOptions = {
+            radius: 5,
+            fillColor: '#9b0004',
+            weight: 0,
+            opacity: 1,
+            fillOpacity: 0.5
+        };
+        let layer = L.geoJSON(geoJson, {
+            pointToLayer:function(feature, latLng){
+                return L.circleMarker(latLng, geojsonMarkerOptions);
+            },
+            onEachFeature: (feature, layer) => {
+                layer.bindPopup("<b>Site Name: </b>" + feature.properties.name + "<br/><b>Location Name: </b>" + feature.properties.locName + "<br/><b>Organization Name: </b>" + feature.properties.orgName + "<br/><b>Result Count: </b>" + feature.properties.resultCnt);
+            }
+            
+        }).addTo(this.sitesLayer);
+
+        //zoom
+        this.map.fitBounds(this.sitesLayer.getBounds(), {padding:[20,20]});
+    }
+
+    //use extent to get NWIS rt gages based on bounding box, display on map
+    public queryNWISrtGages(bbox:string): Observable<any> {
+        var NWISmarkers = {};
+
+        //NWIS query options from http://waterservices.usgs.gov/rest/IV-Test-Tool.html
+        var parameterCodeList = '00065,62619,62620,63160,72214';
+        var siteTypeList = 'OC,OC-CO,ES,LK,ST,ST-CA,ST-DCH,ST-TS';
+        var siteStatus = 'active';
+        var url = 'https://waterservices.usgs.gov/nwis/site/?format=mapper&bBox=' + bbox + '&parameterCd=' + parameterCodeList + '&siteType=' + siteTypeList + '&siteStatus=' + siteStatus;
+
+
+        console.log('here',url)
+
+        return this._http.get(url,{responseType: 'text'})
+        .pipe(
+            map(response => {
+                return response;
+            })
+        );
+
+        
+        // $.ajax({
+        //     url: url,
+        //     dataType: "xml",
+        //     success: function(xml){
+        //         $(xml).find('site').each(function(){
+
+        //             var siteID = $(this).attr('sno');
+        //             var siteName = $(this).attr('sna');
+        //             var lat = $(this).attr('lat');
+        //             var lng = $(this).attr('lng');
+        //             NWISmarkers[siteID] = L.marker([lat, lng], {icon: nwisMarkerIcon});
+        //             NWISmarkers[siteID].data = {siteName:siteName,siteCode:siteID};
+        //             NWISmarkers[siteID].data.parameters = {};
+
+        //             //add point to featureGroup
+        //             USGSrtGages.addLayer(NWISmarkers[siteID]);
+
+        //             $( "#nwisLoadingAlert" ).fadeOut(2000);
+        //         });
+        //     },
+        //     error : function(xml) {
+        //         $( "#nwisLoadingAlert" ).fadeOut(2000);
+        //     }
+        // });
     }
 }

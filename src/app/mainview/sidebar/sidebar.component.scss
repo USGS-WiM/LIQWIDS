@@ -1,0 +1,182 @@
+@import '../../variables.scss';
+
+// Mobile menu toggle
+// Outside sidebar
+#sidebarToggle{
+    color: white;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    transition: 0.2s;
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 54px;
+    width: 54px;
+
+    &:hover,
+    &:active{
+        cursor: pointer;
+        opacity: 0.6;
+        transition: 0.2s;
+    }
+
+    @media only screen and (max-width: 1200px) {
+        display: flex;
+    }
+}
+
+// Sidebar
+#sidebar{
+    height: 100%;
+    overflow: auto;
+
+    .sidebar-header{
+        font-family: $poppins;
+        font-weight: 600;
+        font-size: 18px;
+        color: $black;
+        letter-spacing: -0.3px;
+        display: flex;
+
+        i{
+            width: 40px;
+            height: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        b{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-grow: 3;
+            position: relative;
+
+            &:after{
+                content: '\f067';
+                font-family: 'Font Awesome 5 Pro';
+                position: absolute;
+                right: 0;
+                color: fade-out($black, 0.8);
+                font-size: 16px;
+            }
+        }
+
+        &.expanded{
+
+            b:after{
+                content: '\f068';
+            }
+        }
+
+        &:hover{
+            cursor: pointer;
+
+            b{
+                text-decoration: underline;
+
+                &:after{
+                    color: $black;
+                }
+            }
+        }
+    }
+
+
+    // Content Blocks
+    // Expand with class .expanded
+    .sidebar-content{
+        display: block;
+        box-sizing: border-box;
+        padding-left: 40px;
+        height: 0px;
+        overflow: hidden;
+        margin-bottom: 15px;
+
+        &.expanded{
+            height: auto;
+        }
+    }
+
+    // Sidebar Basemaps
+    // Sidebar Basemaps
+    // Sidebar Basemaps
+    #sidebarBasemaps{
+
+        .basemap{
+            display: block;
+            font-family: $sans;
+            font-size: 13px;
+            font-weight: 500;
+            box-sizing: border-box;
+            letter-spacing: -0.2px;
+            padding: 3px 0;
+            color: $black;
+
+            &:hover{
+                cursor: pointer;
+                text-decoration: underline;
+            }
+
+            &.active{
+                color: $primary;
+
+                &:hover{
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+
+}
+
+
+
+
+// Custom Sidebar Elements
+// Custom Sidebar Elements
+// Custom Sidebar Elements
+#siteCount{
+    display: block;
+    text-align: center;
+    background-color: fade-out($black, 0.85);
+    box-sizing: border-box;
+    border-radius: $borderRadius;
+    padding: 10px;
+    color: $black;
+    font-size: 12px;
+    font-weight: 500;
+    margin: 0 auto;
+    font-family: $poppins;
+    letter-spacing: -0.4px;
+    margin-bottom: 8px;
+    margin-top: 15px;
+
+    b{
+        font-weight: 600;
+        letter-spacing: -0.2px;
+    }
+}
+
+
+// Sidebar Filters
+// Sidebar Filters
+// Sidebar Filters
+#sidebarFilters{
+    margin-bottom: 15px;
+    
+    label{
+        margin-top: 6px;
+    }
+}
+
+
+
+.clearForm{
+    margin-top: 15px;
+}

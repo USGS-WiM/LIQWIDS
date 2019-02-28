@@ -13,6 +13,8 @@ body,html{
 }
 
 *{
+    -webkit-overflow-scrolling: touch;
+    text-rendering: optimizeLegibility;
     outline: none;
     
     &:hover{
@@ -27,3 +29,7 @@ body,html{
         outline: none;
     }
 }
+
+@import '/app/app.component.scss';
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

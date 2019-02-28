@@ -21,6 +21,9 @@
       <a href="https://usgs.gov" alt="USGS Home Page" title="USGS Home Page" target="_blank" id="usgsLogo">
         <img src="https://www.usgs.gov/sites/all/themes/usgs_palladium/logo.png" />
       </a>
+      <a href="https://www.dec.ny.gov/" alt="New York State Department of Environmental Conservation Home Page" title="NY DEC Home Page" target="_blank" id="nydecLogo">
+        <img src="./assets/nydec.png" />
+      </a>
       <!-- Title -->
       <div id="title">
         <span class="abbr">L</span>
@@ -52,149 +55,15 @@
     Main body wrapper 
   -->
   <div id="body">
+    <loading-screen></loading-screen>
     <!-- 
       Sidebar
       Sidebar
      -->
-    <div id="sidebar" [ngClass]="{ expanded: expandSidebar }">
-
-      <!-- 
-        Sidebar Basemaps
-        Sidebar Basemaps
-        Sidebar Basemaps
-       -->
-      <div class="sidebar-header" (click)="showBasemaps = !showBasemaps" [ngClass]="{ expanded: showBasemaps }">
-        <i class="far fa-map"></i>
-        <b>Basemaps</b>
-      </div>
-      <!-- Basemaps content -->
-      <div class="sidebar-content" [ngClass]="{ expanded: showBasemaps }">
-        <div id="sidebarBasemaps">
-          <div
-            class="basemap"
-            id="basemap1"
-            (click)="toggleLayer('OpenStreetMap')"
-            [ngClass]="{ active: chosenBaseLayer == 'OpenStreetMap' }"
-          >
-            Streets
-          </div>
-          <div
-            class="basemap"
-            id="basemap2"
-            (click)="toggleLayer('Topo')"
-            [ngClass]="{ active: chosenBaseLayer == 'Topo' }"
-          >
-            Topographic
-          </div>
-          <div
-            class="basemap"
-            id="basemap3"
-            (click)="toggleLayer('CartoDB')"
-            [ngClass]="{ active: chosenBaseLayer == 'CartoDB' }"
-          >
-            CartoDB
-          </div>
-          <div
-            class="basemap"
-            id="basemap4"
-            (click)="toggleLayer('Terrain')"
-            [ngClass]="{ active: chosenBaseLayer == 'Terrain' }"
-          >
-            Terrain
-          </div>
-          <div
-            class="basemap"
-            id="basemap5"
-            (click)="toggleLayer('Satellite')"
-            [ngClass]="{ active: chosenBaseLayer == 'Satellite' }"
-          >
-            Satellite
-          </div>
-          <div
-            class="basemap"
-            id="basemap5"
-            (click)="toggleLayer('Gray')"
-            [ngClass]="{ active: chosenBaseLayer == 'Gray' }"
-          >
-            Gray
-          </div>
-        </div>
-      </div>
-
-      <!-- 
-        Sidebar Filters
-        Sidebar Filters
-        Sidebar Filters
-       -->
-      <div class="sidebar-header" (click)="showFilters = !showFilters" [ngClass]="{ expanded: showFilters }">
-        <i class="far fa-filter"></i>
-        <b>Filters</b>
-      </div>
-      <!-- 
-        Filters Content
-       -->
-       
-      <div class="sidebar-content" [ngClass]="{ expanded: showFilters }">
-        <form *ngIf="allData" [formGroup]="dropDownGroup" id="sidebarFilters">
-
-          <!-- Huc8 -->
-          <label for="huc8">Huc8</label>
-          <select class="form-control" formControlName="huc8" multiple>
-              <option *ngFor="let huc of allData.huc8" [value]="huc">{{huc}}</option>
-          </select>
-            
-
-          <!-- <label for="location">Location Name</label>
-            <select class="form-control" formControlName="location">
-                <option *ngFor="let locName of allData.locName" [value]="locName">{{locName}}</option>
-            </select>
-            <br> -->
-            <!-- <label for="name">Site Name</label>
-            <select class="form-control" formControlName="name">
-                <option *ngFor="let name of allData.name" [value]="name">{{name}}</option>
-            </select>
-            <br> -->
-
-          <!-- Org IF -->
-          <label for="orgId">Organization Id</label>
-          <select class="form-control" formControlName="orgId" multiple>
-              <option *ngFor="let orgId of allData.orgId" [value]="orgId">{{orgId}}</option>
-          </select>
-
-          <!-- Org Name -->
-          <label for="orgName">Organization Name</label>
-          <select class="form-control" formControlName="orgName" multiple>
-              <option *ngFor="let orgName of allData.orgName" [value]="orgName">{{orgName}}</option>
-          </select>
-
-          <!-- Data Provider -->
-          <label for="provider">Data Provider</label>
-          <select class="form-control" formControlName="provider" multiple>
-              <option *ngFor="let provider of allData.provider" [value]="provider">{{provider}}</option>
-          </select>
-
-          <label for="searchType">Keyword</label>
-          <select class="form-control" formControlName="searchType" multiple>
-              <option *ngFor="let sType of allData.searchType" [value]="sType">{{sType}}</option>
-          </select>
-
-          <label for="type">Site Type</label>
-          <select class="form-control" formControlName="type" multiple>
-              <option *ngFor="let type of allData.type" [value]="type">{{type}}</option>
-          </select>
-              
-        </form>
-
-        <button class="clearForm" title="Clear All Selections" (click)="clearForm()">Clear Selections </button>
-      </div>
-      
+     <app-sidebar></app-sidebar>
     
     
-    </div>
-    <!-- End Sidebar -->
-
-    <!-- Sidebar lightbox for mobile -->
-    <div id="sidebarLightbox" [ngClass]="{ visible: expandSidebar }" (click)="expandSidebar = false"></div>
+    
 
     <!-- 
       Content 
@@ -203,112 +72,60 @@
     -->
     <main>
       <!-- Map -->
-      <div id="map"></div>
-
-      <div class="block">
-        <h1>Data</h1>
-        <div id="fakeData">These data are shown for demonstration purposes only.</div>
-
-        <div id="chartWrapper">
-          <div id="chart1"></div>
-          <div id="chart2"></div>
-        </div>
-
-        <div id="dataTable">
-
-          <div class="row header">
-            <div>Date</div>
-            <div>Site</div>
-            <div>State</div>
-            <div>Color</div>
-            <div>Distance</div>
-            <div>Size</div>
-            <div>Status</div>
-            <div>Amount</div>
-            <div>Notes</div>
-          </div>
-
-          <div class="row">
-            <div>10/11/18</div>
-            <div>12512</div>
-            <div>NY</div>
-            <div>Red</div>
-            <div>10mi</div>
-            <div>8</div>
-            <div>Off</div>
-            <div>9</div>
-            <div></div>
-          </div>
-
-          <div class="row">
-            <div>10/19/18</div>
-            <div>535235</div>
-            <div>NY</div>
-            <div>Black</div>
-            <div>1mi</div>
-            <div>81</div>
-            <div>On</div>
-            <div>5</div>
-            <div>End</div>
-          </div>
-
-          <div class="row">
-            <div>11/9/18</div>
-            <div>623532</div>
-            <div>NY</div>
-            <div>Black</div>
-            <div>2mi</div>
-            <div>1</div>
-            <div>On</div>
-            <div>0</div>
-            <div>None</div>
-          </div>
-
-          <div class="row">
-            <div>11/19/18</div>
-            <div>73453</div>
-            <div>NY</div>
-            <div>Purple</div>
-            <div>22mi</div>
-            <div>51</div>
-            <div>Off</div>
-            <div>10</div>
-            <div></div>
-          </div>
-
-          <div class="row">
-            <div>12/15/18</div>
-            <div>51214</div>
-            <div>NY</div>
-            <div>Black</div>
-            <div>2mi</div>
-            <div>61</div>
-            <div>Off</div>
-            <div>1</div>
-            <div></div>
-          </div>
-
-          <div class="row">
-            <div>12/25/18</div>
-            <div>61214</div>
-            <div>NY</div>
-            <div>Purple</div>
-            <div>3mi</div>
-            <div>66</div>
-            <div>Off</div>
-            <div>1</div>
-            <div></div>
-          </div>
-
-        </div>
-
-      </div>
+        <!-- <div id="map"></div> -->
+        <app-map></app-map>
+        
+        <app-dataview></app-dataview>
+        
 
     </main>
     <!-- End Main Content -->
   </div>
   <!-- End Main Body Wrapper-->
 </div>
+
+
+<!-- 
+  ================================================================
+  Toast
+  Toast
+  Toast - 1,001 z-index base
+  ================================================================
+ -->
+<div id="toast" class="blue" [ngClass]="{ visible: showToast }">
+  <i class="far fa-surprise" id="toastIcon"></i>
+  <div id="toastText">
+    <div id="toastTitle">Oops!</div>
+    <div id="toastBody"> Something went wrong - try again later.</div>
+  </div>
+</div>
+
+<!-- $scope.showToast = false;
+
+$scope.toast = function(class, icon, title, body){
+  $scope.toastClass = class;
+  $scope.toastIcon = icon;
+  $scope.toastTitle = title;
+  $scope.toastBody = body;
+  $scope.showToast = true;
+
+  $timeout( function(){
+    $scope.showToast = false;
+  }, 3500 );
+
+}
+
+
+$scope.toast("red", "fa-exclamation", "Toast Title", "Toast Body"); -->
+
+
+<!-- <div id="toast" class="{{toastClass}}" [ngClass]="{ visible: showToast }">
+  <i class="far {{toastIcon}}" id="toastIcon"></i>
+  <div id="toastText">
+    <div id="toastTitle">{{toastTitle}}!</div>
+    <div id="toastBody"> {{toastBody}}.</div>
+  </div>
+</div> -->
 
 <!-- 
   ================================================================
@@ -326,27 +143,78 @@
     </div>
 
     <div class="modal-content">
-      <h6>What is LIQWIDS?</h6>
-      <p>
-        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque
-        corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in
-        culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et
-        expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id
-        quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem
-        quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et
-        molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus
-        maiores alias consequatur aut perferendis doloribus asperiores repellat?
-      </p>
-      <p>
-        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque
-        corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in
-        culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et
-        expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id
-        quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem
-        quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et
-        molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus
-        maiores alias consequatur aut perferendis doloribus asperiores repellat?
-      </p>
+      
+
+      <tabs>
+        <tab [tabTitle]="'About LIQWIDS'">
+            <br/>
+            <h6>What is LIQWIDS?</h6>
+
+            <p>
+                There are more than 60 organizations and agencies collecting water-quality data on Long Island. As a result, those interested 
+                in analyzing data may be unaware of what data exist and how those data can be obtained without a Freedom of 
+                Information Law request. This web tool is intended to provide a unified view of the water-quality data available, in support of 
+                ongoing efforts such as LINAP, LICAP, and other State and local environmental and human health initiatives. This product was developed by USGS 
+                in partnership with New York State Department of Environmental Conservation
+              </p>
+        </tab>
+        <tab [tabTitle]="'Dashboard'">
+            <br/>
+            <h6>Summary of Data Submission</h6>
+            <app-summary></app-summary>
+            <!-- <div id="dashboardTable">
+                <div class="row header">
+                    <div>Date</div>
+                    <div>Site</div>
+                    <div>State</div>
+                    <div>Color</div>
+                    <div>Distance</div>
+                    <div>Size</div>
+                    <div>Status</div>
+                    <div>Amount</div>
+                    <div>Notes</div>
+                </div>
+            
+                <div class="row">
+                    <div>10/11/18</div>
+                    <div>12512</div>
+                    <div>NY</div>
+                    <div>Red</div>
+                    <div>10mi</div>
+                    <div>8</div>
+                    <div>Off</div>
+                    <div>9</div>
+                    <div></div>
+                </div>
+            </div> -->
+        </tab>
+        <tab [tabTitle]="'Disclaimers'">
+                <br/>
+                <h6>USGS Data Disclaimer:</h6>
+    
+                <p>
+                    Unless otherwise stated, all data, metadata and related materials are considered to satisfy the quality standards relative 
+                    to the purpose for which the data were collected. Although these data and associated metadata have been reviewed for accuracy 
+                    and completeness and approved for release by the U.S. Geological Survey (USGS), no warranty expressed or implied is made 
+                    regarding the display or utility of the data for other purposes, nor on all computer systems, nor shall the act of distribution 
+                    constitute any such warranty.
+                </p>
+                <h6>USGS Software Disclaimer:</h6>
+                <p>
+                    This software has been approved for release by the U.S. Geological Survey (USGS). Although the software has been subjected to 
+                    rigorous review, the USGS reserves the right to update the software as needed pursuant to further analysis and review. 
+                    No warranty, expressed or implied, is made by the USGS or the U.S. Government as to the functionality of the software and 
+                    related material nor shall the fact of release constitute any such warranty. Furthermore, the software is released on condition 
+                    that neither the USGS nor the U.S. Government shall be held liable for any damages resulting from its authorized or unauthorized use.
+                </p>
+                <h6>USGS Product Names Disclaimer:</h6>
+                <p>
+                    Any use of trade, firm, or product names is for descriptive purposes only and does not imply endorsement by the U.S. Government.
+                </p>
+            </tab>
+    </tabs>
+      
+      
     </div>
 
     <div class="modal-actions right">
