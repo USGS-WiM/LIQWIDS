@@ -300,7 +300,7 @@ export class DataviewComponent implements OnInit {
                 labels: {
                     formatter: function() {
                         const date = new Date(this.value);
-                        return date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
+                        return date.getFullYear();
                     }
                 },
                 type: 'datetime'
@@ -336,7 +336,7 @@ export class DataviewComponent implements OnInit {
                         }
                     },
                     tooltip: {
-                        headerFormat: '<b>{point.x:%Y-%m-%d}<b><br>',
+                        headerFormat: '<b>{point.x:%m-%d-%Y}<b><br>',
                         pointFormat: '{point.y} mg/l'
                     }
                 }

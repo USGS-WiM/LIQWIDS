@@ -12,7 +12,7 @@ import { Http, Response, RequestOptions, URLSearchParams, Headers } from '@angul
 export class SummariesService {
     public csvOrgFile;
     public jsonOrgFile;
-    public orgList: Iorg[];
+    public orgList;
 
     public csvSumFile;
     public jsonSumFile;
@@ -32,19 +32,18 @@ export class SummariesService {
     public get SummaryData(): Observable<Array<Ioutput>> {
         return this._summaryDataSubject.asObservable();
     }
-    // read summary json, use while we have the json preloaded
-  public readSumFile() {
-    this.sum_output = [];
-    this._http.get('./assets/org_summary.json')
-      .subscribe(data => {
-        this.jsonFile = data;
-        this.jsonFile = JSON.parse(this.jsonFile._body);
-        for (let i = 0; i < this.jsonFile.length; i++) {
-          this.sum_output.push(this.jsonFile[i]);
-        }
-        this._summaryDataSubject.next(this.sum_output);
-      });
-  }
+    public readSumFile() {
+      this.sum_output = [];
+      this._http.get('./assets/org_summary.json')
+        .subscribe(data => {
+          this.jsonFile = data;
+          this.jsonFile = JSON.parse(this.jsonFile._body);
+          for (let i = 0; i < this.jsonFile.length; i++) {
+            this.sum_output.push(this.jsonFile[i]);
+          }
+          this._summaryDataSubject.next(this.sum_output);
+        });
+    }
 
   // get list of organizations
   public getOrgData() {
@@ -56,7 +55,9 @@ export class SummariesService {
         this.jsonOrgFile = this.csvJSON(this.csvOrgFile._body);
         this.orgList = JSON.parse(this.jsonOrgFile);
         this.sum_output = [];
-        this.getSummaryData(0);
+        for (let i = 0; i < this.orgList.length; i ++) {
+          this.getSummaryData(i);
+        }
       });
   }
 
@@ -64,7 +65,7 @@ export class SummariesService {
   public getSummaryData(i) {
     const sumUrl = 'https://www.waterqualitydata.us/data/summary/monitoringlocation/search?mimeType=csv&zip=no' +
         '&countycode=US%3A36%3A059&countycode=US%3A36%3A103&organization=' + this.orgList[i].OrganizationIdentifier +
-        '&statecode=US%3A36&summaryYears=5&dataProfile=periodOfRecord';
+        '&statecode=US%3A36&dataProfile=periodOfRecord';
     this._http.get(sumUrl)
       .subscribe(data => {
         this.csvSumFile = data;
@@ -74,14 +75,13 @@ export class SummariesService {
             return (new Date(b.LastResultSubmittedDate) > new Date(a.LastResultSubmittedDate)) ? 1 : -1;
           });
           const last_submit_date = sortedData[1].LastResultSubmittedDate;
-          const num_samples = this.sumList.filter(function(o) { return o.LastResultSubmittedDate === last_submit_date; }).length;
+          const num_samples = this.sumList.length;
           this.sum_output.push({org_name: this.orgList[i].OrganizationFormalName, last_submit: last_submit_date,
             num_samples: num_samples});
         } else if (this.sumList.length === 1) {
           this.sum_output.push({org_name: this.orgList[0].OrganizationFormalName, last_submit: this.sumList[0].LastResultSubmittedDate,
             num_samples: 1});
         }
-        if (i < this.orgList.length - 1) { this.getSummaryData( i += 1)};
         console.log(this.sum_output);
         this._summaryDataSubject.next(this.sum_output);
       });
