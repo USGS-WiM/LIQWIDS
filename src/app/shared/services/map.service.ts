@@ -42,6 +42,14 @@ export class MapService {
         return this._characteristicFilterSubject.asObservable();
     }
 
+    public _siteStatsSubject = new Subject();
+    public get SiteStats(): Observable<any> {
+        return this._siteStatsSubject.asObservable();
+    }
+
+    public _siteChangeSubject = new Subject();
+    public get SiteChange(): Observable<any> { return this._siteChangeSubject.asObservable(); }
+
     constructor(private _http: HttpClient, private _loaderService: LoaderService) {
 
         this.chosenBaseLayer = "Topo";
@@ -138,7 +146,7 @@ export class MapService {
         return throwError("HTTPClient error.");
     }
 
-    public addToSitesLayer(geoJson: any){
+    public addToSitesLayer(geoJson: any) {
         const self = this;
         let geojsonMarkerOptions = {
             radius: 5,
@@ -164,6 +172,7 @@ export class MapService {
 
         //zoom
         this.map.fitBounds(this.sitesLayer.getBounds(), {padding:[20,20]});
+        this._siteChangeSubject.next(geoJson);
     }
 
     //use extent to get NWIS rt gages based on bounding box, display on map

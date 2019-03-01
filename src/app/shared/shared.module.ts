@@ -8,6 +8,7 @@ import { MapService } from './services/map.service';
 import { LoaderService } from './services/loader.service';
 import { SummaryComponent } from './components/summary/summary.component';
 import { SummariesService } from './services/summaries.service';
+import { DataLoaderComponent } from './components/loader/dataloader.component';
 
 //Temporarily use NG Material
 import { MatInputModule } from '@angular/material';
@@ -18,9 +19,9 @@ import { MatExpansionModule} from '@angular/material/expansion';
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
-  declarations: [TabsComponent, TabComponent, LoaderComponent, SummaryComponent],
+  declarations: [TabsComponent, TabComponent, LoaderComponent, SummaryComponent, DataLoaderComponent],
   imports: [ CommonModule, MatInputModule, MatTableModule, MatSortModule, MatFormFieldModule, MatExpansionModule, BrowserAnimationsModule ],
-  exports: [TabsComponent, TabComponent, LoaderComponent, SummaryComponent],
+  exports: [TabsComponent, TabComponent, LoaderComponent, SummaryComponent, DataLoaderComponent],
   providers: [MapService, LoaderService, SummariesService]
 })
 export class SharedModule { }
