@@ -1,6 +1,6 @@
 @import '../../variables.scss';
 
-#fakeData{
+#noData{
     color: $red;
     font-size: 14px;
     display: block;
@@ -45,7 +45,7 @@
             background-color: rgba(10,10,50,0.08);
         }
 
-        div{
+        td,th{
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -73,3 +73,11 @@
         }
     }
 } 
+
+.hidden{
+    display: none !important;
+}
+
+button{
+    margin-bottom: 5px;
+}
