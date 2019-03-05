@@ -30,6 +30,19 @@ export class MapComponent implements OnInit {
     this._mapService.sitesLayer = L.featureGroup().addTo(this._mapService.map);
     this._mapService.nwisLayer = L.featureGroup().addTo(this._mapService.map);
 
+    //add legend
+    this._mapService.legend = new L.Control({position: 'bottomright'});
+
+    this._mapService.legend.onAdd = function (map) {
+  
+      var div = L.DomUtil.create('div', 'info legend');
+      var item = '<i class="wqx-site"></i>WQX Sites';
+      div.innerHTML = item;
+      return div;
+    };
+  
+    this._mapService.legend.addTo(this._mapService.map);
+
     ///NOT FINISHED
     this._mapService.map.on('load moveend zoomend', (e) => {
 
