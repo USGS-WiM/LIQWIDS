@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Map } from 'leaflet';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { Observable, throwError, BehaviorSubject, Subject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { LoaderService } from '../../shared/services/loader.service';
 
@@ -32,12 +32,29 @@ export class MapService {
 
     public sitesLayer: L.FeatureGroup<any>;
     public nwisLayer: L.FeatureGroup<any>;
+    public _selectedSiteSubject = new Subject();
+    public get SelectedSite(): Observable<any> {
+        return this._selectedSiteSubject.asObservable();
+    }
 
-    constructor(private _http: HttpClient, private _loaderService: LoaderService) { 
+    public _characteristicFilterSubject = new BehaviorSubject('Nitrate');
+    public get SelectedChar(): Observable<any> {
+        return this._characteristicFilterSubject.asObservable();
+    }
+
+    public _siteStatsSubject = new Subject();
+    public get SiteStats(): Observable<any> {
+        return this._siteStatsSubject.asObservable();
+    }
+
+    public _siteChangeSubject = new Subject();
+    public get SiteChange(): Observable<any> { return this._siteChangeSubject.asObservable(); }
+
+    constructor(private _http: HttpClient, private _loaderService: LoaderService) {
 
         this.chosenBaseLayer = "Topo";
         
-        this.baseMaps = {// {s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png  
+        this.baseMaps = {// {s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
             OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 20,
                 zIndex: 1,
@@ -86,7 +103,7 @@ export class MapService {
             })
         };
 
-        
+
     }
 
     public getData(): Observable<any> {
@@ -114,7 +131,7 @@ export class MapService {
             }),
             catchError(this.handleError)
 
-        )   
+        )
     }
 
     private handleError(err: HttpErrorResponse){
@@ -129,7 +146,8 @@ export class MapService {
         return throwError("HTTPClient error.");
     }
 
-    public addToSitesLayer(geoJson: any){
+    public addToSitesLayer(geoJson: any) {
+        const self = this;
         let geojsonMarkerOptions = {
             radius: 5,
             fillColor: '#9b0004',
@@ -143,12 +161,18 @@ export class MapService {
             },
             onEachFeature: (feature, layer) => {
                 layer.bindPopup("<b>Site Name: </b>" + feature.properties.name + "<br/><b>Location Name: </b>" + feature.properties.locName + "<br/><b>Organization Name: </b>" + feature.properties.orgName + "<br/><b>Result Count: </b>" + feature.properties.resultCnt);
+                layer.on('click', function(e) {
+                    console.log(e);
+                    const event = e;
+                    self._selectedSiteSubject.next(event.target.feature.properties);
+                });
             }
             
         }).addTo(this.sitesLayer);
 
         //zoom
         this.map.fitBounds(this.sitesLayer.getBounds(), {padding:[20,20]});
+        this._siteChangeSubject.next(geoJson);
     }
 
     //use extent to get NWIS rt gages based on bounding box, display on map
