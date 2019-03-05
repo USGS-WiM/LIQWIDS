@@ -4,6 +4,10 @@
 
 @import 'variables.scss';
 
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
+
+
 // SASS helpers/mixins
 @import '/styles/helpers.scss';
 
@@ -17,6 +21,7 @@
 
 @import '/styles/custom/general.scss';
 @import '/styles/custom/map.scss';
+
 
 
 // Specific imports

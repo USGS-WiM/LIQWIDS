@@ -68,7 +68,6 @@
   </div>
 
   <!--  Sidebar Parameter Filters  -->
-
   <div id="siteCount"><b>{{geoJSONsiteCount}}</b> sites showing</div>
 
   <div class="sidebar-header" (click)="showParameterFilters = !showParameterFilters" [ngClass]="{ expanded: showParameterFilters }">
@@ -76,23 +75,24 @@
     <b>Parameter Filters</b>
   </div>
 
-
   <!-- Filters Parameter Content -->
   <div class="sidebar-content" [ngClass]="{ expanded: showParameterFilters }">
 
-    <form *ngIf="siteFilterData" [formGroup]="parameterDropDownGroup" id="sidebarParameterFilters">
+    <form *ngIf="parameterFilterData" [formGroup]="parameterDropDownGroup" id="sidebarParameterFilters">
 
       <!-- characteristic -->
       <label for="characteristic">Characteristic</label>
-      <div class="filter-select">
-          <select class="form-control" formControlName="characteristic" multiple>
-            <option *ngFor="let characteristic of parameterFilterData.characteristics" [value]="characteristic">{{characteristic}}</option>
-          </select>
-      </div>
-      
+      <ng-select 
+        formControlName="characteristic"
+        [items]="parameterFilterData.characteristics"
+        [multiple]="true"
+        bindLabel="name"
+        placeholder="Select">
+      </ng-select>
+
+      <br><br>
     </form>
 
-    <!-- <button class="clearForm" title="reQuery" (click)="reQuery()">Re-Query </button> -->
   </div>
 
   <!--  Sidebar Site Filters  -->
@@ -108,62 +108,64 @@
 
       <!-- Huc8 -->
       <label for="huc8">Huc8</label>
-      <div class="filter-select">
-          <select class="form-control" formControlName="huc8" multiple>
-              <option *ngFor="let huc of siteFilterData.huc8" [value]="huc">{{huc}}</option>
-          </select>
-      </div>
-        
+      <ng-select 
+      formControlName="huc8"
+        [items]="siteFilterData.huc8"
+        [multiple]="true"
+        bindLabel="name"
+        placeholder="Select">
+      </ng-select>
 
-      <!-- <label for="location">Location Name</label>
-        <select class="form-control" formControlName="location">
-            <option *ngFor="let locName of siteFilterData.locName" [value]="locName">{{locName}}</option>
-        </select>
-        <br> -->
-        <!-- <label for="name">Site Name</label>
-        <select class="form-control" formControlName="name">
-            <option *ngFor="let name of siteFilterData.name" [value]="name">{{name}}</option>
-        </select>
-        <br> -->
-
-      <!-- Org IF -->
+      <!-- Org ID -->
       <label for="orgId">Organization Id</label>
-      <div class="filter-select">
-          <select class="form-control" formControlName="orgId" multiple>
-              <option *ngFor="let orgId of siteFilterData.orgId" [value]="orgId">{{orgId}}</option>
-          </select>
-      </div>
+
+      <ng-select 
+        formControlName="orgId"
+        [items]="siteFilterData.orgId"
+        [multiple]="true"
+        bindLabel="name"
+        placeholder="Select">
+      </ng-select>
 
       <!-- Org Name -->
       <label for="orgName">Organization Name</label>
-      <div class="filter-select">
-          <select class="form-control" formControlName="orgName" multiple>
-              <option *ngFor="let orgName of siteFilterData.orgName" [value]="orgName">{{orgName}}</option>
-          </select>
-      </div>
+
+      <ng-select 
+        formControlName="orgName"
+        [items]="siteFilterData.orgName"
+        [multiple]="true"
+        bindLabel="name"
+        placeholder="Select">
+      </ng-select>
 
       <!-- Data Provider -->
       <label for="provider">Data Provider</label>
-      <div class="filter-select">
-          <select class="form-control" formControlName="provider" multiple>
-              <option *ngFor="let provider of siteFilterData.provider" [value]="provider">{{provider}}</option>
-          </select>
-      </div>
+      <ng-select 
+        formControlName="provider"
+        [items]="siteFilterData.provider"
+        [multiple]="true"
+        bindLabel="name"
+        placeholder="Select">
+      </ng-select>
 
+      <!-- Data Provider -->
       <label for="searchType">Keyword</label>
-      <div class="filter-select">
-          <select class="form-control" formControlName="searchType" multiple>
-              <option *ngFor="let sType of siteFilterData.searchType" [value]="sType">{{sType}}</option>
-          </select>
-      </div>
+      <ng-select 
+      formControlName="searchType"
+        [items]="siteFilterData.searchType"
+        [multiple]="true"
+        bindLabel="name"
+        placeholder="Select">
+      </ng-select>
 
       <label for="type">Site Type</label>
-      <div class="filter-select">
-          <select class="form-control" formControlName="type" multiple>
-              <option *ngFor="let type of siteFilterData.type" [value]="type">{{type}}</option>
-          </select>
-      </div>
-
+      <ng-select 
+        formControlName="type"
+        [items]="siteFilterData.type"
+        [multiple]="true"
+        bindLabel="name"
+        placeholder="Select">
+      </ng-select>
 
     </form>
 
