@@ -12,6 +12,7 @@ import * as L from 'leaflet';
 })
 export class MapService {
     public map: Map;
+    public legend: any;
     public chosenBaseLayer: string;
     public baseMaps: any;
     public mainLayers: any;
