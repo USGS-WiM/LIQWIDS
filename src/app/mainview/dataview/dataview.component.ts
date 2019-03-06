@@ -31,6 +31,7 @@ export class DataviewComponent implements OnInit {
     private showSiteData = false;
     private selectedSite = '';
     private noData = false;
+    private dataLoading = false;
     private unitCodes = [];
 
     constructor(private _mapService: MapService, private _http: Http, private _loaderService: LoaderService) { }
@@ -140,6 +141,8 @@ export class DataviewComponent implements OnInit {
 
     public getResultData(site) {
         this._loaderService.showDataLoad();
+        this.dataLoading = true;
+
         let resultUrl = 'https://www.waterqualitydata.us/data/Result/search?mimeType=csv&countrycode=US';
         resultUrl += '&siteid=' + site + '&characteristicName=' + this.characteristic;
         this._http.get(resultUrl)
@@ -149,7 +152,7 @@ export class DataviewComponent implements OnInit {
                 this.resultJson = JSON.parse(this.resultJson);
                 this.showSiteData = true; this.noData = false;
                 if (this.resultJson.length > 0) {this.createSiteCharts(site);
-                } else {this._loaderService.hideDataLoad(); this.noData = true; }
+                } else {this._loaderService.hideDataLoad(); this.noData = true; this.dataLoading = false; }
             });
     }
 
@@ -222,6 +225,7 @@ export class DataviewComponent implements OnInit {
             this.siteChart.addSeries({name: 'Depth: ' + depthValues[depth], data: data});
         }
         this._loaderService.hideDataLoad();
+        this.dataLoading = false;
     }
     public getStatData() {
         while (this.typeChart.series.length > 0) { this.typeChart.series[0].remove(true); }

@@ -31,19 +31,20 @@
 
 // Sidebar
 #sidebar{
-    height: 100%;
-    overflow: auto;
+    
 
     .sidebar-header{
         font-family: $poppins;
-        font-weight: 600;
+        font-weight: 500;
         font-size: 18px;
         color: $black;
         letter-spacing: -0.3px;
         display: flex;
+        box-sizing: border-box;
+        padding: 10px 15px;
 
         i{
-            width: 40px;
+            width: 30px;
             height: 30px;
             display: flex;
             flex-direction: column;
@@ -52,18 +53,25 @@
 
         b{
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             flex-grow: 3;
-            position: relative;
 
             &:after{
                 content: '\f067';
                 font-family: 'Font Awesome 5 Pro';
-                position: absolute;
-                right: 0;
+                right: 15px;
                 color: fade-out($black, 0.8);
                 font-size: 16px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            span{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                flex-grow: 3;
             }
         }
 
@@ -78,7 +86,9 @@
             cursor: pointer;
 
             b{
-                text-decoration: underline;
+                span{
+                    text-decoration: underline;
+                }
 
                 &:after{
                     color: $black;
@@ -93,13 +103,20 @@
     .sidebar-content{
         display: block;
         box-sizing: border-box;
-        padding-left: 40px;
-        height: 0px;
-        overflow: hidden;
-        margin-bottom: 15px;
+        // max-height: 0px;
+        // transition: max-height 0.15s 0.15s, transform 0.15s 0s ease;        
+        overflow: visible;
+        padding: 0 15px 0 45px;
+        // transform: scaleY(0);
+        // transform-origin: 0 0;
+        display: none;
 
         &.expanded{
-            height: auto;
+            // transition: max-height 0.15s 0s, transform 0.15s 0.15s ease;        
+            // max-height: 700px;
+            // overflow: auto;
+            display: block;
+            // transform: scaleY(1);
         }
     }
 
@@ -144,18 +161,17 @@
 #siteCount{
     display: block;
     text-align: center;
-    background-color: fade-out($black, 0.85);
+    background-color: $blue;
     box-sizing: border-box;
-    border-radius: $borderRadius;
     padding: 10px;
-    color: $black;
+    color: $white;
     font-size: 12px;
     font-weight: 500;
     margin: 0 auto;
     font-family: $poppins;
     letter-spacing: -0.4px;
-    margin-bottom: 8px;
-    margin-top: 15px;
+    width: 280px;
+    z-index: 50;
 
     b{
         font-weight: 600;
@@ -164,19 +180,16 @@
 }
 
 
-// Sidebar Filters
-// Sidebar Filters
-// Sidebar Filters
-#sidebarFilters{
-    margin-bottom: 15px;
-    
-    label{
-        margin-top: 6px;
-    }
+.clearForm{
+    margin-top: 15px;
 }
 
 
-
-.clearForm{
-    margin-top: 15px;
+// Multiselect Labels
+// Multiselect Labels
+// Multiselect Labels
+#sidebar .multiselect-label{
+    position: relative;
+    top: 5px;
+    color: $black;
 }

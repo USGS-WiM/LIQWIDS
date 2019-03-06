@@ -10,6 +10,15 @@
     display: block;
     box-sizing: border-box;
     padding: 15px;
+    position: relative;
+
+    &.data-blur{
+
+        // Blur everything except the loader
+        *:not(#dataLoader){
+            filter: blur(3px);
+        }
+    }
 }
 
 

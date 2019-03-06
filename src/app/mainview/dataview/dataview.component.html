@@ -1,5 +1,8 @@
-<div id="dataView">
-    <dataloader-div></dataloader-div>
+<div id="dataView" [ngClass]="{'data-blur': dataLoading == true }">
+        
+    <dataloader-div id="dataLoader"></dataloader-div>
+
+
     <h1>Data</h1>
     <h3 *ngIf="showSiteData == true && noData == false">Site name: {{selectedSite}}</h3>
 
