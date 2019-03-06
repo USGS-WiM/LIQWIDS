@@ -151,6 +151,7 @@ export class MapService {
 
     public addToSitesLayer(geoJson: any) {
         const self = this;
+        if (this.selectedSiteLayer) { this.selectedSiteLayer.remove(this.highlightMarker); }
         let geojsonMarkerOptions = {
             radius: 5,
             fillColor: '#9b0004',

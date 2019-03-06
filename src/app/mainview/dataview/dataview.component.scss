@@ -48,7 +48,7 @@
     display: flex;
     justify-content: space-between;
     box-sizing: border-box;
-    padding: 20px 25px 45px 25px;
+    padding: 20px 25px 10px 25px;
 
     .chart{
         display: block;
@@ -114,5 +114,9 @@
 }
 
 button{
-    margin-bottom: 5px;
+    margin: 45px 0px 5px 0px;
+}
+
+i{
+    padding: 5px;
 }
