@@ -16,9 +16,10 @@ export class MapService {
     public chosenBaseLayer: string;
     public baseMaps: any;
     public mainLayers: any;
-    public geoJson:any;
+    public geoJson: any;
     public filterJson: any;
     public filterOptions: any;
+    public highlightMarker;
 
     public geoJsonURL = 'https://www.waterqualitydata.us/ogcservices/wfs/';
 
@@ -33,6 +34,7 @@ export class MapService {
 
     public sitesLayer: L.FeatureGroup<any>;
     public nwisLayer: L.FeatureGroup<any>;
+    public selectedSiteLayer: any;
     public _selectedSiteSubject = new Subject();
     public get SelectedSite(): Observable<any> {
         return this._selectedSiteSubject.asObservable();
@@ -163,8 +165,8 @@ export class MapService {
             onEachFeature: (feature, layer) => {
                 layer.bindPopup("<b>Site Name: </b>" + feature.properties.name + "<br/><b>Location Name: </b>" + feature.properties.locName + "<br/><b>Organization Name: </b>" + feature.properties.orgName + "<br/><b>Result Count: </b>" + feature.properties.resultCnt);
                 layer.on('click', function(e) {
-                    console.log(e);
                     const event = e;
+                    self.highlightSelectedSite(e);
                     self._selectedSiteSubject.next(event.target.feature.properties);
                 });
             }
@@ -174,6 +176,23 @@ export class MapService {
         //zoom
         this.map.fitBounds(this.sitesLayer.getBounds(), {padding:[20,20]});
         this._siteChangeSubject.next(geoJson);
+    }
+
+    public highlightSelectedSite(site) {
+        if (this.selectedSiteLayer) { this.selectedSiteLayer.remove(this.highlightMarker); }
+        const highlightOptions = {
+            radius: 4,
+            weight: 12,
+            opacity: .45,
+            fill: true,
+            color: 'orange',
+            fillColor: '#9b0004',
+            fillOpacity: 0.5
+        };
+        const highlightMarker = L.circleMarker(site.latlng, highlightOptions);
+        this.selectedSiteLayer = L.featureGroup([]);
+        highlightMarker.addTo(this.selectedSiteLayer);
+        this.selectedSiteLayer.addTo(this.map);
     }
 
     //use extent to get NWIS rt gages based on bounding box, display on map

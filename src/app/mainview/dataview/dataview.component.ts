@@ -24,7 +24,7 @@ export class DataviewComponent implements OnInit {
     public resultCsv;
     public resultJson;
     public filterSelections;
-    public characteristic = 'Nitrate';
+    public characteristics = ['Nitrate'];
     private siteFilterData;
     private geoJSONsiteCount;
     private geojson;
@@ -41,9 +41,11 @@ export class DataviewComponent implements OnInit {
         });
         this._mapService.SelectedChar.subscribe((Response) => {
             this.noData = false;
-            if (Response === 'Nitrogen') {
-                this.characteristic = 'Nitrogen&characteristicName=Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)';
-            } else {this.characteristic = Response; }
+            if (typeof Response === 'string') {this.characteristics = [Response];
+            } else {this.characteristics = Response; }
+            if (this.characteristics.indexOf('Nitrogen') > -1) {
+                this.characteristics.push('Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)');
+            }
         });
 
         this._mapService.SiteChange.subscribe((geojson) => {
@@ -81,11 +83,9 @@ export class DataviewComponent implements OnInit {
                 }
             },
             legend: {
-                layout: 'vertical',
-                align: 'left',
-                verticalAlign: 'top',
-                floating: true,
-                borderWidth: 1
+                floating: false,
+                borderWidth: 1,
+                margin: 5
             },
             plotOptions: {
                 scatter: {
@@ -100,7 +100,8 @@ export class DataviewComponent implements OnInit {
                     },
                     tooltip: {
                         headerFormat: '<b>{point.x:%Y-%m-%d}<b><br>',
-                        pointFormat: '{point.name}'
+                        pointFormat: '{point.name}',
+                        shared: true
                     }
                 }
             }
@@ -141,7 +142,10 @@ export class DataviewComponent implements OnInit {
     public getResultData(site) {
         this._loaderService.showDataLoad();
         let resultUrl = 'https://www.waterqualitydata.us/data/Result/search?mimeType=csv&countrycode=US';
-        resultUrl += '&siteid=' + site + '&characteristicName=' + this.characteristic;
+        resultUrl += '&siteid=' + site;
+        for (const char of this.characteristics) {
+            resultUrl += '&characteristicName=' + char;
+        }
         this._http.get(resultUrl)
             .subscribe(csv => {
                 this.resultCsv = csv; this.resultCsv = this.resultCsv._body;
