@@ -1,16 +1,25 @@
-<div id="dataView">
-    <dataloader-div></dataloader-div>
-    <h1>Data</h1>
-    <h3 *ngIf="showSiteData == true && noData == false">Site name: {{selectedSite}}</h3>
+<div id="dataView" [ngClass]="{'data-blur': dataLoading == true }">
+        
+    <dataloader-div id="dataLoader"></dataloader-div>
 
-    <div [class.hidden]="showSiteData == true" id="chartWrapper">
-        <div id="typeChart"></div>
-        <div id="orgChart"></div>
+
+    <div class="site-meta">
+        <h1>Data</h1>
+        <h3 *ngIf="showSiteData == true && noData == false">Site name: {{selectedSite}}</h3>
     </div>
-    <div [class.hidden]="showSiteData == false || noData == true" id="chartWrapper">
-        <div [class.hidden]="unitCodes.length == 1"id="siteChart2"></div>
-        <div id="siteChart"></div>
+
+    <div [class.hidden]="showSiteData == true" class="chart-wrapper">
+        <div class="chart" id="typeChart"></div>
+        <div class="chart" id="orgChart"></div>
     </div>
+
+
+    <div [class.hidden]="showSiteData == false || noData == true" class="chart-wrapper">
+        <div class="chart" [class.hidden]="unitCodes.length == 1" id="siteChart2"></div>
+        <div class="chart" id="siteChart"></div>
+    </div>
+
+
     <div [class.hidden]="showSiteData == false || noData == true">
         <button (click)="downloadFile()">Download Results File</button>
         <table id="dataTable">

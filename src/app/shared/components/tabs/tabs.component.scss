@@ -9,7 +9,7 @@
   .tab-ul {
         list-style: none;
         width: 100%;
-        padding: 0 0 10px 0;
+        padding: 0 20px 10px 20px;
         box-sizing: border-box;
         margin: 0;
         display: flex;
@@ -21,12 +21,12 @@
 
             a{
                 transition: $transition;
-                font-size: 12px;
+                font-size: 14px;
                 box-sizing: border-box;
                 padding: 6px 0;
                 font-family: $sans;
                 font-weight: 600;
-                letter-spacing: -0.2px;
+                letter-spacing: -0.3px;
                 text-decoration: none;
                 color: fade-out($black, 0.5);
                 transition: $transition;

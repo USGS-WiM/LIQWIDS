@@ -32,9 +32,15 @@
             width: 280px;
             background-color: $white;
             box-sizing: border-box;
-            padding: 15px;
             overflow: auto;
             transition: all 0.15s ease, width 0s 0.15s;
+            height: 100%;
+            overflow: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        
 
             @media only screen and (max-width: 1200px) {
                 position: fixed;
@@ -68,6 +74,15 @@
                     width: 100%;
                     border-top: 1px solid fade-out($black, 0.8);
                 }
+            }
+
+            // Scroll content within sidebar
+            .sidebar-scroll{
+                display: block;
+                overflow: auto;
+                flex-grow: 3;
+                box-sizing: border-box;
+                padding-bottom: 25px;
             }
         } 
 
