@@ -10,6 +10,10 @@ export class LoaderService {
 
     public loaderState = this._loaderSubject.asObservable();
 
+    private _dataloaderSubject = new Subject<boolean>();
+
+    public dataloaderState = this._dataloaderSubject.asObservable();
+
     constructor() { }
 
     public showFullPageLoad() {
@@ -17,5 +21,13 @@ export class LoaderService {
     }
     public hideFullPageLoad() {
         this._loaderSubject.next(false);
+    }
+
+    public showDataLoad() {
+        this._dataloaderSubject.next(true);
+    }
+
+    public hideDataLoad() {
+        this._dataloaderSubject.next(false);
     }
 }

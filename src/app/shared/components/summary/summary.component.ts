@@ -15,8 +15,7 @@ export class SummaryComponent implements OnInit {
     public displayedColumns = ['org_name', 'last_submit', 'num_samples'];
     // public dataSource = new MatTableDataSource;
     public dataSource: MatTableDataSource<Ioutput>;
-    public summaries_count: number;
-    
+
     constructor(private _summariesService: SummariesService) { }
 
     ngOnInit() {
@@ -24,14 +23,18 @@ export class SummaryComponent implements OnInit {
 
         this._summariesService.SummaryData.subscribe((sum_data) => {
             this.dataSource = new MatTableDataSource(sum_data);
-            if (this._summariesService.summary_data) { this.summaries_count = this._summariesService.summary_data.length; }
             this.dataSource.sort = this.sort;
+            this.dataSource.sortingDataAccessor = (item, property) => {
+                switch (property) {
+                    case 'last_submit': return new Date(item.last_submit);
+                    default: return item[property];
+                }
+            };
         });
     }
-    
+
     public applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue.trim().toLowerCase();
-        this.summaries_count = this.dataSource.filteredData.length;
       }
 
 }

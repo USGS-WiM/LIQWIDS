@@ -1,6 +1,3 @@
-<div class="title">
-    <p id="count">Count: {{summaries_count}}</p>
-</div>
 <mat-form-field class="filter">
     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
 </mat-form-field>
@@ -20,7 +17,7 @@
 
         <!--num_samples-->
         <ng-container matColumnDef="num_samples">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Number of Samples Submitted</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Total Samples Submitted</mat-header-cell>
         <mat-cell *matCellDef="let sum">{{sum.num_samples}}</mat-cell>
         </ng-container>
 

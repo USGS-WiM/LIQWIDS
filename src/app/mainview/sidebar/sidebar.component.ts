@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit, NgModule } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
+
 
 import { MapService } from 'src/app/shared/services/map.service';
 
@@ -8,6 +9,7 @@ import { MapService } from 'src/app/shared/services/map.service';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
+
 export class SidebarComponent implements OnInit {
   public parameterDropDownGroup: FormGroup;
   public siteDropDownGroup: FormGroup;
@@ -16,11 +18,20 @@ export class SidebarComponent implements OnInit {
   public defaultParameterFilter;
   public geoJSONsiteCount;
 
+  public cities = [];
+
   constructor(private _mapService: MapService, private formBuilder: FormBuilder) { }
 
 
   ngOnInit() {
 
+    this.cities = [
+      {id: 1, name: 'Vilnius'},
+      {id: 2, name: 'Kaunas'},
+      {id: 3, name: 'Pavilnys', disabled: true},
+      {id: 4, name: 'Pabradė'},
+      {id: 5, name: 'Klaipėda'}
+  ];
 
     //for now we can keep this a static list but ultimately could pull from here in a service
     // https://www.waterqualitydata.us/Codes/Characteristicname?mimeType=xml
@@ -32,6 +43,7 @@ export class SidebarComponent implements OnInit {
 
     this.parameterDropDownGroup = this.formBuilder.group({
       characteristic: [this.defaultParameterFilter]
+      //characteristic: [[]]
     });
 
     this.parameterDropDownGroup.get('characteristic').setValue([this.defaultParameterFilter]);
@@ -49,7 +61,9 @@ export class SidebarComponent implements OnInit {
 
     //this is the main data request
     this._mapService.getData().subscribe(response => {
-      
+
+      console.log(response)
+
       this.siteFilterData = response;
       this._mapService.addToSitesLayer(this._mapService.geoJson);
       this.geoJSONsiteCount = this._mapService.geoJson.totalFeatures;
@@ -59,10 +73,18 @@ export class SidebarComponent implements OnInit {
     this.onChanges();
   }
 
+  onItemSelect(item: any) {
+    console.log(item);
+  }
+  onSelectAll(items: any) {
+    console.log(items);
+  }
+
   private onChanges(): void {
 
     //requery on wfs data on any parameter filter dropdown change
     this.parameterDropDownGroup.valueChanges.subscribe(selections => {
+      this._mapService._characteristicFilterSubject.next(selections.characteristic);
       this.reQuery();
     });
 

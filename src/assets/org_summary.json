@@ -1,32 +1,87 @@
 [
 	{
+		"org_name": "USGS Massachusetts Water Science Center",
+		"last_submit": "01-01-1991",
+		"num_samples": 73
+	},
+	{
 		"org_name": "USGS New York Water Science Center",
-		"last_submit": "12/31/2018",
-		"num_samples": 1063
+		"last_submit": "01-01-2018",
+		"num_samples": 768712
+	},
+	{
+		"org_name": "USGS Texas Water Science Center",
+		"last_submit": "01-01-1997",
+		"num_samples": 31
+	},
+	{
+		"org_name": "US EPA Region 1",
+		"last_submit": "01-01-2001",
+		"num_samples": 184
 	},
 	{
 		"org_name": "National Park Service Water Resources Division",
-		"last_submit": "2018-08-28",
-		"num_samples": 752
+		"last_submit": "11-13-2018",
+		"num_samples": 16039
 	},
 	{
 		"org_name": "New York State Department of Health",
-		"last_submit": "2018-11-30",
-		"num_samples": 266
+		"last_submit": "11-30-2018",
+		"num_samples": 4928
 	},
 	{
-		"org_name": "USGS Georgia Water Science Center",
-		"last_submit": "2016-03-08",
-		"num_samples": 1
+		"org_name": "NYS Dept. of EnCon,  Division of Water",
+		"last_submit": "01-01-2004",
+		"num_samples": 175
+	},
+	{
+		"org_name": "New York State Dec Division Of Water",
+		"last_submit": "03-08-2016",
+		"num_samples": 5142
+	},
+	{
+		"org_name": "Interstate Environmental Commission (New York)",
+		"last_submit": "01-01-2008",
+		"num_samples": 880
 	},
 	{
 		"org_name": "Interstate Environmental Commission",
-		"last_submit": "5/29/2018",
-		"num_samples": 169
+		"last_submit": "05-29-2018",
+		"num_samples": 2380
+	},
+	{
+		"org_name": "CSC (Computer Sciences Corporation)(Virginia)",
+		"last_submit": "01-01-2003",
+		"num_samples": 35
+	},
+	{
+		"org_name": "Environmental Monitoring and Assessment Program",
+		"last_submit": "01-01-2010",
+		"num_samples": 8888
+	},
+	{
+		"org_name": "Environmental Monitoring and Assessment Program (WQX)",
+		"last_submit": "01-11-2013",
+		"num_samples": 7601
 	},
 	{
 		"org_name": "EPA Region 2",
-		"last_submit": "2016-08-21",
-		"num_samples": 24
+		"last_submit": "08-21-2016",
+		"num_samples": 464
+	},
+	{
+		"org_name": "Environmental Protection Agency Region 2",
+		"last_submit": "11-21-2017",
+		"num_samples": 394
+	},
+	{
+		"org_name": "North American Lake Management Society",
+		"last_submit": "07-21-2017",
+		"num_samples": 63
+	},
+	{
+		"org_name": "USEPA, Office of Water, Office of Science and Technology, Standards and Health Protection Division",
+		"last_submit": "03-22-2016",
+		"num_samples": 284
 	}
 ]

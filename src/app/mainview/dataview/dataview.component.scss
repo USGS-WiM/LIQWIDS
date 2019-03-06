@@ -1,6 +1,6 @@
 @import '../../variables.scss';
 
-#fakeData{
+#noData{
     color: $red;
     font-size: 14px;
     display: block;
@@ -9,17 +9,52 @@
 #dataView{
     display: block;
     box-sizing: border-box;
-    padding: 15px;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+
+    &.data-blur{
+
+        // Blur everything except the loader
+        *:not(#dataLoader){
+            filter: blur(3px);
+        }
+    }
+
+    // Site meta
+    // Name, id, etc
+    .site-meta{
+        display: block;
+        box-sizing: border-box;
+        padding: 15px 25px;
+
+        h1{
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        h3{
+            font-size: 18px;
+            font-weight: 500;
+        }
+    }
 }
 
 
 
 
-#chartWrapper{
+.chart-wrapper{
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     box-sizing: border-box;
-    padding: 20px 0 45px 0;
+    padding: 20px 25px 45px 25px;
+
+    .chart{
+        display: block;
+        margin: 0 auto;
+        width: 50%;
+    }
 }
 #chart1,
 #chart2{
@@ -45,7 +80,7 @@
             background-color: rgba(10,10,50,0.08);
         }
 
-        div{
+        td,th{
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -73,3 +108,11 @@
         }
     }
 } 
+
+.hidden{
+    display: none !important;
+}
+
+button{
+    margin-bottom: 5px;
+}
