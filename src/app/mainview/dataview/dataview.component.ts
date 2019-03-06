@@ -104,6 +104,30 @@ export class DataviewComponent implements OnInit {
                         pointFormat: '{point.name}'
                     }
                 }
+            },
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                        },
+                        yAxis: {
+                            labels: {
+                            },
+                            title: {
+                                text: null
+                            }
+                        },
+                        subtitle: {
+                            text: null
+                        },
+                        credits: {
+                            enabled: false
+                        }
+                    }
+                }]
             }
         };
         this.siteChart = new Highcharts.Chart('siteChart', this._siteChartOptions);
@@ -130,8 +154,34 @@ export class DataviewComponent implements OnInit {
                         format: '<b>{point.name}</b>: {point.percentage:.1f} %'
                     }
                 }
+            },
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                        },
+                        yAxis: {
+                            labels: {
+                            },
+                            title: {
+                                text: null
+                            }
+                        },
+                        subtitle: {
+                            text: null
+                        },
+                        credits: {
+                            enabled: false
+                        }
+                    }
+                }]
             }
         };
+
+
         this.typeChart = new Highcharts.Chart('typeChart', this._typeChartOptions);
         this.orgChart = new Highcharts.Chart('orgChart', this._typeChartOptions);
         this.typeChart.setTitle({text: 'Sites By Type'});

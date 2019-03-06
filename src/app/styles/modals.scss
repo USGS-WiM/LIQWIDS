@@ -103,7 +103,7 @@
         // Modal content
         .modal-content{
             box-sizing: border-box;
-            padding: 0 20px;
+            padding: 0 0;
             margin-bottom: 10px;
             flex-grow: 3;
             max-height: 45vh;
@@ -293,10 +293,6 @@
         tab{
             flex-grow: 3;
             overflow: auto;
-        }
-
-        .pane{
-            padding: 0;
         }
     }
 }
