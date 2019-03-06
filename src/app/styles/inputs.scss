@@ -42,183 +42,112 @@ button{
 }
 
 
-// Search Selector
-// Search Selector
-// Search Selector
-.search-select{
-    display: block;
-    position: relative;
 
-    input{
-        width: 100%;
-        border: 1px solid $borderColor;
-        border-radius: $borderRadius;
-        box-sizing: border-box;
-        padding: 6px 12px;
-        font-size: 15px;
-        font-family: $sans;
-        font-weight: 500;
-        color: $black;
-    }
+// Sidebar Multi Select
+// Sidebar Multi Select
+// Sidebar Multi Select
+#sidebar ng-select {
+    margin-bottom: 14px;
 
-    .search-select-results{
-        display: none;
-        background-color: $black;
-        box-sizing: border-box;
-        padding: 10px 0;
-        border-bottom-left-radius: 10px;
-        border-bottom-right-radius: 10px;
-        max-height: 180px;
-        overflow: auto;
-
-        div{
-            color: $white;
-            font-size: 15px;
-            line-height: 15px;
-            box-sizing: border-box;
-            padding: 4px 15px;
-
-            &:hover{
-                text-decoration: underline;
-                cursor: pointer;
+    >div {
+        >div.single {
+            >div.toggle {
+                color: white !important;
+                background: none;
+                &:hover {
+                    background-color: #4389a9;
+                }
             }
-
-
+            >div.placeholder {
+                color: white;
+                font-size: 35px;
+                font-family: MontserratRegular;
+            }
+            >div.clear {
+                &:hover {
+                    background-color: #4389a9;
+                }
+            }
         }
+        border: none !important;
     }
 
-    input:focus ~ .search-select-results{
-        display: block;
-    }
-}
-
-
-// Select Dropdown
-// Select Dropdown
-// Select Dropdown
-.styled-select{
-    border: 1px solid #ccc;
-    width: 99%;
-    border-radius: 3px;
-    overflow: hidden;
-    background: #fafafa url("data:image/png;base64,R0lGODlhDwAUAIABAAAAAP///yH5BAEAAAEALAAAAAAPABQAAAIXjI+py+0Po5wH2HsXzmw//lHiSJZmUAAAOw==") no-repeat 95% 48%;
-
-    select{
-        padding: 5px 8px;
-        width: 130%;
-        border: none;
-        box-shadow: none;
-        background: transparent;
-        background-image: none;
-        -webkit-appearance: none;
-
-        &:focus{
-            outline: none;
-        }
-    }
-}
-
-
-// Regular Selects
-select{
-    display: block;
-    width: 100%;
-}
-
-
-
-// Temp Multi Select
-// Temp Multi Select
-// Temp Multi Select
-.sidebar-content select{
-    border-radius: 4px;
-    box-sizing: border-box;
-    border: 1px solid fade-out($black, 0.9);
-    margin-bottom: 10px;
-
-    option{
-        font-size: 12px;
-        box-sizing: border-box;
-        padding: 3px 8px;
-        font-family: $sans;
-        font-weight: 500;
-    }
-}
-.filter-select{
-    position: relative;
-
-    select{
-        max-height: 26px;
-        transition: 0.15s;
-
-        &:before{
-            content: 'Select';
-            font-family: $sans;
-            font-size: 11px;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: absolute;
-            top: 5%;
-            left: 1.5%;
-            height: 90%;
-            width: 70%;
-            font-weight: 500;
-            box-sizing: border-box;
-            padding-left: 10px;
-            box-sizing: border-box;
-            transition: $transition;
-            background-color: white;
-            z-index: 1;
-        }
-        &:after{
-            content: '\f0d7';
-            font-family: 'Font Awesome 5 Pro';
-            font-size: 16px;
-            text-align: right;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: absolute;
-            background-color: white;
-            top: 5%;
-            left: 1.5%;
-            height: 90%;
-            width: 93%;
-            font-weight: 900;
-            box-sizing: border-box;
-            padding-right: 10px;
-            box-sizing: border-box;
-            font-weight: 600;
-            transition: $transition;
-            padding-bottom: 1px;
-        }
+    .ng-select-container{
+        border-radius: 0;
+        border-bottom: 1px solid fade-out($black, 0.8) !important;
+        box-shadow: none !important;
+        background-color: transparent;
+        transition: $transition;
 
         &:hover{
-            cursor: pointer;
-            background-color: fade-out($black, 0.95);
-
-            &:after{
-                color: $blue;
-                transition: $transition;
-            }
-        }
-
-        &:focus{
-            transition: 0.15s;
-            max-height: 120px;
-            background-color: white;
-
-            &:hover{
-                background-color: white;
-            }
-
-            &:after,
-            &:before{
-                display: none;
-            }
-
+            border-bottom: 1px solid fade-out($black, 0.25) !important;
+            transition: $transition;
         }
     }
+
+    .ng-value-container{
+        padding-left: 0;
+        padding-top: 0;
+        min-height: 0;
+
+        // Text Placeholder
+        .ng-placeholder{
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: -0.1px;
+            top: 11px;
+            padding-left: 0px;
+            padding-bottom: 0px;
+            color: fade-out($black, 0.4);
+        }
+
+        // Text Input
+        .ng-input{
+            padding: 0 0 4px 0;
+        }
+
+        // Value / tag boxes
+        .ng-value{
+            margin: 2px 4px;
+            background-color: fade-out($primary, 0.85);
+            font-size: 12.5px;
+            font-family: $sans;
+            font-weight: 600;
+            color: $text;
+            display: flex;
+
+            .ng-value-icon{
+                color: $black;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                transition: $transition;
+                border-right: 1px solid fade-out($primary, 0.5);
+
+                &:hover{
+                    color: $red;
+                    background-color: fade-out($primary, 0.85);
+                    transition: $transition;
+                }
+            }
+
+            .ng-value-label{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding: 0 3px 0.5px 3px;
+                letter-spacing: -0.2px;
+            }
+        }
+    }
+
+    // Dropdown arrow
+    .ng-arrow-wrapper{
+        padding: 0;
+    }
+
+    
+}
+#sidebar select-dropdown {
+    display: none;
 }

@@ -31,6 +31,7 @@ export class DataviewComponent implements OnInit {
     private showSiteData = false;
     private selectedSite = '';
     private noData = false;
+    private dataLoading = false;
     private unitCodes = [];
 
     constructor(private _mapService: MapService, private _http: Http, private _loaderService: LoaderService) { }
@@ -104,6 +105,30 @@ export class DataviewComponent implements OnInit {
                         shared: true
                     }
                 }
+            },
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                        },
+                        yAxis: {
+                            labels: {
+                            },
+                            title: {
+                                text: null
+                            }
+                        },
+                        subtitle: {
+                            text: null
+                        },
+                        credits: {
+                            enabled: false
+                        }
+                    }
+                }]
             }
         };
         this.siteChart = new Highcharts.Chart('siteChart', this._siteChartOptions);
@@ -130,8 +155,34 @@ export class DataviewComponent implements OnInit {
                         format: '<b>{point.name}</b>: {point.percentage:.1f} %'
                     }
                 }
+            },
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                        },
+                        yAxis: {
+                            labels: {
+                            },
+                            title: {
+                                text: null
+                            }
+                        },
+                        subtitle: {
+                            text: null
+                        },
+                        credits: {
+                            enabled: false
+                        }
+                    }
+                }]
             }
         };
+
+
         this.typeChart = new Highcharts.Chart('typeChart', this._typeChartOptions);
         this.orgChart = new Highcharts.Chart('orgChart', this._typeChartOptions);
         this.typeChart.setTitle({text: 'Sites By Type'});
@@ -141,6 +192,8 @@ export class DataviewComponent implements OnInit {
 
     public getResultData(site) {
         this._loaderService.showDataLoad();
+        this.dataLoading = true;
+
         let resultUrl = 'https://www.waterqualitydata.us/data/Result/search?mimeType=csv&countrycode=US';
         resultUrl += '&siteid=' + site;
         for (const char of this.characteristics) {
@@ -153,7 +206,7 @@ export class DataviewComponent implements OnInit {
                 this.resultJson = JSON.parse(this.resultJson);
                 this.showSiteData = true; this.noData = false;
                 if (this.resultJson.length > 0) {this.createSiteCharts(site);
-                } else {this._loaderService.hideDataLoad(); this.noData = true; }
+                } else {this._loaderService.hideDataLoad(); this.noData = true; this.dataLoading = false; }
             });
     }
 
@@ -226,6 +279,7 @@ export class DataviewComponent implements OnInit {
             this.siteChart.addSeries({name: 'Depth: ' + depthValues[depth], data: data});
         }
         this._loaderService.hideDataLoad();
+        this.dataLoading = false;
     }
     public getStatData() {
         while (this.typeChart.series.length > 0) { this.typeChart.series[0].remove(true); }
