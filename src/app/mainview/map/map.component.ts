@@ -36,7 +36,15 @@ export class MapComponent implements OnInit {
     this._mapService.legend.onAdd = function (map) {
   
       var div = L.DomUtil.create('div', 'info legend');
-      var item = '<i class="wqx-site"></i>WQX Sites';
+      var item = '<i class="site facility"></i>Facility<br>' +
+        '<i class="site atmosphere"></i>Atmosphere<br>' +
+        '<i class="site lake"></i>Lake, Reservoir, Impoundment<br>' +
+        '<i class="site stream"></i>Stream<br>' +
+        '<i class="site well"></i>Well<br>' +
+        '<i class="site land"></i>Land<br>' +
+        '<i class="site estuary"></i>Estuary<br>' +
+        '<i class="site wetland"></i>Wetland<br>' +
+        '<i class="site ocean"></i>Ocean';
       div.innerHTML = item;
       return div;
     };

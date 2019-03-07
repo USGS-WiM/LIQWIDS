@@ -167,7 +167,8 @@ export class MapService {
         };
         let layer = L.geoJSON(geoJson, {
             pointToLayer: function (feature, latLng) {
-                return L.circleMarker(latLng, geojsonMarkerOptions);
+                const marker = self.setMarker(feature);
+                return L.circleMarker(latLng, marker);
             },
             onEachFeature: (feature, layer) => {
                 layer.bindPopup("<b>Site Name: </b>" + feature.properties.name + "<br/><b>Location Name: </b>" + feature.properties.locName + "<br/><b>Organization Name: </b>" + feature.properties.orgName + "<br/><b>Result Count: </b>" + feature.properties.resultCnt);
@@ -212,6 +213,46 @@ export class MapService {
         this.highlightMarkers.forEach((marker) => marker.addTo(this.selectedSiteLayer));
         this.selectedSiteLayer.addTo(this.map);
         this.selectedSiteLayer.bringToBack();
+    }
+
+    public setMarker(feature) {
+        let fillColor = '';
+        switch (feature.properties.searchType) {
+            case 'Facility':
+                fillColor = '#555E7B';
+                break;
+            case 'Atmosphere':
+                fillColor = '#B7D968';
+                break;
+            case 'Lake, Reservoir, Impoundment':
+                fillColor = '#B576AD';
+                break;
+            case 'Stream':
+                fillColor = '#4376D3';
+                break;
+            case 'Well':
+                fillColor = '#E04644';
+                break;
+            case 'Land':
+                fillColor = '#1F777F';
+                break;
+            case 'Estuary':
+                fillColor = '#D608A9';
+                break;
+            case 'Wetland':
+                fillColor = '#BEFF82';
+                break;
+            case 'Ocean':
+                fillColor = '#C64C41';
+                break;
+        }
+        return {
+            radius: 4,
+            fillColor: fillColor,
+            weight: 0,
+            opacity: 1,
+            fillOpacity: 0.5
+        };
     }
 
     //use extent to get NWIS rt gages based on bounding box, display on map
