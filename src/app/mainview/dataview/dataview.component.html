@@ -1,11 +1,11 @@
 <div id="dataView" [ngClass]="{'data-blur': dataLoading == true }">
-        
+
     <dataloader-div id="dataLoader"></dataloader-div>
 
 
     <div class="site-meta">
         <h1>Data</h1>
-        <h3 *ngIf="showSiteData == true && noData == false">Site name: {{selectedSite}}</h3>
+        <h3 *ngIf="showSiteData == true && noData == false || selectedSites.length === 1">Site name: {{selectedSites[0]}}</h3>
     </div>
 
     <div [class.hidden]="showSiteData == true" class="chart-wrapper">
@@ -14,18 +14,24 @@
     </div>
 
 
-    <div [class.hidden]="showSiteData == false || noData == true" class="chart-wrapper">
+    <div [class.hidden]="showSiteData == false || noData == true || selectedSites.length > 1" class="chart-wrapper">
         <div class="chart" [class.hidden]="unitCodes.length == 1" id="siteChart2"></div>
         <div class="chart" id="siteChart"></div>
     </div>
 
+    <div [class.hidden]="showSiteData == false || noData == true || selectedSites.length == 1" class="chart-wrapper">
+        <div class="chart" id="multSiteChart"></div>
+    </div>
+
 
     <div [class.hidden]="showSiteData == false || noData == true">
-        <div style="text-align: center;"><i class="fa fa-mouse-pointer"></i>Drag a box around points on the graph to zoom in</div>
+        <div style="text-align: center;"><i class="fa fa-mouse-pointer"></i>Drag a box around points on the graph to
+            zoom in</div>
         <button (click)="downloadFile()">Download Results File</button>
         <table id="dataTable">
             <thead>
                 <tr class="row header">
+                    <th *ngIf="selectedSites.length > 1">Site Name</th>
                     <th>Activity Start Date</th>
                     <th>Depth</th>
                     <th>Value</th>
@@ -37,6 +43,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let sample of resultJson" class="row">
+                    <td *ngIf="selectedSites.length > 1">{{sample.MonitoringLocationIdentifier}}</td>
                     <td>{{sample.ActivityStartDate}}</td>
                     <td>{{sample['ActivityBottomDepthHeightMeasure/MeasureValue']}}
                         {{sample['ActivityBottomDepthHeightMeasure/MeasureUnitCode']}}</td>

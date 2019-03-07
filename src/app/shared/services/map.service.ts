@@ -8,7 +8,7 @@ import { LoaderService } from '../../shared/services/loader.service';
 import * as L from 'leaflet';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class MapService {
     public map: Map;
@@ -19,7 +19,7 @@ export class MapService {
     public geoJson: any;
     public filterJson: any;
     public filterOptions: any;
-    public highlightMarker;
+    public highlightMarkers = [];
 
     public geoJsonURL = 'https://www.waterqualitydata.us/ogcservices/wfs/';
 
@@ -40,6 +40,11 @@ export class MapService {
         return this._selectedSiteSubject.asObservable();
     }
 
+    public _selectMultSubject = new Subject();
+    public get MultSelect(): Observable<any> {
+        return this._selectMultSubject.asObservable();
+    }
+
     public _characteristicFilterSubject = new BehaviorSubject('Nitrate');
     public get SelectedChar(): Observable<any> {
         return this._characteristicFilterSubject.asObservable();
@@ -56,7 +61,7 @@ export class MapService {
     constructor(private _http: HttpClient, private _loaderService: LoaderService) {
 
         this.chosenBaseLayer = "Topo";
-        
+
         this.baseMaps = {// {s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
             OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 20,
@@ -112,37 +117,37 @@ export class MapService {
     public getData(): Observable<any> {
         this._loaderService.showFullPageLoad();
         return this._http.get<any>(this.geoJsonURL, {params: this.URLparams})
-        .pipe(
-            map(response => {
-                this.geoJson = response;
-                this.filterJson = this.geoJson; // set filtered object to all on init.
+            .pipe(
+                map(response => {
+                    this.geoJson = response;
+                    this.filterJson = this.geoJson; // set filtered object to all on init.
 
-                //get unique values for filterOptions
-                this.filterOptions = {};
-                this.geoJson.features.forEach(feature => {
-                    for (var property in feature.properties){
-                        if (!this.filterOptions.hasOwnProperty(property)){
-                            this.filterOptions[property] = [];
+                    //get unique values for filterOptions
+                    this.filterOptions = {};
+                    this.geoJson.features.forEach(feature => {
+                        for (var property in feature.properties){
+                            if (!this.filterOptions.hasOwnProperty(property)){
+                                this.filterOptions[property] = [];
+                            }
+                            if (this.filterOptions[property].indexOf(feature.properties[property]) === -1 && property !== 'bbox') {
+                                this.filterOptions[property].push(feature.properties[property]);
+                            }
                         }
-                        if (this.filterOptions[property].indexOf(feature.properties[property]) === -1 && property !== 'bbox') {
-                            this.filterOptions[property].push(feature.properties[property]);
-                        }
-                    }
-                })
-                this._loaderService.hideFullPageLoad();
-                return this.filterOptions;
-            }),
-            catchError(this.handleError)
+                    })
+                    this._loaderService.hideFullPageLoad();
+                    return this.filterOptions;
+                }),
+                catchError(this.handleError)
 
-        )
+            )
     }
 
-    private handleError(err: HttpErrorResponse){
+    private handleError(err: HttpErrorResponse) {
         this._loaderService.hideFullPageLoad();
-        if(err.error instanceof ErrorEvent) {
+        if (err.error instanceof ErrorEvent) {
             //client side
             console.error("An error occurred:", err.error.message);
-        } else{
+        } else {
             //server error message
             console.error("Server returned code ${err.status, body ${err.error}");
         }
@@ -151,7 +156,8 @@ export class MapService {
 
     public addToSitesLayer(geoJson: any) {
         const self = this;
-        if (this.selectedSiteLayer) { this.selectedSiteLayer.remove(this.highlightMarker); }
+        if (this.selectedSiteLayer) { this.highlightMarkers.forEach((marker) => this.selectedSiteLayer.remove(marker)); }
+        this.highlightMarkers = [];
         let geojsonMarkerOptions = {
             radius: 5,
             fillColor: '#9b0004',
@@ -160,18 +166,30 @@ export class MapService {
             fillOpacity: 0.5
         };
         let layer = L.geoJSON(geoJson, {
-            pointToLayer:function(feature, latLng){
+            pointToLayer: function (feature, latLng) {
                 return L.circleMarker(latLng, geojsonMarkerOptions);
             },
             onEachFeature: (feature, layer) => {
                 layer.bindPopup("<b>Site Name: </b>" + feature.properties.name + "<br/><b>Location Name: </b>" + feature.properties.locName + "<br/><b>Organization Name: </b>" + feature.properties.orgName + "<br/><b>Result Count: </b>" + feature.properties.resultCnt);
-                layer.on('click', function(e) {
-                    const event = e;
+                layer.on('click', function (e) {
+                    let run = true;
+                    if (self.selectedSiteLayer) {
+                        self.selectedSiteLayer.eachLayer((lay) => { if (lay._latlng === this._latlng) { run = false; } });
+                    }
+                    if (run === true) {
+                        if (self.selectedSiteLayer) { self.highlightMarkers.forEach((marker) => self.selectedSiteLayer.remove(marker)); }
+                        self.highlightMarkers = [];
+                        self.highlightSelectedSite(e);
+                        self._selectedSiteSubject.next(e.target.feature.properties);
+                    }
+                });
+                layer.on('contextmenu', function (e) {
+                    this.openPopup();
                     self.highlightSelectedSite(e);
-                    self._selectedSiteSubject.next(event.target.feature.properties);
+                    self._selectMultSubject.next(e.target.feature.properties);
                 });
             }
-            
+
         }).addTo(this.sitesLayer);
 
         //zoom
@@ -180,7 +198,6 @@ export class MapService {
     }
 
     public highlightSelectedSite(site) {
-        if (this.selectedSiteLayer) { this.selectedSiteLayer.remove(this.highlightMarker); }
         const highlightOptions = {
             radius: 4,
             weight: 12,
@@ -190,10 +207,11 @@ export class MapService {
             fillColor: '#9b0004',
             fillOpacity: 0.5
         };
-        const highlightMarker = L.circleMarker(site.latlng, highlightOptions);
+        this.highlightMarkers.push(L.circleMarker(site.latlng, highlightOptions));
         this.selectedSiteLayer = L.featureGroup([]);
-        highlightMarker.addTo(this.selectedSiteLayer);
+        this.highlightMarkers.forEach((marker) => marker.addTo(this.selectedSiteLayer));
         this.selectedSiteLayer.addTo(this.map);
+        this.selectedSiteLayer.bringToBack();
     }
 
     //use extent to get NWIS rt gages based on bounding box, display on map
@@ -210,13 +228,13 @@ export class MapService {
         console.log('here',url)
 
         return this._http.get(url,{responseType: 'text'})
-        .pipe(
-            map(response => {
-                return response;
-            })
-        );
+            .pipe(
+                map(response => {
+                    return response;
+                })
+            );
 
-        
+
         // $.ajax({
         //     url: url,
         //     dataType: "xml",
