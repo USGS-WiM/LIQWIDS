@@ -11,6 +11,28 @@ module.exports = [[module.i, ".mat-badge-content{font-weight:600;font-size:12px;
 
 /***/ }),
 
+/***/ "./node_modules/@angular-devkit/build-angular/src/angular-cli-files/plugins/raw-css-loader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/@angular-devkit/build-angular/src/angular-cli-files/plugins/raw-css-loader.js!./node_modules/postcss-loader/src??embedded!./node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css ***!
+  \********************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = [[module.i, ".marker-cluster-small {\r\n\tbackground-color: rgba(181, 226, 140, 0.6);\r\n\t}\r\n.marker-cluster-small div {\r\n\tbackground-color: rgba(110, 204, 57, 0.6);\r\n\t}\r\n.marker-cluster-medium {\r\n\tbackground-color: rgba(241, 211, 87, 0.6);\r\n\t}\r\n.marker-cluster-medium div {\r\n\tbackground-color: rgba(240, 194, 12, 0.6);\r\n\t}\r\n.marker-cluster-large {\r\n\tbackground-color: rgba(253, 156, 115, 0.6);\r\n\t}\r\n.marker-cluster-large div {\r\n\tbackground-color: rgba(241, 128, 23, 0.6);\r\n\t}\r\n/* IE 6-8 fallback colors */\r\n.leaflet-oldie .marker-cluster-small {\r\n\tbackground-color: rgb(181, 226, 140);\r\n\t}\r\n.leaflet-oldie .marker-cluster-small div {\r\n\tbackground-color: rgb(110, 204, 57);\r\n\t}\r\n.leaflet-oldie .marker-cluster-medium {\r\n\tbackground-color: rgb(241, 211, 87);\r\n\t}\r\n.leaflet-oldie .marker-cluster-medium div {\r\n\tbackground-color: rgb(240, 194, 12);\r\n\t}\r\n.leaflet-oldie .marker-cluster-large {\r\n\tbackground-color: rgb(253, 156, 115);\r\n\t}\r\n.leaflet-oldie .marker-cluster-large div {\r\n\tbackground-color: rgb(241, 128, 23);\r\n}\r\n.marker-cluster {\r\n\tbackground-clip: padding-box;\r\n\tborder-radius: 20px;\r\n\t}\r\n.marker-cluster div {\r\n\twidth: 30px;\r\n\theight: 30px;\r\n\tmargin-left: 5px;\r\n\tmargin-top: 5px;\r\n\r\n\ttext-align: center;\r\n\tborder-radius: 15px;\r\n\tfont: 12px \"Helvetica Neue\", Arial, Helvetica, sans-serif;\r\n\t}\r\n.marker-cluster span {\r\n\tline-height: 30px;\r\n\t}\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5vZGVfbW9kdWxlcy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvZGlzdC9NYXJrZXJDbHVzdGVyLkRlZmF1bHQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0NBQ0MsMENBQTBDO0NBQzFDO0FBQ0Q7Q0FDQyx5Q0FBeUM7Q0FDekM7QUFFRDtDQUNDLHlDQUF5QztDQUN6QztBQUNEO0NBQ0MseUNBQXlDO0NBQ3pDO0FBRUQ7Q0FDQywwQ0FBMEM7Q0FDMUM7QUFDRDtDQUNDLHlDQUF5QztDQUN6QztBQUVBLDJCQUEyQjtBQUM1QjtDQUNDLG9DQUFvQztDQUNwQztBQUNEO0NBQ0MsbUNBQW1DO0NBQ25DO0FBRUQ7Q0FDQyxtQ0FBbUM7Q0FDbkM7QUFDRDtDQUNDLG1DQUFtQztDQUNuQztBQUVEO0NBQ0Msb0NBQW9DO0NBQ3BDO0FBQ0Q7Q0FDQyxtQ0FBbUM7QUFDcEM7QUFFQTtDQUNDLDRCQUE0QjtDQUM1QixtQkFBbUI7Q0FDbkI7QUFDRDtDQUNDLFdBQVc7Q0FDWCxZQUFZO0NBQ1osZ0JBQWdCO0NBQ2hCLGVBQWU7O0NBRWYsa0JBQWtCO0NBQ2xCLG1CQUFtQjtDQUNuQix5REFBeUQ7Q0FDekQ7QUFDRDtDQUNDLGlCQUFpQjtDQUNqQiIsImZpbGUiOiJub2RlX21vZHVsZXMvbGVhZmxldC5tYXJrZXJjbHVzdGVyL2Rpc3QvTWFya2VyQ2x1c3Rlci5EZWZhdWx0LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi5tYXJrZXItY2x1c3Rlci1zbWFsbCB7XHJcblx0YmFja2dyb3VuZC1jb2xvcjogcmdiYSgxODEsIDIyNiwgMTQwLCAwLjYpO1xyXG5cdH1cclxuLm1hcmtlci1jbHVzdGVyLXNtYWxsIGRpdiB7XHJcblx0YmFja2dyb3VuZC1jb2xvcjogcmdiYSgxMTAsIDIwNCwgNTcsIDAuNik7XHJcblx0fVxyXG5cclxuLm1hcmtlci1jbHVzdGVyLW1lZGl1bSB7XHJcblx0YmFja2dyb3VuZC1jb2xvcjogcmdiYSgyNDEsIDIxMSwgODcsIDAuNik7XHJcblx0fVxyXG4ubWFya2VyLWNsdXN0ZXItbWVkaXVtIGRpdiB7XHJcblx0YmFja2dyb3VuZC1jb2xvcjogcmdiYSgyNDAsIDE5NCwgMTIsIDAuNik7XHJcblx0fVxyXG5cclxuLm1hcmtlci1jbHVzdGVyLWxhcmdlIHtcclxuXHRiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDI1MywgMTU2LCAxMTUsIDAuNik7XHJcblx0fVxyXG4ubWFya2VyLWNsdXN0ZXItbGFyZ2UgZGl2IHtcclxuXHRiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDI0MSwgMTI4LCAyMywgMC42KTtcclxuXHR9XHJcblxyXG5cdC8qIElFIDYtOCBmYWxsYmFjayBjb2xvcnMgKi9cclxuLmxlYWZsZXQtb2xkaWUgLm1hcmtlci1jbHVzdGVyLXNtYWxsIHtcclxuXHRiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMTgxLCAyMjYsIDE0MCk7XHJcblx0fVxyXG4ubGVhZmxldC1vbGRpZSAubWFya2VyLWNsdXN0ZXItc21hbGwgZGl2IHtcclxuXHRiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMTEwLCAyMDQsIDU3KTtcclxuXHR9XHJcblxyXG4ubGVhZmxldC1vbGRpZSAubWFya2VyLWNsdXN0ZXItbWVkaXVtIHtcclxuXHRiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjQxLCAyMTEsIDg3KTtcclxuXHR9XHJcbi5sZWFmbGV0LW9sZGllIC5tYXJrZXItY2x1c3Rlci1tZWRpdW0gZGl2IHtcclxuXHRiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjQwLCAxOTQsIDEyKTtcclxuXHR9XHJcblxyXG4ubGVhZmxldC1vbGRpZSAubWFya2VyLWNsdXN0ZXItbGFyZ2Uge1xyXG5cdGJhY2tncm91bmQtY29sb3I6IHJnYigyNTMsIDE1NiwgMTE1KTtcclxuXHR9XHJcbi5sZWFmbGV0LW9sZGllIC5tYXJrZXItY2x1c3Rlci1sYXJnZSBkaXYge1xyXG5cdGJhY2tncm91bmQtY29sb3I6IHJnYigyNDEsIDEyOCwgMjMpO1xyXG59XHJcblxyXG4ubWFya2VyLWNsdXN0ZXIge1xyXG5cdGJhY2tncm91bmQtY2xpcDogcGFkZGluZy1ib3g7XHJcblx0Ym9yZGVyLXJhZGl1czogMjBweDtcclxuXHR9XHJcbi5tYXJrZXItY2x1c3RlciBkaXYge1xyXG5cdHdpZHRoOiAzMHB4O1xyXG5cdGhlaWdodDogMzBweDtcclxuXHRtYXJnaW4tbGVmdDogNXB4O1xyXG5cdG1hcmdpbi10b3A6IDVweDtcclxuXHJcblx0dGV4dC1hbGlnbjogY2VudGVyO1xyXG5cdGJvcmRlci1yYWRpdXM6IDE1cHg7XHJcblx0Zm9udDogMTJweCBcIkhlbHZldGljYSBOZXVlXCIsIEFyaWFsLCBIZWx2ZXRpY2EsIHNhbnMtc2VyaWY7XHJcblx0fVxyXG4ubWFya2VyLWNsdXN0ZXIgc3BhbiB7XHJcblx0bGluZS1oZWlnaHQ6IDMwcHg7XHJcblx0fSJdfQ== */", '', '']]
+
+/***/ }),
+
+/***/ "./node_modules/@angular-devkit/build-angular/src/angular-cli-files/plugins/raw-css-loader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/leaflet.markercluster/dist/MarkerCluster.css":
+/*!************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/@angular-devkit/build-angular/src/angular-cli-files/plugins/raw-css-loader.js!./node_modules/postcss-loader/src??embedded!./node_modules/leaflet.markercluster/dist/MarkerCluster.css ***!
+  \************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = [[module.i, ".leaflet-cluster-anim .leaflet-marker-icon, .leaflet-cluster-anim .leaflet-marker-shadow {\r\n\ttransition: opacity 0.3s ease-in, -webkit-transform 0.3s ease-out;\r\n\ttransition: transform 0.3s ease-out, opacity 0.3s ease-in;\r\n\ttransition: transform 0.3s ease-out, opacity 0.3s ease-in, -webkit-transform 0.3s ease-out;\r\n}\r\n\r\n.leaflet-cluster-spider-leg {\r\n\t/* stroke-dashoffset (duration and function) should match with leaflet-marker-icon transform in order to track it exactly */\r\n\ttransition: stroke-dashoffset 0.3s ease-out, stroke-opacity 0.3s ease-in;\r\n}\r\n\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5vZGVfbW9kdWxlcy9sZWFmbGV0Lm1hcmtlcmNsdXN0ZXIvZGlzdC9NYXJrZXJDbHVzdGVyLmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtDQUlDLGlFQUF5RDtDQUF6RCx5REFBeUQ7Q0FBekQsMEZBQXlEO0FBQzFEOztBQUVBO0NBQ0MsMkhBQTJIO0NBSTNILHdFQUF3RTtBQUN6RSIsImZpbGUiOiJub2RlX21vZHVsZXMvbGVhZmxldC5tYXJrZXJjbHVzdGVyL2Rpc3QvTWFya2VyQ2x1c3Rlci5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIubGVhZmxldC1jbHVzdGVyLWFuaW0gLmxlYWZsZXQtbWFya2VyLWljb24sIC5sZWFmbGV0LWNsdXN0ZXItYW5pbSAubGVhZmxldC1tYXJrZXItc2hhZG93IHtcclxuXHQtd2Via2l0LXRyYW5zaXRpb246IC13ZWJraXQtdHJhbnNmb3JtIDAuM3MgZWFzZS1vdXQsIG9wYWNpdHkgMC4zcyBlYXNlLWluO1xyXG5cdC1tb3otdHJhbnNpdGlvbjogLW1vei10cmFuc2Zvcm0gMC4zcyBlYXNlLW91dCwgb3BhY2l0eSAwLjNzIGVhc2UtaW47XHJcblx0LW8tdHJhbnNpdGlvbjogLW8tdHJhbnNmb3JtIDAuM3MgZWFzZS1vdXQsIG9wYWNpdHkgMC4zcyBlYXNlLWluO1xyXG5cdHRyYW5zaXRpb246IHRyYW5zZm9ybSAwLjNzIGVhc2Utb3V0LCBvcGFjaXR5IDAuM3MgZWFzZS1pbjtcclxufVxyXG5cclxuLmxlYWZsZXQtY2x1c3Rlci1zcGlkZXItbGVnIHtcclxuXHQvKiBzdHJva2UtZGFzaG9mZnNldCAoZHVyYXRpb24gYW5kIGZ1bmN0aW9uKSBzaG91bGQgbWF0Y2ggd2l0aCBsZWFmbGV0LW1hcmtlci1pY29uIHRyYW5zZm9ybSBpbiBvcmRlciB0byB0cmFjayBpdCBleGFjdGx5ICovXHJcblx0LXdlYmtpdC10cmFuc2l0aW9uOiAtd2Via2l0LXN0cm9rZS1kYXNob2Zmc2V0IDAuM3MgZWFzZS1vdXQsIC13ZWJraXQtc3Ryb2tlLW9wYWNpdHkgMC4zcyBlYXNlLWluO1xyXG5cdC1tb3otdHJhbnNpdGlvbjogLW1vei1zdHJva2UtZGFzaG9mZnNldCAwLjNzIGVhc2Utb3V0LCAtbW96LXN0cm9rZS1vcGFjaXR5IDAuM3MgZWFzZS1pbjtcclxuXHQtby10cmFuc2l0aW9uOiAtby1zdHJva2UtZGFzaG9mZnNldCAwLjNzIGVhc2Utb3V0LCAtby1zdHJva2Utb3BhY2l0eSAwLjNzIGVhc2UtaW47XHJcblx0dHJhbnNpdGlvbjogc3Ryb2tlLWRhc2hvZmZzZXQgMC4zcyBlYXNlLW91dCwgc3Ryb2tlLW9wYWNpdHkgMC4zcyBlYXNlLWluO1xyXG59XHJcbiJdfQ== */", '', '']]
+
+/***/ }),
+
 /***/ "./node_modules/@angular-devkit/build-angular/src/angular-cli-files/plugins/raw-css-loader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/leaflet/dist/leaflet.css":
 /*!****************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/@angular-devkit/build-angular/src/angular-cli-files/plugins/raw-css-loader.js!./node_modules/postcss-loader/src??embedded!./node_modules/leaflet/dist/leaflet.css ***!
@@ -56,6 +78,66 @@ options.transform = transform
 options.insertInto = undefined;
 
 var update = __webpack_require__(/*! ../../../style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css":
+/*!***************************************************************************!*\
+  !*** ./node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../@angular-devkit/build-angular/src/angular-cli-files/plugins/raw-css-loader.js!../../postcss-loader/src??embedded!./MarkerCluster.Default.css */ "./node_modules/@angular-devkit/build-angular/src/angular-cli-files/plugins/raw-css-loader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/leaflet.markercluster/dist/MarkerCluster.css":
+/*!*******************************************************************!*\
+  !*** ./node_modules/leaflet.markercluster/dist/MarkerCluster.css ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../@angular-devkit/build-angular/src/angular-cli-files/plugins/raw-css-loader.js!../../postcss-loader/src??embedded!./MarkerCluster.css */ "./node_modules/@angular-devkit/build-angular/src/angular-cli-files/plugins/raw-css-loader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/leaflet.markercluster/dist/MarkerCluster.css");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
 
 if(content.locals) module.exports = content.locals;
 
@@ -633,15 +715,17 @@ if(false) {}
 /***/ }),
 
 /***/ 2:
-/*!****************************************************************************************************************************************!*\
-  !*** multi ./node_modules/@angular/material/prebuilt-themes/indigo-pink.css ./src/styles.scss ./node_modules/leaflet/dist/leaflet.css ***!
-  \****************************************************************************************************************************************/
+/*!************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** multi ./node_modules/@angular/material/prebuilt-themes/indigo-pink.css ./src/styles.scss ./node_modules/leaflet/dist/leaflet.css ./node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css ./node_modules/leaflet.markercluster/dist/MarkerCluster.css ***!
+  \************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! C:\Users\kjacobsen\Documents\wim_projects\LIQWIDS\node_modules\@angular\material\prebuilt-themes\indigo-pink.css */"./node_modules/@angular/material/prebuilt-themes/indigo-pink.css");
 __webpack_require__(/*! C:\Users\kjacobsen\Documents\wim_projects\LIQWIDS\src\styles.scss */"./src/styles.scss");
-module.exports = __webpack_require__(/*! C:\Users\kjacobsen\Documents\wim_projects\LIQWIDS\node_modules\leaflet\dist\leaflet.css */"./node_modules/leaflet/dist/leaflet.css");
+__webpack_require__(/*! C:\Users\kjacobsen\Documents\wim_projects\LIQWIDS\node_modules\leaflet\dist\leaflet.css */"./node_modules/leaflet/dist/leaflet.css");
+__webpack_require__(/*! C:\Users\kjacobsen\Documents\wim_projects\LIQWIDS\node_modules\leaflet.markercluster\dist\MarkerCluster.Default.css */"./node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css");
+module.exports = __webpack_require__(/*! C:\Users\kjacobsen\Documents\wim_projects\LIQWIDS\node_modules\leaflet.markercluster\dist\MarkerCluster.css */"./node_modules/leaflet.markercluster/dist/MarkerCluster.css");
 
 
 /***/ })

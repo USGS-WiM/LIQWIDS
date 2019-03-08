@@ -750,6 +750,16 @@ var MapComponent = /** @class */ (function () {
             //console.log('here',e)
             var bbox = _this._mapService.map.getBounds().getSouthWest().lng.toFixed(7) + ',' + _this._mapService.map.getBounds().getSouthWest().lat.toFixed(7) + ',' + _this._mapService.map.getBounds().getNorthEast().lng.toFixed(7) + ',' + _this._mapService.map.getBounds().getNorthEast().lat.toFixed(7);
             //this._mapService.queryNWISrtGages(bbox).subscribe(results => console.log('results',results));
+            if (e.target._zoom >= 16) {
+                if (_this._mapService.markerClusters) {
+                    _this._mapService.markerClusters.enableClustering();
+                }
+            }
+            else {
+                if (_this._mapService.markerClusters) {
+                    _this._mapService.markerClusters.disableClustering();
+                }
+            }
         });
     };
     MapComponent = __decorate([
@@ -1404,6 +1414,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shared_services_loader_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../shared/services/loader.service */ "./src/app/shared/services/loader.service.ts");
 /* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! leaflet */ "./node_modules/leaflet/dist/leaflet-src.js");
 /* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(leaflet__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var leaflet_markercluster__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! leaflet.markercluster */ "./node_modules/leaflet.markercluster/dist/leaflet.markercluster-src.js");
+/* harmony import */ var leaflet_markercluster__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(leaflet_markercluster__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var leaflet_markercluster_freezable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! leaflet.markercluster.freezable */ "./node_modules/leaflet.markercluster.freezable/dist/leaflet.markercluster.freezable.js");
+/* harmony import */ var leaflet_markercluster_freezable__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(leaflet_markercluster_freezable__WEBPACK_IMPORTED_MODULE_7__);
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1413,6 +1427,8 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
+
 
 
 
@@ -1440,30 +1456,30 @@ var MapService = /** @class */ (function () {
         this._siteChangeSubject = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
         this.chosenBaseLayer = "Topo";
         this.baseMaps = {
-            OpenStreetMap: leaflet__WEBPACK_IMPORTED_MODULE_5__["tileLayer"]('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 20,
                 zIndex: 1,
                 attribution: 'Imagery from <a href="https://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             }),
-            Topo: leaflet__WEBPACK_IMPORTED_MODULE_5__["tileLayer"]("https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}", {
+            Topo: L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}", {
                 zIndex: 1,
                 attribution: "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community"
             }),
-            CartoDB: leaflet__WEBPACK_IMPORTED_MODULE_5__["tileLayer"]("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
+            CartoDB: L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
                 zIndex: 1,
                 attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> &copy; <a href='https://cartodb.com/attributions'>CartoDB</a>"
             }),
-            Satellite: leaflet__WEBPACK_IMPORTED_MODULE_5__["tileLayer"]('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            Satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 zIndex: 1,
                 attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community' //,
                 //maxZoom: 10
             }),
-            Terrain: leaflet__WEBPACK_IMPORTED_MODULE_5__["tileLayer"]('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}', {
+            Terrain: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}', {
                 zIndex: 1,
                 attribution: 'Tiles &copy; Esri &mdash; Source: USGS, Esri, TANA, DeLorme, and NPS',
                 maxZoom: 13
             }),
-            Gray: leaflet__WEBPACK_IMPORTED_MODULE_5__["tileLayer"]('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+            Gray: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
                 zIndex: 1,
                 attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
                 maxZoom: 16
@@ -1471,13 +1487,13 @@ var MapService = /** @class */ (function () {
         };
         //if typeScript complains about searchParams, add it to the class in the leaflet@types definition
         this.mainLayers = {
-            WQP: leaflet__WEBPACK_IMPORTED_MODULE_5__["tileLayer"].wms('https://www.waterqualitydata.us/ogcservices/ows?', {
+            WQP: L.tileLayer.wms('https://www.waterqualitydata.us/ogcservices/ows?', {
                 layers: "wqp_sites",
                 format: "image/png",
                 transparent: true,
                 zIndex: 2,
             }),
-            NWIS: leaflet__WEBPACK_IMPORTED_MODULE_5__["tileLayer"].wms("https://www.waterqualitydata.us/ogcservices/ows?", {
+            NWIS: L.tileLayer.wms("https://www.waterqualitydata.us/ogcservices/ows?", {
                 layers: "qw_portal_map:nwis_sites",
                 format: "image/png",
                 transparent: true,
@@ -1557,21 +1573,17 @@ var MapService = /** @class */ (function () {
     MapService.prototype.addToSitesLayer = function (geoJson) {
         var _this = this;
         var self = this;
+        if (this.markerClusters) {
+            this.markerClusters.remove();
+        }
         if (this.selectedSiteLayer) {
             this.highlightMarkers.forEach(function (marker) { return _this.selectedSiteLayer.remove(marker); });
         }
         this.highlightMarkers = [];
-        var geojsonMarkerOptions = {
-            radius: 5,
-            fillColor: '#9b0004',
-            weight: 0,
-            opacity: 1,
-            fillOpacity: 0.5
-        };
-        var layer = leaflet__WEBPACK_IMPORTED_MODULE_5__["geoJSON"](geoJson, {
+        var layer = L.geoJSON(geoJson, {
             pointToLayer: function (feature, latLng) {
                 var marker = self.setMarker(feature);
-                return leaflet__WEBPACK_IMPORTED_MODULE_5__["circleMarker"](latLng, marker);
+                return L.circleMarker(latLng, marker);
             },
             onEachFeature: function (feature, layer) {
                 layer.bindPopup("<b>Site Name: </b>" + feature.properties.name + "<br/><b>Location Name: </b>" + feature.properties.locName + "<br/><b>Organization Name: </b>" + feature.properties.orgName + "<br/><b>Result Count: </b>" + feature.properties.resultCnt);
@@ -1599,6 +1611,14 @@ var MapService = /** @class */ (function () {
                 });
             }
         }).addTo(this.sitesLayer);
+        this.markerClusters = L.markerClusterGroup({
+            showCoverageOnHover: false,
+            maxClusterRadius: .1,
+            spiderfyDistanceMultiplier: 2
+        });
+        this.markerClusters.addLayer(this.sitesLayer);
+        this.map.addLayer(this.markerClusters);
+        this.markerClusters.disableClustering();
         //zoom
         this.map.fitBounds(this.sitesLayer.getBounds(), { padding: [20, 20] });
         this._siteChangeSubject.next(geoJson);
@@ -1614,8 +1634,8 @@ var MapService = /** @class */ (function () {
             fillColor: '#9b0004',
             fillOpacity: 0.5
         };
-        this.highlightMarkers.push(leaflet__WEBPACK_IMPORTED_MODULE_5__["circleMarker"](site.latlng, highlightOptions));
-        this.selectedSiteLayer = leaflet__WEBPACK_IMPORTED_MODULE_5__["featureGroup"]([]);
+        this.highlightMarkers.push(L.circleMarker(site.latlng, highlightOptions));
+        this.selectedSiteLayer = L.featureGroup([]);
         this.highlightMarkers.forEach(function (marker) { return marker.addTo(_this.selectedSiteLayer); });
         this.selectedSiteLayer.addTo(this.map);
         this.selectedSiteLayer.bringToBack();

@@ -5,7 +5,10 @@ import { Observable, throwError, BehaviorSubject, Subject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { LoaderService } from '../../shared/services/loader.service';
 
-import * as L from 'leaflet';
+declare let L;
+import 'leaflet';
+import 'leaflet.markercluster';
+import 'leaflet.markercluster.freezable';
 
 @Injectable({
     providedIn: 'root'
@@ -20,6 +23,7 @@ export class MapService {
     public filterJson: any;
     public filterOptions: any;
     public highlightMarkers = [];
+    public markerClusters;
 
     public geoJsonURL = 'https://www.waterqualitydata.us/ogcservices/wfs/';
 
@@ -156,15 +160,9 @@ export class MapService {
 
     public addToSitesLayer(geoJson: any) {
         const self = this;
+        if (this.markerClusters) {this.markerClusters.remove(); }
         if (this.selectedSiteLayer) { this.highlightMarkers.forEach((marker) => this.selectedSiteLayer.remove(marker)); }
         this.highlightMarkers = [];
-        let geojsonMarkerOptions = {
-            radius: 5,
-            fillColor: '#9b0004',
-            weight: 0,
-            opacity: 1,
-            fillOpacity: 0.5
-        };
         let layer = L.geoJSON(geoJson, {
             pointToLayer: function (feature, latLng) {
                 const marker = self.setMarker(feature);
@@ -192,6 +190,16 @@ export class MapService {
             }
 
         }).addTo(this.sitesLayer);
+
+        this.markerClusters = L.markerClusterGroup({
+            showCoverageOnHover: false,
+            maxClusterRadius: .1,
+            spiderfyDistanceMultiplier: 2
+        });
+        this.markerClusters.addLayer(this.sitesLayer);
+        this.map.addLayer(this.markerClusters);
+
+        this.markerClusters.disableClustering();
 
         //zoom
         this.map.fitBounds(this.sitesLayer.getBounds(), {padding:[20,20]});
