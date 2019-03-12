@@ -59,7 +59,7 @@ export class MapComponent implements OnInit {
         var bbox = this._mapService.map.getBounds().getSouthWest().lng.toFixed(7) + ',' + this._mapService.map.getBounds().getSouthWest().lat.toFixed(7) + ',' + this._mapService.map.getBounds().getNorthEast().lng.toFixed(7) + ',' + this._mapService.map.getBounds().getNorthEast().lat.toFixed(7);
 
         //this._mapService.queryNWISrtGages(bbox).subscribe(results => console.log('results',results));
-      if (e.target._zoom >= 16) {
+      if (e.target._zoom >= 15) {
         if (this._mapService.markerClusters) {this._mapService.markerClusters.enableClustering(); }
       } else {
         if (this._mapService.markerClusters) {this._mapService.markerClusters.disableClustering(); }

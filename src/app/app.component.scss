@@ -38,7 +38,7 @@
     color: #555; 
     .site {
         border-radius: 50%;
-        opacity: 1;
+        opacity: .5;
         width: 8px;
         height: 8px;
         margin-top: 5px;
@@ -75,8 +75,7 @@
     width: 18px; 
     height: 18px; 
     float: left; 
-    margin-right: 8px; 
-    opacity: 0.7; }
+    margin-right: 8px;}
 
 /*TEMPORARY STYLING UNTIL WE GET THE LIQWIDS DASHBOARD INSERTED HERE*/
 #dashboardTable{

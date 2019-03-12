@@ -5,7 +5,7 @@
 
     <div class="site-meta">
         <h1>Data</h1>
-        <h3 *ngIf="showSiteData == true && noData == false || selectedSites.length === 1">Site name: {{selectedSites[0]}}</h3>
+        <h3 *ngIf="showSiteData == true && noData == false">{{selectedSites.join(", ")}}</h3>
     </div>
 
     <div [class.hidden]="showSiteData == true" class="chart-wrapper">
@@ -13,21 +13,21 @@
         <div class="chart" id="orgChart"></div>
     </div>
 
-
-    <div [class.hidden]="showSiteData == false || noData == true || selectedSites.length > 1" class="chart-wrapper">
-        <div class="chart" [class.hidden]="unitCodes.length == 1" id="siteChart2"></div>
-        <div class="chart" id="siteChart"></div>
-    </div>
-
-    <div [class.hidden]="showSiteData == false || noData == true || selectedSites.length == 1" class="chart-wrapper">
-        <div class="chart" id="multSiteChart"></div>
-    </div>
-
-
     <div [class.hidden]="showSiteData == false || noData == true">
+
+        <div [class.hidden]="selectedSites.length > 1" class="chart-wrapper">
+            <div class="chart" id="siteChart2"></div>
+            <div class="chart" [class.hidden]="unitCodes.length == 1" id="siteChart"></div>
+        </div>
+
+        <div [class.hidden]="selectedSites.length == 1" class="chart-wrapper">
+            <div class="chart" id="multSiteChart"></div>
+        </div>
         <div style="text-align: center;"><i class="fa fa-mouse-pointer"></i>Drag a box around points on the graph to
             zoom in</div>
-        <button (click)="downloadFile()">Download Results File</button>
+
+        <button (click)="downloadFile()"><i class="fa fa-file-download"></i>Download Results CSV</button>
+        <button (click)="makeModalChart()"><i class="fa fa-book-open"></i>Report</button>
         <table id="dataTable">
             <thead>
                 <tr class="row header">
@@ -36,7 +36,6 @@
                     <th>Depth</th>
                     <th>Value</th>
                     <th>Hydrologic Event</th>
-                    <th>Collection Method</th>
                     <th>Aquifer</th>
                     <th>Provider</th>
                 </tr>
@@ -49,7 +48,6 @@
                         {{sample['ActivityBottomDepthHeightMeasure/MeasureUnitCode']}}</td>
                     <td>{{sample.ResultMeasureValue}} {{sample['ResultMeasure/MeasureUnitCode']}}</td>
                     <td>{{sample.HydrologicEvent}}</td>
-                    <td>{{sample['SampleCollectionMethod/MethodIdentifier']}}</td>
                     <td>{{sample.SampleAquifer}}</td>
                     <td>{{sample.ProviderName}}</td>
                 </tr>
@@ -59,5 +57,24 @@
     </div>
     <div *ngIf="noData == true" id="noData">
         <h2>No data was returned</h2>
+    </div>
+</div>
+
+<div class="modal-wrapper" *ngIf="showModal" (click)="showModal = false">
+    <div class="modal" id="reportModal" (click)="$event.stopPropagation()">
+        <div class="modal-header hidden-print">
+            <div class="title">Report</div>
+            <div class="modal-close" (click)="showModal = false">&times;</div>
+        </div>
+        <div class="modal-content" id="printArea">
+            <h4>{{selectedSites.join(", ")}}</h4>
+            <div class="chart" id="modalChart"></div>
+            <div id="modalChart2" [class]="unitCodes.length == 1 || selectedSites.length > 1 ? 'hidden hidden-print': 'chart'"></div>
+            <div id="modalTable"></div>
+            <div class="modal-actions hidden-print">
+                <button (click)="printReport()"><i class="fa fa-print"></i>Print</button>
+            </div>
+        </div>
+
     </div>
 </div>

@@ -22,6 +22,8 @@ export class DataviewComponent implements OnInit {
     public typeChart: any;
     private _typeChartOptions: any;
     public orgChart: any;
+    public modalChart: any;
+    public modalChart2: any;
     public resultCsv;
     public resultJson;
     public filterSelections;
@@ -35,6 +37,7 @@ export class DataviewComponent implements OnInit {
     private dataLoading = false;
     private unitCodes = [];
     private uniqueData = [];
+    public showModal = false;
 
     constructor(private _mapService: MapService, private _http: Http, private _loaderService: LoaderService) { }
 
@@ -224,7 +227,7 @@ export class DataviewComponent implements OnInit {
                     this.createSiteChart('ResultMeasure/MeasureUnitCode', this.siteChart2);
                     this.createSiteChart('ActivityBottomDepthHeightMeasure/MeasureValue', this.siteChart);
                 } else if (this.resultJson.length > 0 && this.selectedSites.length > 1) {
-                    this.createMultSiteChart();
+                    this.createMultSiteChart(this.multSiteChart);
                 } else { this.noData = true; }
                 this._loaderService.hideDataLoad();
                 this.dataLoading = false;
@@ -262,7 +265,7 @@ export class DataviewComponent implements OnInit {
             } else if (value === '' && array.indexOf('N/A') === -1) { array.push('N/A'); }
         }
 
-        if (chart === this.siteChart2) {this.unitCodes = array; }
+        if (char === 'ActivityBottomDepthHeightMeasure/MeasureValue') {this.unitCodes = array; }
         for (let item = 0; item < array.length; item++) {
             const data = new Array();
             for (const result of this.resultJson) {
@@ -278,12 +281,35 @@ export class DataviewComponent implements OnInit {
                 }
             }
             if (chart === this.siteChart) {chart.addSeries({ name: 'Depth: ' + array[item], data: data });
-            } else {chart.addSeries({ name: array[item], data: data }); }
+        } else {chart.addSeries({ name: array[item], data: data }); }
         }
     }
 
-    public createMultSiteChart() {
-        while (this.multSiteChart.series.length > 0) { this.multSiteChart.series[0].remove(true); }
+    public makeModalChart() {
+        this.showModal = true;
+        const self = this;
+        setTimeout(function() {
+            if (self.selectedSites.length === 1) {
+                self.modalChart2 = new Highcharts.Chart('modalChart2', self._siteChartOptions);
+                self.modalChart2.setTitle({ text: 'Result Measure Value by Depth' });
+                self.createSiteChart('ActivityBottomDepthHeightMeasure/MeasureValue', self.modalChart2);
+                self.modalChart = new Highcharts.Chart('modalChart', self._siteChartOptions);
+                self.modalChart.setTitle({ text: 'Result Measure Value by Measurement Type' });
+                self.createSiteChart('ResultMeasure/MeasureUnitCode', self.modalChart);
+            } else {
+                self.modalChart = new Highcharts.Chart('modalChart', self._siteChartOptions);
+                self.modalChart.setTitle({ text: 'Result Measure Value' });
+                self.createMultSiteChart(self.modalChart);
+                document.getElementById('modalChart2').innerHTML = '';
+            }
+            const table = document.getElementById('dataTable').cloneNode(true);
+            const modalTable = document.getElementById('modalTable');
+            modalTable.appendChild(table);
+        }, 100);
+    }
+
+    public createMultSiteChart(chart) {
+        while (chart.series && chart.series.length > 0) { chart.series[0].remove(true); }
         this.selectedSites.forEach((site) => {
             let val; const data = new Array();
             for (const result of this.resultJson) {
@@ -303,7 +329,7 @@ export class DataviewComponent implements OnInit {
                     if (JSON.stringify(this.uniqueData).indexOf(JSON.stringify([date, val])) === -1) { this.uniqueData.push([date, val]); }
                 }
             }
-            this.multSiteChart.addSeries({name: site, data: data});
+            chart.addSeries({name: site, data: data});
         });
     }
 
@@ -343,6 +369,10 @@ export class DataviewComponent implements OnInit {
                 window.open(url);
             }
         }
+    }
+
+    public printReport() {
+        window.print();
     }
 
 }// END class

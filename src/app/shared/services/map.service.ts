@@ -171,21 +171,38 @@ export class MapService {
             onEachFeature: (feature, layer) => {
                 layer.bindPopup("<b>Site Name: </b>" + feature.properties.name + "<br/><b>Location Name: </b>" + feature.properties.locName + "<br/><b>Organization Name: </b>" + feature.properties.orgName + "<br/><b>Result Count: </b>" + feature.properties.resultCnt);
                 layer.on('click', function (e) {
+                    // check for overlapping sites
+                    let locSites = 0;
+                    self.geoJson.features.forEach((ft) => {
+                        const coord = ft.geometry.coordinates;
+                        const featCoord = this._latlng;
+                        if (coord[0].toFixed(3) === featCoord.lng.toFixed(3) && coord[1].toFixed(3) === featCoord.lat.toFixed(3)) { locSites ++; }
+                    });
+                    if (locSites > 1 && e.target._map._zoom < 15) {
+                        e.target.getPopup().setContent("<b>Site Name: </b>" + feature.properties.name + "<br/><b>Location Name: </b>" + feature.properties.locName + "<br/><b>Organization Name: </b>" + feature.properties.orgName + "<br/><b>Result Count: </b>" + feature.properties.resultCnt +
+                        "<br><b style='color: red;'>WARNING: overlapping sites here. Zoom in to access individual sites</b>");
+                        
+                    }
+
+                    // if site is already selected, just open the popup
                     let run = true;
                     if (self.selectedSiteLayer) {
                         self.selectedSiteLayer.eachLayer((lay) => { if (lay._latlng === this._latlng) { run = false; } });
                     }
                     if (run === true) {
-                        if (self.selectedSiteLayer) { self.highlightMarkers.forEach((marker) => self.selectedSiteLayer.remove(marker)); }
-                        self.highlightMarkers = [];
-                        self.highlightSelectedSite(e);
-                        self._selectedSiteSubject.next(e.target.feature.properties);
+                        // control key used to select multiple sites
+                        if (e.originalEvent.ctrlKey === false) {
+                            if (self.selectedSiteLayer) {self.highlightMarkers.forEach((marker) => self.selectedSiteLayer.remove(marker)); }
+                            self.highlightMarkers = [];
+                            self.highlightSelectedSite(e);
+                            self._selectedSiteSubject.next(e.target.feature.properties);
+                        } else {
+                            self.highlightSelectedSite(e);
+                            self._selectMultSubject.next(e.target.feature.properties);
+                        }
+                    } else {
+                        this.openPopup();
                     }
-                });
-                layer.on('contextmenu', function (e) {
-                    this.openPopup();
-                    self.highlightSelectedSite(e);
-                    self._selectMultSubject.next(e.target.feature.properties);
                 });
             }
 
@@ -193,7 +210,7 @@ export class MapService {
 
         this.markerClusters = L.markerClusterGroup({
             showCoverageOnHover: false,
-            maxClusterRadius: .1,
+            maxClusterRadius: .05,
             spiderfyDistanceMultiplier: 2
         });
         this.markerClusters.addLayer(this.sitesLayer);
