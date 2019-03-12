@@ -1,4 +1,4 @@
 export interface Ioptions {
-    label : string;
-    option : string[];
+    label: string;
+    option: string[];
 }
