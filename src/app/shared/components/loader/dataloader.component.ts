@@ -3,18 +3,19 @@ import { Subscription } from 'rxjs';
 import { LoaderService } from '../../services/loader.service';
 
 @Component({
-    selector: 'dataloader-div',
-    template: `<div [class.dataloader-hidden]="!show">
-                  <div class="data-loader" id="data-loader"></div>
-                </div>`,
+    selector: 'app-dataloader-div',
+    template: `
+        <div [class.dataloader-hidden]="!show">
+            <div class="data-loader" id="data-loader"></div>
+        </div>
+    `,
     styleUrls: ['loader.component.scss']
 })
-
-export class DataLoaderComponent implements OnInit {
+export class DataLoaderComponent implements OnInit, OnDestroy {
     public show = false;
     private subscription: Subscription;
 
-    constructor(private _loaderService: LoaderService) { }
+    constructor(private _loaderService: LoaderService) {}
 
     ngOnInit() {
         // subscription to update the class on the div to show/hide the div

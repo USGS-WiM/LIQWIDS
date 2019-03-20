@@ -1,42 +1,32 @@
-import { 
-    Component,
-    OnInit, 
-    ContentChildren, 
-    QueryList, 
-    AfterContentInit
-} from '@angular/core';
+import { Component, OnInit, ContentChildren, QueryList, AfterContentInit } from '@angular/core';
 
-import { TabComponent } from "../tab/tab.component";
-
+import { TabComponent } from '../tab/tab.component';
 
 @Component({
-  selector: 'tabs',
-  templateUrl: './tabs.component.html',
-  styleUrls: ['./tabs.component.scss']
+    selector: 'tabs',
+    templateUrl: './tabs.component.html',
+    styleUrls: ['./tabs.component.scss']
 })
 export class TabsComponent implements AfterContentInit {
+    @ContentChildren(TabComponent) tabs: QueryList<TabComponent>;
 
-  @ContentChildren(TabComponent) tabs: QueryList<TabComponent>;
+    ngAfterContentInit() {
+        const activeTabs = this.tabs.filter(tab => tab.active);
 
-
-  ngAfterContentInit() {
-      let activeTabs = this.tabs.filter((tab)=>tab.active);
-
-      //set initial tab
-      if(activeTabs.length === 0 ){
-          this.selectTab(this.tabs.first);
-      }
-      //set initial tab to other than first
-      /* if (activeTabs.length === 0){
+        // set initial tab
+        if (activeTabs.length === 0) {
+            this.selectTab(this.tabs.first);
+        }
+        // set initial tab to other than first
+        /* if (activeTabs.length === 0){
           this.selectTab(this.tabs.filter((tab) => tab.title == "test2"));
 
         } */
-  }
+    }
 
-  selectTab(tab: any){
-      this.tabs.toArray().forEach(tab => tab.active = false);
+    selectTab(tab: any) {
+        this.tabs.toArray().forEach(_tab => (_tab.active = false));
 
-      tab.active = true;
-  }
-
+        tab.active = true;
+    }
 }

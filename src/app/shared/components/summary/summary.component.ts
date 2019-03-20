@@ -5,9 +5,9 @@ import { Isummary } from '../../interfaces/summary.interface';
 import { Ioutput } from '../../interfaces/output.interface';
 
 @Component({
-  selector: 'app-summary',
-  templateUrl: './summary.component.html',
-  styleUrls: ['./summary.component.scss']
+    selector: 'app-summary',
+    templateUrl: './summary.component.html',
+    styleUrls: ['./summary.component.scss']
 })
 export class SummaryComponent implements OnInit {
     @ViewChild(MatSort) sort: MatSort;
@@ -16,18 +16,20 @@ export class SummaryComponent implements OnInit {
     // public dataSource = new MatTableDataSource;
     public dataSource: MatTableDataSource<Ioutput>;
 
-    constructor(private _summariesService: SummariesService) { }
+    constructor(private _summariesService: SummariesService) {}
 
     ngOnInit() {
         this._summariesService.readSumFile();
 
-        this._summariesService.SummaryData.subscribe((sum_data) => {
+        this._summariesService.SummaryData.subscribe(sum_data => {
             this.dataSource = new MatTableDataSource(sum_data);
             this.dataSource.sort = this.sort;
             this.dataSource.sortingDataAccessor = (item, property) => {
                 switch (property) {
-                    case 'last_submit': return new Date(item.last_submit);
-                    default: return item[property];
+                    case 'last_submit':
+                        return new Date(item.last_submit);
+                    default:
+                        return item[property];
                 }
             };
         });
@@ -35,6 +37,5 @@ export class SummaryComponent implements OnInit {
 
     public applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue.trim().toLowerCase();
-      }
-
+    }
 }
