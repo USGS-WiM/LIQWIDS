@@ -32,7 +32,7 @@ export class MapService {
         service: 'wfs',
         version: '2.0.0',
         typeNames: 'wqp_sites',
-        SEARCHPARAMS: 'countrycode:US;statecode:US:36;countycode:US:36:059|US:36:103;characteristicName:Nitrate',
+        SEARCHPARAMS: 'countrycode:US;statecode:US:36;countycode:US:36:059|US:36:103;characteristicName:Nitrate;minresults:1',
         outputFormat: 'application/json'
     };
 
@@ -250,7 +250,25 @@ export class MapService {
         this.markerClusters = L.markerClusterGroup({
             showCoverageOnHover: false,
             maxClusterRadius: 0.05,
-            spiderfyDistanceMultiplier: 2
+            spiderfyDistanceMultiplier: 2,
+            iconCreateFunction: function(cluster) {
+                const children = cluster.getAllChildMarkers();
+                const props = new Array();
+                for (const child of children) {
+                    const prop = child.feature.properties.searchType;
+                    if (props.indexOf(prop) === -1) {props.push(prop); }
+                }
+                if (props.length === 1) {
+                    return new L.DivIcon({html: '<div class="' + props[0].toLowerCase() + '"><span>' + cluster.getChildCount() +
+                    '</span></div>', className: 'marker-cluster marker-cluster-small border-' + props[0].toLowerCase(),
+                    iconSize: new L.Point(4, 4) });
+                } else {
+                    console.log('multiple site types');
+                    return new L.DivIcon({html: '<div class="multiple-types"><span>' + cluster.getChildCount() +
+                    '</span></div>', className: 'marker-cluster marker-cluster-small border-multiple-types',
+                    iconSize: new L.Point(4, 4) });
+                }
+            }
         });
         this.markerClusters.addLayer(this.sitesLayer);
         this.map.addLayer(this.markerClusters);

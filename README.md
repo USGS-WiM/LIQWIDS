@@ -33,6 +33,22 @@ Basic server with
 npm run start
 ```
 
+To build:
+```
+ng build
+```
+If you want to update the version numbers in the package.json and code.json AND build:
+
+`npm run patch` or
+
+`npm run minor` or
+
+`npm run major`
+
+To reset version in files:
+
+`bump {version number} package.json code.json`
+
 ## Deployment
 
 Add additional notes about how to deploy this on a live system. **Do not include any credentials, IP addresses, or other sensitive information**

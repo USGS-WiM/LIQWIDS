@@ -44,7 +44,8 @@ export class MapComponent implements OnInit {
                 '<i class="site land"></i>Land<br>' +
                 '<i class="site estuary"></i>Estuary<br>' +
                 '<i class="site wetland"></i>Wetland<br>' +
-                '<i class="site ocean"></i>Ocean';
+                '<i class="site ocean"></i>Ocean<br>' +
+                '<i class="site multiple-types"></i>Multiple Types';
             div.innerHTML = item;
             return div;
         };

@@ -6,6 +6,11 @@
     display: block;
 }
 
+#noGraphData {
+    text-align: center;
+    color: $red;
+}
+
 #dataView{
     display: block;
     box-sizing: border-box;

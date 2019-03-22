@@ -1,10 +1,13 @@
 {
   "name": "liqwids",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "patch": "bump patch package.json code.json && ng build",
+    "minor": "bump minor package.json code.json && ng build",
+    "major": "bump major package.json code.json && ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
@@ -33,6 +36,7 @@
     "leaflet.markercluster": "^1.4.1",
     "leaflet.markercluster.freezable": "^1.0.0",
     "rxjs": "~6.3.3",
+    "version-bump-prompt": "^5.0.0",
     "web-animations-js": "^2.3.1",
     "zone.js": "~0.8.26"
   },
