@@ -34,6 +34,7 @@ export class DataviewComponent implements OnInit {
     private showSiteData = false;
     private selectedSites = [];
     private noData = false;
+    private noGraphData = false;
     private dataLoading = false;
     private unitCodes = [];
     private uniqueData = [];
@@ -210,7 +211,7 @@ export class DataviewComponent implements OnInit {
     public getResultData() {
         this._loaderService.showDataLoad();
         this.dataLoading = true;
-        let resultUrl = 'https://www.waterqualitydata.us/data/Result/search?mimeType=csv&countrycode=US';
+        let resultUrl = 'https://www.waterqualitydata.us/data/Result/search?mimeType=csv&countrycode=US&minactivities=1';
         for (const site of this.selectedSites) {
             resultUrl += '&siteid=' + site;
         }
@@ -219,6 +220,7 @@ export class DataviewComponent implements OnInit {
         }
         this._http.get(resultUrl)
             .subscribe(csv => {
+                this.noGraphData = false;
                 this.resultCsv = csv; this.resultCsv = this.resultCsv._body;
                 this.resultJson = this.csvJSON(this.resultCsv);
                 this.resultJson = JSON.parse(this.resultJson);
@@ -234,8 +236,15 @@ export class DataviewComponent implements OnInit {
 
                 // if duplicates, jitter the points, need to find a way of removing duplicates...
                 if (this.uniqueData.length < this.resultJson.length) {
-                    this.siteChart.options.plotOptions.scatter.jitter = {x: 0, y: 0.05};
-                    this.siteChart2.options.plotOptions.scatter.jitter = {x: 0, y: 0.05};
+                    this.siteChart.options.plotOptions.scatter.jitter = {x: 0, y: 0.01};
+                    this.siteChart2.options.plotOptions.scatter.jitter = {x: 0, y: 0.01};
+                }
+                if (!this.siteChart2.hasData) {
+                    // this.siteChart2.destroy();
+                    // document.getElementById('siteChart2').classList.add('hidden');
+                }
+                if (!this.siteChart2.series.data && this.siteChart.series[0].data.length === 0) {
+                    this.noGraphData = true;
                 }
             });
     }
@@ -262,7 +271,7 @@ export class DataviewComponent implements OnInit {
             const value = this.resultJson[i][char];
             if (value !== '' && array.indexOf(value) === -1) {
                 array.push(value);
-            } else if (value === '' && array.indexOf('N/A') === -1) { array.push('N/A'); }
+            } else if (value === '' && array.indexOf('N/A') === -1 && char !== 'ResultMeasure/MeasureUnitCode') { array.push('N/A'); }
         }
 
         if (char === 'ActivityBottomDepthHeightMeasure/MeasureValue') {this.unitCodes = array; }
@@ -273,15 +282,23 @@ export class DataviewComponent implements OnInit {
                 if (currentValue === array[item] || (currentValue === '' && array[item] === 'N/A')) {
                     if (/\d/.test(result.ResultMeasureValue)) {
                         val = Number(result.ResultMeasureValue);
-                    } else { val = 0; }
-                    let date = result.ActivityStartDate.split('-');
-                    date = Date.UTC(date[0], Number(date[1]) - 1, date[2]);
-                    data.push({ x: date, y: val, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
-                    if (JSON.stringify(this.uniqueData).indexOf(JSON.stringify([date, val])) === -1) { this.uniqueData.push([date, val]); }
+                        let date = result.ActivityStartDate.split('-');
+                        date = Date.UTC(date[0], Number(date[1]) - 1, date[2]);
+                        if (result['ResultMeasure/MeasureUnitCode'] === 'ug/l')  {
+                            data.push({ x: date, y: val / 1000, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
+                        } else if (result['ResultMeasure/MeasureUnitCode'] === 'umol') {
+                            data.push({ x: date, y: val / 4.31, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
+                        } else {
+                            data.push({ x: date, y: val, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
+                        }
+                        if (JSON.stringify(this.uniqueData).indexOf(JSON.stringify([date, val])) === -1) {
+                            this.uniqueData.push([date, val]);
+                        }
+                    } // skip if no value
                 }
             }
             if (chart === this.siteChart) {chart.addSeries({ name: 'Depth: ' + array[item], data: data });
-        } else {chart.addSeries({ name: array[item], data: data }); }
+            } else {chart.addSeries({ name: array[item], data: data }); }
         }
     }
 
@@ -311,25 +328,38 @@ export class DataviewComponent implements OnInit {
     public createMultSiteChart(chart) {
         while (chart.series && chart.series.length > 0) { chart.series[0].remove(true); }
         this.selectedSites.forEach((site) => {
-            let val; const data = new Array();
+            const array = new Array();
             for (const result of this.resultJson) {
                 if (result.MonitoringLocationIdentifier === site) {
-                    if (/\d/.test(result.ResultMeasureValue)) {
-                        val = Number(result.ResultMeasureValue);
-                    } else { val = 0; }
-                    let date = result.ActivityStartDate.split('-');
-                    date = Date.UTC(date[0], Number(date[1]) - 1, date[2]);
-                    if (result['ResultMeasure/MeasureUnitCode'] === 'ug/l')  {
-                        data.push({ x: date, y: val / 1000, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
-                    } else if (result['ResultMeasure/MeasureUnitCode'] === 'umol') {
-                        data.push({ x: date, y: val / 4.31, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
-                    } else {
-                        data.push({ x: date, y: val, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
+                    const value = result['ResultMeasure/MeasureUnitCode'];
+                    if (value !== '' && array.indexOf(value) === -1) {
+                        array.push(value);
                     }
-                    if (JSON.stringify(this.uniqueData).indexOf(JSON.stringify([date, val])) === -1) { this.uniqueData.push([date, val]); }
                 }
             }
-            chart.addSeries({name: site, data: data});
+            for (const unit of array) {
+                let val; const data = new Array();
+                for (const result of this.resultJson) {
+                    if (result.MonitoringLocationIdentifier === site && result['ResultMeasure/MeasureUnitCode'] === unit) {
+                        if (/\d/.test(result.ResultMeasureValue)) {
+                            val = Number(result.ResultMeasureValue);
+                            let date = result.ActivityStartDate.split('-');
+                            date = Date.UTC(date[0], Number(date[1]) - 1, date[2]);
+                            if (result['ResultMeasure/MeasureUnitCode'] === 'ug/l')  {
+                                data.push({ x: date, y: val / 1000, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
+                            } else if (result['ResultMeasure/MeasureUnitCode'] === 'umol') {
+                                data.push({ x: date, y: val / 4.31, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
+                            } else {
+                                data.push({ x: date, y: val, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
+                            }
+                            if (JSON.stringify(this.uniqueData).indexOf(JSON.stringify([date, val])) === -1) {
+                                this.uniqueData.push([date, val]);
+                            }
+                        } // skip if no value
+                    }
+                }
+                chart.addSeries({name: site + ', ' + unit, data: data});
+            }
         });
     }
 

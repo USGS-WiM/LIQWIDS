@@ -70,6 +70,9 @@
     .ocean {
         background: rgba(198, 76, 65, 1); //4272b0
     }
+    .multiple-types {
+        background-color: rgba(128,128,128, 1) !important;
+    }
 }
 .legend i { 
     width: 18px; 
@@ -77,6 +80,82 @@
     float: left; 
     margin-right: 8px;}
 
+.facility{
+    background-color: rgba(85, 94, 123, 0.7) !important;
+}
+.atmosphere{
+    background-color: rgba(183, 217, 104, 0.7) !important;
+}
+.lake{
+    background-color: rgba(181, 118, 173, 0.7) !important;
+}
+.stream{
+    background-color: rgba(67, 118, 211, 0.7) !important;
+}
+.well{
+    background-color: rgba(224, 70, 68, 0.7) !important;
+}
+.land{
+    background-color: rgba(31, 119, 127, 0.7) !important;
+}
+.estuary{
+    background-color: rgba(214, 8, 169, 0.7) !important;
+}
+.wetland {
+    background-color: rgba(60, 180, 75, 0.7) !important; //#5239af
+}
+.ocean {
+    background-color: rgba(198, 76, 65, 0.7) !important; //4272b0
+}
+.multiple-types {
+    background-color: rgba(128,128,128, 0.7) !important;
+}
+
+.marker-cluster div {
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 20px !important;
+}
+
+.marker-cluster span {
+    line-height: 20px !important;
+    font-size: 11px !important;
+}
+
+.marker-cluster-small {
+    width: 30px !important;
+    height: 30px !important;
+}
+.border-facility{
+    background-color: rgba(85, 94, 123, 0.3) !important;
+}
+.border-atmosphere{
+    background-color: rgba(183, 217, 104, 0.3) !important;
+}
+.border-lake{
+    background-color: rgba(181, 118, 173, 0.3) !important;
+}
+.border-stream{
+    background-color: rgba(67, 118, 211, 0.3) !important;
+}
+.border-well{
+    background-color: rgba(224, 70, 68, 0.3) !important;
+}
+.border-land{
+    background-color: rgba(31, 119, 127, 0.3) !important;
+}
+.border-estuary{
+    background-color: rgba(214, 8, 169, 0.3) !important;
+}
+.border-.wetland {
+    background-color: rgba(60, 180, 75, 0.3) !important;
+}
+.border-ocean {
+    background-color: rgba(198, 76, 65, 0.3) !important;
+}
+.border-multiple-types {
+    background-color: rgba(128,128,128, 0.3) !important;
+}
 /*TEMPORARY STYLING UNTIL WE GET THE LIQWIDS DASHBOARD INSERTED HERE*/
 #dashboardTable{
     display: flex;
