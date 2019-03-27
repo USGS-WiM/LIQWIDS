@@ -25,6 +25,7 @@ export class SidebarComponent implements OnInit {
     public urlSelSites;
     public fromURL = false;
     public filterSelections;
+    public hideLoad = false;
 
     constructor(private _mapService: MapService, private formBuilder: FormBuilder, private _loaderService: LoaderService) {}
 
@@ -166,7 +167,6 @@ export class SidebarComponent implements OnInit {
         // requery on wfs data on any parameter filter dropdown change
         this.parameterDropDownGroup.valueChanges.subscribe(selections => {
             this._mapService._characteristicFilterSubject.next(selections.characteristic);
-            this.reQuery();
             const self = this;
             // remove all other filters from url if characteristic changed after load
             this.urlParams.forEach(function(value, key) {
@@ -176,6 +176,8 @@ export class SidebarComponent implements OnInit {
                 this.urlParams.append('characteristicType', char);
             }
             this.updateQueryParams();
+            this.hideLoad = true;
+            this.reQuery();
         });
 
         // on site dropdown change just re-filter geojson
@@ -221,6 +223,7 @@ export class SidebarComponent implements OnInit {
 
             // clearForm function clears layer and readds geojson
             this.clearForm();
+            if (this.hideLoad) {this._loaderService.hideFullPageLoad(); }
         });
     }
 
