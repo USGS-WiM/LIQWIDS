@@ -7,7 +7,7 @@
 /*! exports provided: name, version, scripts, private, dependencies, devDependencies, default */
 /***/ (function(module) {
 
-module.exports = {"name":"liqwids","version":"0.0.4","scripts":{"ng":"ng","start":"ng serve","build":"ng build","patch":"bump patch package.json code.json && ng build","minor":"bump minor package.json code.json && ng build","major":"bump major package.json code.json && ng build","test":"ng test","lint":"ng lint","e2e":"ng e2e","live":"ng serve --configuration hmr"},"private":true,"dependencies":{"@angular/animations":"~7.0.0","@angular/cdk":"~7.3.3","@angular/common":"~7.0.0","@angular/compiler":"~7.0.0","@angular/core":"~7.0.0","@angular/forms":"~7.0.0","@angular/http":"~7.0.0","@angular/material":"^7.3.3","@angular/platform-browser":"~7.0.0","@angular/platform-browser-dynamic":"~7.0.0","@angular/router":"~7.0.0","@ng-select/ng-select":"^2.16.0","@types/geojson":"^7946.0.5","@types/leaflet":"^1.2.14","classlist.js":"^1.1.20150312","core-js":"^2.5.4","highcharts":"^7.0.3","leaflet":"^1.3.4","leaflet.markercluster":"^1.4.1","leaflet.markercluster.freezable":"^1.0.0","rxjs":"~6.3.3","version-bump-prompt":"^5.0.0","web-animations-js":"^2.3.1","zone.js":"~0.8.26"},"devDependencies":{"@angular-devkit/build-angular":"^0.13.0","@angular/cli":"~7.0.5","@angular/compiler-cli":"^7.2.5","@angular/language-service":"~7.0.0","@angularclass/hmr":"^2.1.3","@types/highcharts":"^5.0.36","@types/jasmine":"~2.8.8","@types/jasminewd2":"~2.0.3","@types/node":"~8.9.4","codelyzer":"~4.5.0","jasmine-core":"~2.99.1","jasmine-spec-reporter":"~4.2.1","karma":"~3.0.0","karma-chrome-launcher":"~2.2.0","karma-coverage-istanbul-reporter":"~2.0.1","karma-jasmine":"~1.1.2","karma-jasmine-html-reporter":"^0.2.2","protractor":"~5.4.0","ts-node":"~7.0.0","tslint":"~5.11.0","typescript":"~3.1.6"}};
+module.exports = {"name":"liqwids","version":"0.0.4","scripts":{"ng":"ng","start":"ng serve","build":"ng build","patch":"bump patch package.json code.json && ng build","minor":"bump minor package.json code.json && ng build","major":"bump major package.json code.json && ng build","test":"ng test","lint":"ng lint","e2e":"ng e2e","live":"ng serve --configuration hmr"},"private":true,"dependencies":{"@angular/animations":"~7.0.0","@angular/cdk":"~7.3.3","@angular/common":"~7.0.0","@angular/compiler":"~7.0.0","@angular/core":"~7.0.0","@angular/forms":"~7.0.0","@angular/http":"~7.0.0","@angular/material":"^7.3.3","@angular/platform-browser":"~7.0.0","@angular/platform-browser-dynamic":"~7.0.0","@angular/router":"~7.0.0","@ng-select/ng-select":"^2.16.0","@types/geojson":"^7946.0.5","@types/leaflet":"^1.2.14","classlist.js":"^1.1.20150312","core-js":"^2.5.4","highcharts":"^7.0.3","leaflet":"^1.3.4","leaflet.markercluster":"^1.4.1","leaflet.markercluster.freezable":"^1.0.0","regression":"^2.0.1","rxjs":"~6.3.3","version-bump-prompt":"^5.0.0","web-animations-js":"^2.3.1","zone.js":"~0.8.26"},"devDependencies":{"@angular-devkit/build-angular":"^0.13.0","@angular/cli":"~7.0.5","@angular/compiler-cli":"^7.2.5","@angular/language-service":"~7.0.0","@angularclass/hmr":"^2.1.3","@types/highcharts":"^5.0.36","@types/jasmine":"~2.8.8","@types/jasminewd2":"~2.0.3","@types/node":"~8.9.4","codelyzer":"~4.5.0","jasmine-core":"~2.99.1","jasmine-spec-reporter":"~4.2.1","karma":"~3.0.0","karma-chrome-launcher":"~2.2.0","karma-coverage-istanbul-reporter":"~2.0.1","karma-jasmine":"~1.1.2","karma-jasmine-html-reporter":"^0.2.2","protractor":"~5.4.0","ts-node":"~7.0.0","tslint":"~5.11.0","typescript":"~3.1.6"}};
 
 /***/ }),
 
@@ -153,10 +153,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _angular_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/http */ "./node_modules/@angular/http/fesm5/http.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
-/* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./app-routing.module */ "./src/app/app-routing.module.ts");
-/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
-/* harmony import */ var _mainview_mainview_module__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./mainview/mainview.module */ "./src/app/mainview/mainview.module.ts");
-/* harmony import */ var _shared_shared_module__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./shared/shared.module */ "./src/app/shared/shared.module.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./app-routing.module */ "./src/app/app-routing.module.ts");
+/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
+/* harmony import */ var _mainview_mainview_module__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./mainview/mainview.module */ "./src/app/mainview/mainview.module.ts");
+/* harmony import */ var _shared_shared_module__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./shared/shared.module */ "./src/app/shared/shared.module.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -173,24 +174,30 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+
+var appRoutes = [
+    { path: 'app', redirectTo: '/app', pathMatch: 'full' }
+];
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
     AppModule = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
-            declarations: [_app_component__WEBPACK_IMPORTED_MODULE_6__["AppComponent"]],
+            declarations: [_app_component__WEBPACK_IMPORTED_MODULE_7__["AppComponent"]],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormsModule"],
                 _angular_http__WEBPACK_IMPORTED_MODULE_3__["HttpModule"],
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClientModule"],
-                _app_routing_module__WEBPACK_IMPORTED_MODULE_5__["AppRoutingModule"],
+                _app_routing_module__WEBPACK_IMPORTED_MODULE_6__["AppRoutingModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_2__["ReactiveFormsModule"],
-                _mainview_mainview_module__WEBPACK_IMPORTED_MODULE_7__["MainviewModule"],
-                _shared_shared_module__WEBPACK_IMPORTED_MODULE_8__["SharedModule"]
+                _mainview_mainview_module__WEBPACK_IMPORTED_MODULE_8__["MainviewModule"],
+                _shared_shared_module__WEBPACK_IMPORTED_MODULE_9__["SharedModule"],
+                _angular_router__WEBPACK_IMPORTED_MODULE_5__["RouterModule"].forRoot(appRoutes)
             ],
             providers: [],
-            bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_6__["AppComponent"]]
+            bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_7__["AppComponent"]],
+            exports: [_angular_router__WEBPACK_IMPORTED_MODULE_5__["RouterModule"]]
         })
     ], AppModule);
     return AppModule;
@@ -235,9 +242,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var highcharts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! highcharts */ "./node_modules/highcharts/highcharts.js");
 /* harmony import */ var highcharts__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(highcharts__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var src_app_shared_services_map_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/shared/services/map.service */ "./src/app/shared/services/map.service.ts");
-/* harmony import */ var _shared_services_loader_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../shared/services/loader.service */ "./src/app/shared/services/loader.service.ts");
-/* harmony import */ var _angular_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/http */ "./node_modules/@angular/http/fesm5/http.js");
+/* harmony import */ var regression__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! regression */ "./node_modules/regression/dist/regression.js");
+/* harmony import */ var regression__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(regression__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var src_app_shared_services_map_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/shared/services/map.service */ "./src/app/shared/services/map.service.ts");
+/* harmony import */ var _shared_services_loader_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../shared/services/loader.service */ "./src/app/shared/services/loader.service.ts");
+/* harmony import */ var _angular_http__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/http */ "./node_modules/@angular/http/fesm5/http.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -252,12 +261,13 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var DataviewComponent = /** @class */ (function () {
     function DataviewComponent(_mapService, _http, _loaderService) {
         this._mapService = _mapService;
         this._http = _http;
         this._loaderService = _loaderService;
-        this.characteristics = ['Nitrate'];
+        this.queryChar = ['Nitrate'];
         this.showSiteData = false;
         this.selectedSites = [];
         this.noData = false;
@@ -280,15 +290,13 @@ var DataviewComponent = /** @class */ (function () {
             _this.getResultData();
         });
         this._mapService.SelectedChar.subscribe(function (Response) {
+            _this.queryChar = Response;
             _this.noData = false;
             if (typeof Response === 'string') {
-                _this.characteristics = [Response];
+                _this.queryChar = [Response];
             }
             else {
-                _this.characteristics = Response;
-            }
-            if (_this.characteristics.indexOf('Nitrogen') > -1) {
-                _this.characteristics.push('Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)');
+                _this.queryChar = Response;
             }
         });
         this._mapService.SiteChange.subscribe(function (geojson) {
@@ -431,18 +439,22 @@ var DataviewComponent = /** @class */ (function () {
     }; // End NgOnInit
     DataviewComponent.prototype.getResultData = function () {
         var _this = this;
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
         this._loaderService.showDataLoad();
         this.dataLoading = true;
         var resultUrl = 'https://www.waterqualitydata.us/data/Result/search?mimeType=csv&countrycode=US&minactivities=1';
+        var sites = this.selectedSites;
         for (var _i = 0, _a = this.selectedSites; _i < _a.length; _i++) {
             var site = _a[_i];
             resultUrl += '&siteid=' + site;
         }
-        for (var _b = 0, _c = this.characteristics; _b < _c.length; _b++) {
+        for (var _b = 0, _c = this.queryChar; _b < _c.length; _b++) {
             var char = _c[_b];
             resultUrl += '&characteristicName=' + char;
         }
-        this._http.get(resultUrl)
+        this.subscription = this._http.get(resultUrl)
             .subscribe(function (csv) {
             _this.noGraphData = false;
             _this.resultCsv = csv;
@@ -452,11 +464,11 @@ var DataviewComponent = /** @class */ (function () {
             _this.showSiteData = true;
             _this.noData = false;
             _this.uniqueData = [];
-            if (_this.resultJson.length > 0 && _this.selectedSites.length === 1) {
+            if (_this.resultJson.length > 0 && sites.length === 1) {
                 _this.createSiteChart('ResultMeasure/MeasureUnitCode', _this.siteChart2);
                 _this.createSiteChart('ActivityBottomDepthHeightMeasure/MeasureValue', _this.siteChart);
             }
-            else if (_this.resultJson.length > 0 && _this.selectedSites.length > 1) {
+            else if (_this.resultJson.length > 0 && sites.length > 1) {
                 _this.createMultSiteChart(_this.multSiteChart);
             }
             else {
@@ -469,11 +481,7 @@ var DataviewComponent = /** @class */ (function () {
                 _this.siteChart.options.plotOptions.scatter.jitter = { x: 0, y: 0.01 };
                 _this.siteChart2.options.plotOptions.scatter.jitter = { x: 0, y: 0.01 };
             }
-            if (!_this.siteChart2.hasData) {
-                // this.siteChart2.destroy();
-                // document.getElementById('siteChart2').classList.add('hidden');
-            }
-            if (!_this.siteChart2.series.data && _this.siteChart.series[0].data.length === 0) {
+            if (sites.length === 1 && !_this.siteChart2.series.data && _this.siteChart.series[0].data.length === 0) {
                 _this.noGraphData = true;
             }
         });
@@ -493,7 +501,8 @@ var DataviewComponent = /** @class */ (function () {
         return JSON.stringify(result);
     };
     DataviewComponent.prototype.createSiteChart = function (char, chart) {
-        while (chart.series.length > 0) {
+        var seriesData = [];
+        while (chart.series && chart.series.length > 0) {
             chart.series[0].remove(true);
         }
         var array = [];
@@ -532,6 +541,7 @@ var DataviewComponent = /** @class */ (function () {
                         if (JSON.stringify(this.uniqueData).indexOf(JSON.stringify([date, val])) === -1) {
                             this.uniqueData.push([date, val]);
                         }
+                        seriesData.push([date / 10000000000, val]);
                     } // skip if no value
                 }
             }
@@ -542,6 +552,24 @@ var DataviewComponent = /** @class */ (function () {
                 chart.addSeries({ name: array[item], data: data });
             }
         }
+        // create regression
+        if (seriesData.length > 2) {
+            this.createRegression(chart, seriesData);
+        }
+    };
+    DataviewComponent.prototype.createRegression = function (chart, data) {
+        var ymxb = regression__WEBPACK_IMPORTED_MODULE_2__["linear"](data);
+        var m = ymxb.equation[0];
+        var b = ymxb.equation[1];
+        var xs = [];
+        data.forEach(function (d) {
+            xs.push(d[0]);
+        });
+        var x0 = Math.min.apply(null, xs);
+        var y0 = m * x0 + b;
+        var xf = Math.max.apply(null, xs);
+        var yf = m * xf + b;
+        chart.addSeries({ type: 'line', name: 'Regression Line', data: [[x0 * 10000000000, y0], [xf * 10000000000, yf]] });
     };
     DataviewComponent.prototype.makeModalChart = function () {
         this.showModal = true;
@@ -568,6 +596,7 @@ var DataviewComponent = /** @class */ (function () {
     };
     DataviewComponent.prototype.createMultSiteChart = function (chart) {
         var _this = this;
+        var seriesData = [];
         while (chart.series && chart.series.length > 0) {
             chart.series[0].remove(true);
         }
@@ -605,16 +634,20 @@ var DataviewComponent = /** @class */ (function () {
                             if (JSON.stringify(_this.uniqueData).indexOf(JSON.stringify([date, val])) === -1) {
                                 _this.uniqueData.push([date, val]);
                             }
+                            seriesData.push([date / 10000000000, val]);
                         } // skip if no value
                     }
                 }
                 chart.addSeries({ name: site + ', ' + unit, data: data });
             }
         });
+        if (seriesData.length > 2) {
+            this.createRegression(chart, seriesData);
+        }
     };
     DataviewComponent.prototype.createStatChart = function (chart, name, property) {
         var _this = this;
-        while (chart.series.length > 0) {
+        while (chart.series && chart.series.length > 0) {
             chart.series[0].remove(true);
         }
         var propData = [];
@@ -664,7 +697,7 @@ var DataviewComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./dataview.component.html */ "./src/app/mainview/dataview/dataview.component.html"),
             styles: [__webpack_require__(/*! ./dataview.component.scss */ "./src/app/mainview/dataview/dataview.component.scss")]
         }),
-        __metadata("design:paramtypes", [src_app_shared_services_map_service__WEBPACK_IMPORTED_MODULE_2__["MapService"], _angular_http__WEBPACK_IMPORTED_MODULE_4__["Http"], _shared_services_loader_service__WEBPACK_IMPORTED_MODULE_3__["LoaderService"]])
+        __metadata("design:paramtypes", [src_app_shared_services_map_service__WEBPACK_IMPORTED_MODULE_3__["MapService"], _angular_http__WEBPACK_IMPORTED_MODULE_5__["Http"], _shared_services_loader_service__WEBPACK_IMPORTED_MODULE_4__["LoaderService"]])
     ], DataviewComponent);
     return DataviewComponent;
 }()); // END class
@@ -894,6 +927,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var src_app_shared_services_map_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/shared/services/map.service */ "./src/app/shared/services/map.service.ts");
+/* harmony import */ var _shared_services_loader_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../shared/services/loader.service */ "./src/app/shared/services/loader.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -906,25 +940,21 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var SidebarComponent = /** @class */ (function () {
-    function SidebarComponent(_mapService, formBuilder) {
+    function SidebarComponent(_mapService, formBuilder, _loaderService) {
         this._mapService = _mapService;
         this.formBuilder = formBuilder;
+        this._loaderService = _loaderService;
         this.showBasemaps = false;
         this.showSiteFilters = true;
         this.showParameterFilters = true;
         this.expandSidebar = false;
-        this.cities = [];
+        this.fromURL = false;
     }
     SidebarComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.cities = [
-            { id: 1, name: 'Vilnius' },
-            { id: 2, name: 'Kaunas' },
-            { id: 3, name: 'Pavilnys', disabled: true },
-            { id: 4, name: 'Pabradė' },
-            { id: 5, name: 'Klaipėda' }
-        ];
+        this.urlParams = new URLSearchParams(window.location.search);
         // for now we can keep this a static list but ultimately could pull from here in a service
         // https://www.waterqualitydata.us/Codes/Characteristicname?mimeType=xml
         this.parameterFilterData = {
@@ -933,9 +963,19 @@ var SidebarComponent = /** @class */ (function () {
         this.defaultParameterFilter = 'Nitrate';
         this.parameterDropDownGroup = this.formBuilder.group({
             characteristic: [this.defaultParameterFilter]
-            // characteristic: [[]]
         });
-        this.parameterDropDownGroup.get('characteristic').setValue([this.defaultParameterFilter]);
+        this.urlSelSites = this.urlParams.getAll('sites');
+        this.urlCharParam = this.urlParams.getAll('characteristicType');
+        // use characteristic sent through in url, otherwise 'Nitrate'
+        if (this.urlCharParam.length > 0 && this.urlCharParam[0] !== null) {
+            this.parameterDropDownGroup.get('characteristic').setValue(this.urlCharParam);
+            this._mapService._characteristicFilterSubject.next(this.urlCharParam);
+            this.reQuery();
+        }
+        else {
+            this.urlParams.set('characteristicType', [this.defaultParameterFilter]);
+            this.parameterDropDownGroup.get('characteristic').setValue([this.defaultParameterFilter]);
+        }
         this.siteDropDownGroup = this.formBuilder.group({
             huc8: [[]],
             location: [[]],
@@ -952,9 +992,42 @@ var SidebarComponent = /** @class */ (function () {
             _this.siteFilterData = response;
             _this._mapService.addToSitesLayer(_this._mapService.geoJson);
             _this.geoJSONsiteCount = _this._mapService.geoJson.totalFeatures;
+            // get filters from url params
+            _this.setFilters();
+            _this.filterGeoJSON(_this.filterSelections);
+            // highlights selected sites on map, runs data query and updates url
+            if (_this.urlSelSites[0] !== null) {
+                _this.highlightURLSites();
+            }
+            _this.updateQueryParams();
+            _this._loaderService.hideFullPageLoad();
         });
         // set up filter listeners
         this.onChanges();
+        this._mapService.SelectedSite.subscribe(function (Response) {
+            // updates url if site selected after load
+            if (_this.urlSelSites[0] !== Response.name) {
+                _this.urlSelSites = [Response.name];
+                _this.urlParams.set('sites', [Response.name]);
+                _this.updateQueryParams();
+            }
+        });
+        this._mapService.MultSelect.subscribe(function (Response) {
+            // updates url if multiple new sites selected after load
+            if (_this.urlSelSites.indexOf(Response.name) === -1) {
+                _this.urlSelSites.push(Response.name);
+            }
+            for (var _i = 0, _a = _this.urlSelSites; _i < _a.length; _i++) {
+                var site = _a[_i];
+                if (_this.urlSelSites[0] === site) {
+                    _this.urlParams.set('sites', site);
+                }
+                else {
+                    _this.urlParams.append('sites', site);
+                }
+            }
+            _this.updateQueryParams();
+        });
     };
     SidebarComponent.prototype.onItemSelect = function (item) {
         console.log(item);
@@ -962,16 +1035,97 @@ var SidebarComponent = /** @class */ (function () {
     SidebarComponent.prototype.onSelectAll = function (items) {
         console.log(items);
     };
+    SidebarComponent.prototype.setFilters = function () {
+        // change dropdown filters to match url on load
+        var self = this;
+        this.fromURL = false;
+        this.urlParams.forEach(function (value, key) {
+            var dropdownKey = self.siteDropDownGroup.get(key);
+            var match = true;
+            var paramsValue = self.urlParams.getAll(key);
+            if (key !== 'characteristicType' && key !== 'sites') {
+                if (dropdownKey.value.length !== paramsValue.length) {
+                    match = false;
+                }
+                for (var i = dropdownKey.value.length; i--;) {
+                    if (dropdownKey.value[i] !== paramsValue[i]) {
+                        match = false;
+                    }
+                }
+                if (match === false) {
+                    self.fromURL = true;
+                    dropdownKey.setValue(self.urlParams.getAll(key));
+                }
+            }
+        });
+    };
+    SidebarComponent.prototype.highlightURLSites = function () {
+        var _this = this;
+        // highlight sites and send to dataview
+        if (this.urlSelSites.length === 1) {
+            var jsonIndex = this._mapService.geoJson.features.findIndex(function (site) {
+                return site.properties.name === _this.urlSelSites[0];
+            });
+            this._mapService._selectedSiteSubject.next(this._mapService.geoJson.features[jsonIndex].properties);
+            this._mapService.highlightSelectedSite(this._mapService.geoJson.features[jsonIndex]);
+        }
+        else if (this.urlSelSites.length > 1) {
+            this.urlSelSites.forEach(function (selSite) {
+                var jsonIndex = _this._mapService.geoJson.features.findIndex(function (site) {
+                    return site.properties.name === selSite;
+                });
+                _this._mapService._selectMultSubject.next(_this._mapService.geoJson.features[jsonIndex].properties);
+                _this._mapService.highlightSelectedSite(_this._mapService.geoJson.features[jsonIndex]);
+            });
+        }
+    };
+    SidebarComponent.prototype.updateQueryParams = function () {
+        window.history.replaceState({}, '', decodeURIComponent(location.pathname + "?" + this.urlParams));
+    };
     SidebarComponent.prototype.onChanges = function () {
         var _this = this;
         // requery on wfs data on any parameter filter dropdown change
         this.parameterDropDownGroup.valueChanges.subscribe(function (selections) {
             _this._mapService._characteristicFilterSubject.next(selections.characteristic);
             _this.reQuery();
+            var self = _this;
+            // remove all other filters from url if characteristic changed after load
+            _this.urlParams.forEach(function (value, key) {
+                self.urlParams.delete(key);
+            });
+            for (var _i = 0, _a = selections.characteristic; _i < _a.length; _i++) {
+                var char = _a[_i];
+                _this.urlParams.append('characteristicType', char);
+            }
+            _this.updateQueryParams();
         });
         // on site dropdown change just re-filter geojson
         this.siteDropDownGroup.valueChanges.subscribe(function (selections) {
+            _this.filterSelections = selections;
             _this.filterGeoJSON(selections);
+            if (!_this.fromURL) {
+                // update url filters if selections made after load
+                Object.keys(selections).forEach(function (key) {
+                    _this.urlParams.delete(key);
+                    if (selections[key].length > 1) {
+                        selections[key].forEach(function (sel) {
+                            if (_this.urlParams.getAll(key).indexOf(sel) === -1) {
+                                _this.urlParams.append(key, sel);
+                            }
+                        });
+                    }
+                    else if (selections[key].length === 1) {
+                        _this.urlParams.set(key, selections[key]);
+                    }
+                    else {
+                        _this.urlParams.delete(key);
+                    }
+                });
+                // remove selected sites from url
+                _this.urlParams.delete('sites');
+            }
+            _this.fromURL = false;
+            _this.updateQueryParams();
         });
     };
     SidebarComponent.prototype.reQuery = function () {
@@ -1052,7 +1206,7 @@ var SidebarComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./sidebar.component.html */ "./src/app/mainview/sidebar/sidebar.component.html"),
             styles: [__webpack_require__(/*! ./sidebar.component.scss */ "./src/app/mainview/sidebar/sidebar.component.scss")]
         }),
-        __metadata("design:paramtypes", [src_app_shared_services_map_service__WEBPACK_IMPORTED_MODULE_2__["MapService"], _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormBuilder"]])
+        __metadata("design:paramtypes", [src_app_shared_services_map_service__WEBPACK_IMPORTED_MODULE_2__["MapService"], _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormBuilder"], _shared_services_loader_service__WEBPACK_IMPORTED_MODULE_3__["LoaderService"]])
     ], SidebarComponent);
     return SidebarComponent;
 }());
@@ -1499,12 +1653,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 /* harmony import */ var _shared_services_loader_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../shared/services/loader.service */ "./src/app/shared/services/loader.service.ts");
-/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! leaflet */ "./node_modules/leaflet/dist/leaflet-src.js");
-/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(leaflet__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var leaflet_markercluster__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! leaflet.markercluster */ "./node_modules/leaflet.markercluster/dist/leaflet.markercluster-src.js");
-/* harmony import */ var leaflet_markercluster__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(leaflet_markercluster__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var leaflet_markercluster_freezable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! leaflet.markercluster.freezable */ "./node_modules/leaflet.markercluster.freezable/dist/leaflet.markercluster.freezable.js");
-/* harmony import */ var leaflet_markercluster_freezable__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(leaflet_markercluster_freezable__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! leaflet */ "./node_modules/leaflet/dist/leaflet-src.js");
+/* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(leaflet__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var leaflet_markercluster__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! leaflet.markercluster */ "./node_modules/leaflet.markercluster/dist/leaflet.markercluster-src.js");
+/* harmony import */ var leaflet_markercluster__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(leaflet_markercluster__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var leaflet_markercluster_freezable__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! leaflet.markercluster.freezable */ "./node_modules/leaflet.markercluster.freezable/dist/leaflet.markercluster.freezable.js");
+/* harmony import */ var leaflet_markercluster_freezable__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(leaflet_markercluster_freezable__WEBPACK_IMPORTED_MODULE_8__);
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1522,10 +1677,13 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var MapService = /** @class */ (function () {
-    function MapService(_http, _loaderService) {
+    function MapService(_http, _loaderService, router, route) {
         this._http = _http;
         this._loaderService = _loaderService;
+        this.router = router;
+        this.route = route;
         this.highlightMarkers = [];
         this.geoJsonURL = 'https://www.waterqualitydata.us/ogcservices/wfs/';
         this.URLparams = {
@@ -1648,7 +1806,6 @@ var MapService = /** @class */ (function () {
                     }
                 }
             });
-            _this._loaderService.hideFullPageLoad();
             return _this.filterOptions;
         }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["catchError"])(this.handleError));
     };
@@ -1716,7 +1873,7 @@ var MapService = /** @class */ (function () {
                     var run = true;
                     if (self.selectedSiteLayer) {
                         self.selectedSiteLayer.eachLayer(function (site) {
-                            if (site._latlng === _this._latlng) {
+                            if (site._latlng['lat'] === _this._latlng['lat'] && site._latlng['lng'] === _this._latlng['lng']) {
                                 run = false;
                             }
                         });
@@ -1762,7 +1919,6 @@ var MapService = /** @class */ (function () {
                         iconSize: new L.Point(4, 4) });
                 }
                 else {
-                    console.log('multiple site types');
                     return new L.DivIcon({ html: '<div class="multiple-types"><span>' + cluster.getChildCount() +
                             '</span></div>', className: 'marker-cluster marker-cluster-small border-multiple-types',
                         iconSize: new L.Point(4, 4) });
@@ -1787,7 +1943,15 @@ var MapService = /** @class */ (function () {
             fillColor: '#9b0004',
             fillOpacity: 0.5
         };
-        this.highlightMarkers.push(L.circleMarker(site.latlng, highlightOptions));
+        if (site.latlng) {
+            this.highlightMarkers.push(L.circleMarker(site.latlng, highlightOptions));
+        }
+        else if (site.geometry.coordinates) {
+            var latlng = {};
+            latlng['lat'] = site.geometry.coordinates[1];
+            latlng['lng'] = site.geometry.coordinates[0];
+            this.highlightMarkers.push(L.circleMarker(latlng, highlightOptions));
+        }
         this.selectedSiteLayer = L.featureGroup([]);
         this.highlightMarkers.forEach(function (marker) { return marker.addTo(_this.selectedSiteLayer); });
         this.selectedSiteLayer.addTo(this.map);
@@ -1877,7 +2041,8 @@ var MapService = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
             providedIn: 'root'
         }),
-        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"], _shared_services_loader_service__WEBPACK_IMPORTED_MODULE_4__["LoaderService"]])
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"], _shared_services_loader_service__WEBPACK_IMPORTED_MODULE_4__["LoaderService"], _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_5__["ActivatedRoute"]])
     ], MapService);
     return MapService;
 }());
@@ -1979,7 +2144,6 @@ var SummariesService = /** @class */ (function () {
                     num_samples: 1
                 });
             }
-            console.log(_this.sum_output);
             _this._summaryDataSubject.next(_this.sum_output);
         });
     };
