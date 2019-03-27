@@ -4,6 +4,7 @@ import { Map } from 'leaflet';
 import { Observable, throwError, BehaviorSubject, Subject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { LoaderService } from '../../shared/services/loader.service';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 declare let L;
 import 'leaflet';
@@ -64,7 +65,8 @@ export class MapService {
         return this._siteChangeSubject.asObservable();
     }
 
-    constructor(private _http: HttpClient, private _loaderService: LoaderService) {
+    constructor(private _http: HttpClient, private _loaderService: LoaderService, private router: Router,
+        private route: ActivatedRoute) {
         this.chosenBaseLayer = 'Topo';
 
         this.baseMaps = {
@@ -148,7 +150,6 @@ export class MapService {
                         }
                     }
                 });
-                this._loaderService.hideFullPageLoad();
                 return this.filterOptions;
             }),
             catchError(this.handleError)
@@ -263,7 +264,6 @@ export class MapService {
                     '</span></div>', className: 'marker-cluster marker-cluster-small border-' + props[0].toLowerCase(),
                     iconSize: new L.Point(4, 4) });
                 } else {
-                    console.log('multiple site types');
                     return new L.DivIcon({html: '<div class="multiple-types"><span>' + cluster.getChildCount() +
                     '</span></div>', className: 'marker-cluster marker-cluster-small border-multiple-types',
                     iconSize: new L.Point(4, 4) });
@@ -290,7 +290,12 @@ export class MapService {
             fillColor: '#9b0004',
             fillOpacity: 0.5
         };
-        this.highlightMarkers.push(L.circleMarker(site.latlng, highlightOptions));
+        if (site.latlng) { this.highlightMarkers.push(L.circleMarker(site.latlng, highlightOptions));
+        } else if (site.geometry.coordinates) {
+            const latlng = {};
+            latlng['lat'] = site.geometry.coordinates[1];
+            latlng['lng'] = site.geometry.coordinates[0];
+            this.highlightMarkers.push(L.circleMarker(latlng, highlightOptions)); }
         this.selectedSiteLayer = L.featureGroup([]);
         this.highlightMarkers.forEach(marker => marker.addTo(this.selectedSiteLayer));
         this.selectedSiteLayer.addTo(this.map);

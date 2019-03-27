@@ -27,7 +27,7 @@ export class DataviewComponent implements OnInit {
     public resultCsv;
     public resultJson;
     public filterSelections;
-    public characteristics = ['Nitrate'];
+    public queryChar = ['Nitrate'];
     private siteFilterData;
     private geoJSONsiteCount;
     private geojson;
@@ -39,6 +39,7 @@ export class DataviewComponent implements OnInit {
     private unitCodes = [];
     private uniqueData = [];
     public showModal = false;
+    public urlParams;
 
     constructor(private _mapService: MapService, private _http: Http, private _loaderService: LoaderService) { }
 
@@ -54,13 +55,11 @@ export class DataviewComponent implements OnInit {
             this.getResultData();
         });
         this._mapService.SelectedChar.subscribe((Response) => {
+            this.queryChar = Response;
             this.noData = false;
             if (typeof Response === 'string') {
-            this.characteristics = [Response];
-            } else { this.characteristics = Response; }
-            if (this.characteristics.indexOf('Nitrogen') > -1) {
-                this.characteristics.push('Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)');
-            }
+                this.queryChar = [Response];
+            } else { this.queryChar = Response; }
         });
 
         this._mapService.SiteChange.subscribe((geojson) => {
@@ -212,10 +211,11 @@ export class DataviewComponent implements OnInit {
         this._loaderService.showDataLoad();
         this.dataLoading = true;
         let resultUrl = 'https://www.waterqualitydata.us/data/Result/search?mimeType=csv&countrycode=US&minactivities=1';
+        const sites = this.selectedSites;
         for (const site of this.selectedSites) {
             resultUrl += '&siteid=' + site;
         }
-        for (const char of this.characteristics) {
+        for (const char of this.queryChar) {
             resultUrl += '&characteristicName=' + char;
         }
         this._http.get(resultUrl)
@@ -225,10 +225,10 @@ export class DataviewComponent implements OnInit {
                 this.resultJson = this.csvJSON(this.resultCsv);
                 this.resultJson = JSON.parse(this.resultJson);
                 this.showSiteData = true; this.noData = false; this.uniqueData = [];
-                if (this.resultJson.length > 0 && this.selectedSites.length === 1) {
+                if (this.resultJson.length > 0 && sites.length === 1) {
                     this.createSiteChart('ResultMeasure/MeasureUnitCode', this.siteChart2);
                     this.createSiteChart('ActivityBottomDepthHeightMeasure/MeasureValue', this.siteChart);
-                } else if (this.resultJson.length > 0 && this.selectedSites.length > 1) {
+                } else if (this.resultJson.length > 0 && sites.length > 1) {
                     this.createMultSiteChart(this.multSiteChart);
                 } else { this.noData = true; }
                 this._loaderService.hideDataLoad();
@@ -239,11 +239,7 @@ export class DataviewComponent implements OnInit {
                     this.siteChart.options.plotOptions.scatter.jitter = {x: 0, y: 0.01};
                     this.siteChart2.options.plotOptions.scatter.jitter = {x: 0, y: 0.01};
                 }
-                if (!this.siteChart2.hasData) {
-                    // this.siteChart2.destroy();
-                    // document.getElementById('siteChart2').classList.add('hidden');
-                }
-                if (!this.siteChart2.series.data && this.siteChart.series[0].data.length === 0) {
+                if (sites.length === 1 && !this.siteChart2.series.data && this.siteChart.series[0].data.length === 0) {
                     this.noGraphData = true;
                 }
             });
@@ -265,7 +261,7 @@ export class DataviewComponent implements OnInit {
     }
 
     public createSiteChart(char, chart) {
-        while (chart.series.length > 0) { chart.series[0].remove(true); }
+        while (chart.series && chart.series.length > 0) { chart.series[0].remove(true); }
         const array = [];
         for (let i = 0; i < this.resultJson.length; i++) { // creating separate series based on properties
             const value = this.resultJson[i][char];
@@ -364,7 +360,7 @@ export class DataviewComponent implements OnInit {
     }
 
     public createStatChart(chart, name, property) {
-        while (chart.series.length > 0) { chart.series[0].remove(true); }
+        while (chart.series && chart.series.length > 0) { chart.series[0].remove(true); }
         const propData = [];
         this.siteFilterData[property].forEach(prop => {
             const count = this.geojson.features.filter(function (feat) {

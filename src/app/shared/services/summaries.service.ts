@@ -88,7 +88,6 @@ export class SummariesService {
                     num_samples: 1
                 });
             }
-            console.log(this.sum_output);
             this._summaryDataSubject.next(this.sum_output);
         });
     }
