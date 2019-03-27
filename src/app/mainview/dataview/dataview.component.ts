@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
+import * as regression from 'regression';
 
 import { TabsComponent } from '../../shared/components/tabs/tabs.component';
 import { MapService } from 'src/app/shared/services/map.service';
@@ -40,6 +41,7 @@ export class DataviewComponent implements OnInit {
     private uniqueData = [];
     public showModal = false;
     public urlParams;
+    public subscription;
 
     constructor(private _mapService: MapService, private _http: Http, private _loaderService: LoaderService) { }
 
@@ -208,6 +210,7 @@ export class DataviewComponent implements OnInit {
     } // End NgOnInit
 
     public getResultData() {
+        if (this.subscription) { this.subscription.unsubscribe(); }
         this._loaderService.showDataLoad();
         this.dataLoading = true;
         let resultUrl = 'https://www.waterqualitydata.us/data/Result/search?mimeType=csv&countrycode=US&minactivities=1';
@@ -218,7 +221,7 @@ export class DataviewComponent implements OnInit {
         for (const char of this.queryChar) {
             resultUrl += '&characteristicName=' + char;
         }
-        this._http.get(resultUrl)
+        this.subscription = this._http.get(resultUrl)
             .subscribe(csv => {
                 this.noGraphData = false;
                 this.resultCsv = csv; this.resultCsv = this.resultCsv._body;
@@ -261,6 +264,7 @@ export class DataviewComponent implements OnInit {
     }
 
     public createSiteChart(char, chart) {
+        const seriesData = [];
         while (chart.series && chart.series.length > 0) { chart.series[0].remove(true); }
         const array = [];
         for (let i = 0; i < this.resultJson.length; i++) { // creating separate series based on properties
@@ -290,12 +294,32 @@ export class DataviewComponent implements OnInit {
                         if (JSON.stringify(this.uniqueData).indexOf(JSON.stringify([date, val])) === -1) {
                             this.uniqueData.push([date, val]);
                         }
+                        seriesData.push([date / 10000000000, val]);
                     } // skip if no value
                 }
             }
             if (chart === this.siteChart) {chart.addSeries({ name: 'Depth: ' + array[item], data: data });
-            } else {chart.addSeries({ name: array[item], data: data }); }
+            } else { chart.addSeries({ name: array[item], data: data }); }
         }
+
+        // create regression
+        if (seriesData.length > 2) {this.createRegression(chart, seriesData); }
+    }
+
+    public createRegression(chart, data) {
+        const ymxb = regression.linear(data);
+        const m = ymxb.equation[0]; const b = ymxb.equation[1];
+        const xs = [];
+        data.forEach(function(d) {
+            xs.push(d[0]);
+        });
+
+        const x0 = Math.min.apply(null, xs);
+        const y0 = m * x0 + b;
+        const xf = Math.max.apply(null, xs);
+        const yf = m * xf + b;
+
+        chart.addSeries({type: 'line', name: 'Regression Line', data: [[x0 * 10000000000, y0], [xf * 10000000000, yf]]});
     }
 
     public makeModalChart() {
@@ -322,6 +346,7 @@ export class DataviewComponent implements OnInit {
     }
 
     public createMultSiteChart(chart) {
+        const seriesData = [];
         while (chart.series && chart.series.length > 0) { chart.series[0].remove(true); }
         this.selectedSites.forEach((site) => {
             const array = new Array();
@@ -351,12 +376,14 @@ export class DataviewComponent implements OnInit {
                             if (JSON.stringify(this.uniqueData).indexOf(JSON.stringify([date, val])) === -1) {
                                 this.uniqueData.push([date, val]);
                             }
+                            seriesData.push([date / 10000000000, val]);
                         } // skip if no value
                     }
                 }
                 chart.addSeries({name: site + ', ' + unit, data: data});
             }
         });
+        if (seriesData.length > 2) {this.createRegression(chart, seriesData); }
     }
 
     public createStatChart(chart, name, property) {

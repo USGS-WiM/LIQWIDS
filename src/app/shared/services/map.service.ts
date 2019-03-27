@@ -223,7 +223,7 @@ export class MapService {
                     let run = true;
                     if (self.selectedSiteLayer) {
                         self.selectedSiteLayer.eachLayer(site => {
-                            if (site._latlng === this._latlng) {
+                            if (site._latlng['lat'] === this._latlng['lat'] && site._latlng['lng'] === this._latlng['lng']) {
                                 run = false;
                             }
                         });
