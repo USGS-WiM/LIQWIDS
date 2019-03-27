@@ -569,6 +569,12 @@ var DataviewComponent = /** @class */ (function () {
         var y0 = m * x0 + b;
         var xf = Math.max.apply(null, xs);
         var yf = m * xf + b;
+        if (y0 < 0) {
+            y0 = 0;
+        }
+        if (yf < 0) {
+            yf = 0;
+        }
         chart.addSeries({ type: 'line', name: 'Regression Line', data: [[x0 * 10000000000, y0], [xf * 10000000000, yf]] });
     };
     DataviewComponent.prototype.makeModalChart = function () {
@@ -951,6 +957,7 @@ var SidebarComponent = /** @class */ (function () {
         this.showParameterFilters = true;
         this.expandSidebar = false;
         this.fromURL = false;
+        this.hideLoad = false;
     }
     SidebarComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -1087,7 +1094,6 @@ var SidebarComponent = /** @class */ (function () {
         // requery on wfs data on any parameter filter dropdown change
         this.parameterDropDownGroup.valueChanges.subscribe(function (selections) {
             _this._mapService._characteristicFilterSubject.next(selections.characteristic);
-            _this.reQuery();
             var self = _this;
             // remove all other filters from url if characteristic changed after load
             _this.urlParams.forEach(function (value, key) {
@@ -1098,6 +1104,8 @@ var SidebarComponent = /** @class */ (function () {
                 _this.urlParams.append('characteristicType', char);
             }
             _this.updateQueryParams();
+            _this.hideLoad = true;
+            _this.reQuery();
         });
         // on site dropdown change just re-filter geojson
         this.siteDropDownGroup.valueChanges.subscribe(function (selections) {
@@ -1141,6 +1149,9 @@ var SidebarComponent = /** @class */ (function () {
             _this.siteFilterData = response;
             // clearForm function clears layer and readds geojson
             _this.clearForm();
+            if (_this.hideLoad) {
+                _this._loaderService.hideFullPageLoad();
+            }
         });
     };
     SidebarComponent.prototype.filterGeoJSON = function (selections) {
