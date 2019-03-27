@@ -315,9 +315,12 @@ export class DataviewComponent implements OnInit {
         });
 
         const x0 = Math.min.apply(null, xs);
-        const y0 = m * x0 + b;
+        let y0 = m * x0 + b;
         const xf = Math.max.apply(null, xs);
-        const yf = m * xf + b;
+        let yf = m * xf + b;
+
+        if (y0 < 0) {y0 = 0; }
+        if (yf < 0) {yf = 0; }
 
         chart.addSeries({type: 'line', name: 'Regression Line', data: [[x0 * 10000000000, y0], [xf * 10000000000, yf]]});
     }
