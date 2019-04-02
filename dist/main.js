@@ -280,10 +280,29 @@ var DataviewComponent = /** @class */ (function () {
     DataviewComponent.prototype.ngOnInit = function () {
         var _this = this;
         this._mapService.SelectedSite.subscribe(function (Response) {
+            _this.getUrlSites();
+            if (_this.urlSites[0] !== Response.name) {
+                _this.urlSites = [Response.name];
+                _this.urlParams.set('sites', [Response.name]);
+                _this.updateQueryParams();
+            }
             _this.selectedSites = [Response.name];
             _this.getResultData();
         });
         this._mapService.MultSelect.subscribe(function (Response) {
+            _this.getUrlSites();
+            if (_this.urlSites.indexOf(Response.name) === -1) {
+                _this.urlSites.push(Response.name);
+                for (var i = 0; i < _this.urlSites.length; i++) {
+                    if (i === 0) {
+                        _this.urlParams.set('sites', _this.urlSites[i]);
+                    }
+                    else {
+                        _this.urlParams.append('sites', _this.urlSites[i]);
+                    }
+                }
+                _this.updateQueryParams();
+            }
             if (_this.selectedSites.indexOf(Response.name) === -1) {
                 _this.selectedSites.push(Response.name);
             }
@@ -300,14 +319,18 @@ var DataviewComponent = /** @class */ (function () {
             }
         });
         this._mapService.SiteChange.subscribe(function (geojson) {
+            _this.getUrlSites();
             _this.geojson = geojson;
-            _this.selectedSites = [];
             _this.geoJSONsiteCount = geojson.features.length;
-            _this.showSiteData = false;
-            _this.noData = false;
             _this.siteFilterData = _this._mapService.filterOptions;
-            _this.createStatChart(_this.typeChart, 'Site Type Stats', 'searchType');
-            _this.createStatChart(_this.orgChart, 'Site Organization Stats', 'orgName');
+            // if site given on load, will skip making statistic charts
+            if (_this.urlSites.length === 0) {
+                _this.selectedSites = [];
+                _this.showSiteData = false;
+                _this.noData = false;
+                _this.createStatChart(_this.typeChart, 'Site Type Stats', 'searchType');
+                _this.createStatChart(_this.orgChart, 'Site Organization Stats', 'orgName');
+            }
         });
         this._siteChartOptions = {
             credits: {
@@ -437,6 +460,13 @@ var DataviewComponent = /** @class */ (function () {
         this.typeChart.setTitle({ text: 'Sites By Type' });
         this.orgChart.setTitle({ text: 'Sites By Organization' });
     }; // End NgOnInit
+    DataviewComponent.prototype.updateQueryParams = function () {
+        window.history.replaceState({}, '', decodeURIComponent(location.pathname + "?" + this.urlParams));
+    };
+    DataviewComponent.prototype.getUrlSites = function () {
+        this.urlParams = new URLSearchParams(window.location.search);
+        this.urlSites = this.urlParams.getAll('sites');
+    };
     DataviewComponent.prototype.getResultData = function () {
         var _this = this;
         if (this.subscription) {
@@ -484,7 +514,13 @@ var DataviewComponent = /** @class */ (function () {
             if (sites.length === 1 && !_this.siteChart2.series.data && _this.siteChart.series[0].data.length === 0) {
                 _this.noGraphData = true;
             }
+        }, function (error) {
+            _this.handleError(error);
         });
+    };
+    DataviewComponent.prototype.handleError = function (error) {
+        this._loaderService.hideDataLoad();
+        console.log(error);
     };
     DataviewComponent.prototype.csvJSON = function (csv) {
         var lines = csv.split('\n');
@@ -956,8 +992,7 @@ var SidebarComponent = /** @class */ (function () {
         this.showSiteFilters = true;
         this.showParameterFilters = true;
         this.expandSidebar = false;
-        this.fromURL = false;
-        this.hideLoad = false;
+        this.firstLoad = true;
     }
     SidebarComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -977,7 +1012,10 @@ var SidebarComponent = /** @class */ (function () {
         if (this.urlCharParam.length > 0 && this.urlCharParam[0] !== null) {
             this.parameterDropDownGroup.get('characteristic').setValue(this.urlCharParam);
             this._mapService._characteristicFilterSubject.next(this.urlCharParam);
-            this.reQuery();
+            var characteristic = this.urlCharParam.join('|');
+            // update URL params
+            this._mapService.URLparams.SEARCHPARAMS =
+                this._mapService.URLparams.SEARCHPARAMS.split('characteristicName:')[0] + 'characteristicName:' + characteristic;
         }
         else {
             this.urlParams.set('characteristicType', [this.defaultParameterFilter]);
@@ -1001,40 +1039,15 @@ var SidebarComponent = /** @class */ (function () {
             _this.geoJSONsiteCount = _this._mapService.geoJson.totalFeatures;
             // get filters from url params
             _this.setFilters();
-            _this.filterGeoJSON(_this.filterSelections);
             // highlights selected sites on map, runs data query and updates url
             if (_this.urlSelSites[0] !== null) {
                 _this.highlightURLSites();
             }
-            _this.updateQueryParams();
             _this._loaderService.hideFullPageLoad();
+            _this.firstLoad = false;
         });
         // set up filter listeners
         this.onChanges();
-        this._mapService.SelectedSite.subscribe(function (Response) {
-            // updates url if site selected after load
-            if (_this.urlSelSites[0] !== Response.name) {
-                _this.urlSelSites = [Response.name];
-                _this.urlParams.set('sites', [Response.name]);
-                _this.updateQueryParams();
-            }
-        });
-        this._mapService.MultSelect.subscribe(function (Response) {
-            // updates url if multiple new sites selected after load
-            if (_this.urlSelSites.indexOf(Response.name) === -1) {
-                _this.urlSelSites.push(Response.name);
-            }
-            for (var _i = 0, _a = _this.urlSelSites; _i < _a.length; _i++) {
-                var site = _a[_i];
-                if (_this.urlSelSites[0] === site) {
-                    _this.urlParams.set('sites', site);
-                }
-                else {
-                    _this.urlParams.append('sites', site);
-                }
-            }
-            _this.updateQueryParams();
-        });
     };
     SidebarComponent.prototype.onItemSelect = function (item) {
         console.log(item);
@@ -1043,26 +1056,12 @@ var SidebarComponent = /** @class */ (function () {
         console.log(items);
     };
     SidebarComponent.prototype.setFilters = function () {
+        var _this = this;
         // change dropdown filters to match url on load
-        var self = this;
-        this.fromURL = false;
-        this.urlParams.forEach(function (value, key) {
-            var dropdownKey = self.siteDropDownGroup.get(key);
-            var match = true;
-            var paramsValue = self.urlParams.getAll(key);
-            if (key !== 'characteristicType' && key !== 'sites') {
-                if (dropdownKey.value.length !== paramsValue.length) {
-                    match = false;
-                }
-                for (var i = dropdownKey.value.length; i--;) {
-                    if (dropdownKey.value[i] !== paramsValue[i]) {
-                        match = false;
-                    }
-                }
-                if (match === false) {
-                    self.fromURL = true;
-                    dropdownKey.setValue(self.urlParams.getAll(key));
-                }
+        Object.keys(this.siteDropDownGroup.controls).forEach(function (key) {
+            var paramKey = _this.urlParams.getAll(key);
+            if (paramKey.length > 0) {
+                _this.siteDropDownGroup.get(key).setValue(paramKey);
             }
         });
     };
@@ -1073,16 +1072,20 @@ var SidebarComponent = /** @class */ (function () {
             var jsonIndex = this._mapService.geoJson.features.findIndex(function (site) {
                 return site.properties.name === _this.urlSelSites[0];
             });
-            this._mapService._selectedSiteSubject.next(this._mapService.geoJson.features[jsonIndex].properties);
-            this._mapService.highlightSelectedSite(this._mapService.geoJson.features[jsonIndex]);
+            if (jsonIndex > -1) {
+                this._mapService._selectedSiteSubject.next(this._mapService.geoJson.features[jsonIndex].properties);
+                this._mapService.highlightSelectedSite(this._mapService.geoJson.features[jsonIndex]);
+            }
         }
         else if (this.urlSelSites.length > 1) {
             this.urlSelSites.forEach(function (selSite) {
                 var jsonIndex = _this._mapService.geoJson.features.findIndex(function (site) {
                     return site.properties.name === selSite;
                 });
-                _this._mapService._selectMultSubject.next(_this._mapService.geoJson.features[jsonIndex].properties);
-                _this._mapService.highlightSelectedSite(_this._mapService.geoJson.features[jsonIndex]);
+                if (jsonIndex > -1) {
+                    _this._mapService._selectMultSubject.next(_this._mapService.geoJson.features[jsonIndex].properties);
+                    _this._mapService.highlightSelectedSite(_this._mapService.geoJson.features[jsonIndex]);
+                }
             });
         }
     };
@@ -1104,22 +1107,18 @@ var SidebarComponent = /** @class */ (function () {
                 _this.urlParams.append('characteristicType', char);
             }
             _this.updateQueryParams();
-            _this.hideLoad = true;
             _this.reQuery();
         });
         // on site dropdown change just re-filter geojson
         this.siteDropDownGroup.valueChanges.subscribe(function (selections) {
             _this.filterSelections = selections;
             _this.filterGeoJSON(selections);
-            if (!_this.fromURL) {
-                // update url filters if selections made after load
+            if (!_this.firstLoad) {
                 Object.keys(selections).forEach(function (key) {
                     _this.urlParams.delete(key);
                     if (selections[key].length > 1) {
                         selections[key].forEach(function (sel) {
-                            if (_this.urlParams.getAll(key).indexOf(sel) === -1) {
-                                _this.urlParams.append(key, sel);
-                            }
+                            _this.urlParams.append(key, sel);
                         });
                     }
                     else if (selections[key].length === 1) {
@@ -1129,10 +1128,9 @@ var SidebarComponent = /** @class */ (function () {
                         _this.urlParams.delete(key);
                     }
                 });
-                // remove selected sites from url
-                _this.urlParams.delete('sites');
             }
-            _this.fromURL = false;
+            // remove selected sites from url
+            _this.urlParams.delete('sites');
             _this.updateQueryParams();
         });
     };
@@ -1149,9 +1147,7 @@ var SidebarComponent = /** @class */ (function () {
             _this.siteFilterData = response;
             // clearForm function clears layer and readds geojson
             _this.clearForm();
-            if (_this.hideLoad) {
-                _this._loaderService.hideFullPageLoad();
-            }
+            _this._loaderService.hideFullPageLoad();
         });
     };
     SidebarComponent.prototype.filterGeoJSON = function (selections) {
