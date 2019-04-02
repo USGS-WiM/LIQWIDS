@@ -23,9 +23,8 @@ export class SidebarComponent implements OnInit {
     public urlParams;
     public urlCharParam;
     public urlSelSites;
-    public fromURL = false;
+    public firstLoad = true;
     public filterSelections;
-    public hideLoad = false;
 
     constructor(private _mapService: MapService, private formBuilder: FormBuilder, private _loaderService: LoaderService) {}
 
@@ -51,7 +50,10 @@ export class SidebarComponent implements OnInit {
         if (this.urlCharParam.length > 0 && this.urlCharParam[0] !== null) {
             this.parameterDropDownGroup.get('characteristic').setValue(this.urlCharParam);
             this._mapService._characteristicFilterSubject.next(this.urlCharParam);
-            this.reQuery();
+            const characteristic = this.urlCharParam.join('|');
+            // update URL params
+            this._mapService.URLparams.SEARCHPARAMS =
+                this._mapService.URLparams.SEARCHPARAMS.split('characteristicName:')[0] + 'characteristicName:' + characteristic;
         } else {
             this.urlParams.set('characteristicType', [this.defaultParameterFilter]);
             this.parameterDropDownGroup.get('characteristic').setValue([this.defaultParameterFilter]);
@@ -78,36 +80,14 @@ export class SidebarComponent implements OnInit {
 
             // get filters from url params
             this.setFilters();
-            this.filterGeoJSON(this.filterSelections);
-
             // highlights selected sites on map, runs data query and updates url
             if (this.urlSelSites[0] !== null) {this.highlightURLSites(); }
-            this.updateQueryParams();
             this._loaderService.hideFullPageLoad();
+            this.firstLoad = false;
         });
 
         // set up filter listeners
         this.onChanges();
-
-        this._mapService.SelectedSite.subscribe((Response) => {
-            // updates url if site selected after load
-            if (this.urlSelSites[0] !== Response.name) {
-                this.urlSelSites = [Response.name];
-                this.urlParams.set('sites', [Response.name]);
-                this.updateQueryParams();
-            }
-        });
-        this._mapService.MultSelect.subscribe((Response) => {
-            // updates url if multiple new sites selected after load
-            if (this.urlSelSites.indexOf(Response.name) === -1) {
-                this.urlSelSites.push(Response.name);
-            }
-            for (const site of this.urlSelSites) {
-                if (this.urlSelSites[0] === site) {this.urlParams.set('sites', site);
-                } else {this.urlParams.append('sites', site); }
-            }
-            this.updateQueryParams();
-        });
     }
 
     onItemSelect(item: any) {
@@ -119,24 +99,9 @@ export class SidebarComponent implements OnInit {
 
     public setFilters() {
         // change dropdown filters to match url on load
-        const self = this;
-        this.fromURL = false;
-        this.urlParams.forEach(function(value, key) {
-            const dropdownKey = self.siteDropDownGroup.get(key);
-            let match = true;
-            const paramsValue = self.urlParams.getAll(key);
-            if (key !== 'characteristicType' && key !== 'sites') {
-                if (dropdownKey.value.length !== paramsValue.length) {match = false; }
-                for (let i = dropdownKey.value.length; i--;) {
-                    if (dropdownKey.value[i] !== paramsValue[i]) {
-                        match = false;
-                    }
-                }
-                if (match === false) {
-                    self.fromURL = true;
-                    dropdownKey.setValue(self.urlParams.getAll(key));
-                }
-            }
+        Object.keys(this.siteDropDownGroup.controls).forEach(key => {
+            const paramKey = this.urlParams.getAll(key);
+            if (paramKey.length > 0) { this.siteDropDownGroup.get(key).setValue(paramKey); }
         });
     }
 
@@ -146,15 +111,19 @@ export class SidebarComponent implements OnInit {
             const jsonIndex = this._mapService.geoJson.features.findIndex(site => {
                 return site.properties.name === this.urlSelSites[0];
             });
-            this._mapService._selectedSiteSubject.next(this._mapService.geoJson.features[jsonIndex].properties);
-            this._mapService.highlightSelectedSite(this._mapService.geoJson.features[jsonIndex]);
+            if (jsonIndex > -1) {
+                this._mapService._selectedSiteSubject.next(this._mapService.geoJson.features[jsonIndex].properties);
+                this._mapService.highlightSelectedSite(this._mapService.geoJson.features[jsonIndex]);
+            }
         } else if (this.urlSelSites.length > 1 ) {
             this.urlSelSites.forEach(selSite => {
                 const jsonIndex = this._mapService.geoJson.features.findIndex(site => {
                     return site.properties.name === selSite;
                 });
-                this._mapService._selectMultSubject.next(this._mapService.geoJson.features[jsonIndex].properties);
-                this._mapService.highlightSelectedSite(this._mapService.geoJson.features[jsonIndex]);
+                if (jsonIndex > -1) {
+                    this._mapService._selectMultSubject.next(this._mapService.geoJson.features[jsonIndex].properties);
+                    this._mapService.highlightSelectedSite(this._mapService.geoJson.features[jsonIndex]);
+                }
             });
         }
     }
@@ -176,7 +145,6 @@ export class SidebarComponent implements OnInit {
                 this.urlParams.append('characteristicType', char);
             }
             this.updateQueryParams();
-            this.hideLoad = true;
             this.reQuery();
         });
 
@@ -184,15 +152,12 @@ export class SidebarComponent implements OnInit {
         this.siteDropDownGroup.valueChanges.subscribe(selections => {
             this.filterSelections = selections;
             this.filterGeoJSON(selections);
-            if (!this.fromURL) {
-                // update url filters if selections made after load
+            if (!this.firstLoad) {
                 Object.keys(selections).forEach(key => {
                     this.urlParams.delete(key);
                     if (selections[key].length > 1) {
                         selections[key].forEach(sel => {
-                            if (this.urlParams.getAll(key).indexOf(sel) === -1) {
-                                this.urlParams.append(key, sel);
-                            }
+                            this.urlParams.append(key, sel);
                         });
                     } else if (selections[key].length === 1) {
                         this.urlParams.set(key, selections[key]);
@@ -200,10 +165,9 @@ export class SidebarComponent implements OnInit {
                         this.urlParams.delete(key);
                     }
                 });
-                // remove selected sites from url
-                this.urlParams.delete('sites');
             }
-            this.fromURL = false;
+            // remove selected sites from url
+            this.urlParams.delete('sites');
             this.updateQueryParams();
         });
     }
@@ -223,7 +187,7 @@ export class SidebarComponent implements OnInit {
 
             // clearForm function clears layer and readds geojson
             this.clearForm();
-            if (this.hideLoad) {this._loaderService.hideFullPageLoad(); }
+            this._loaderService.hideFullPageLoad();
         });
     }
 

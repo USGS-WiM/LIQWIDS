@@ -5,9 +5,7 @@ import * as regression from 'regression';
 import { TabsComponent } from '../../shared/components/tabs/tabs.component';
 import { MapService } from 'src/app/shared/services/map.service';
 import { LoaderService } from '../../shared/services/loader.service';
-import { validateConfig } from '@angular/router/src/config';
 import { Http } from '@angular/http';
-import { DataLoaderComponent } from 'src/app/shared/components/loader/dataloader.component';
 
 @Component({
     selector: 'app-dataview',
@@ -41,16 +39,32 @@ export class DataviewComponent implements OnInit {
     private uniqueData = [];
     public showModal = false;
     public urlParams;
+    public urlSites;
     public subscription;
 
     constructor(private _mapService: MapService, private _http: Http, private _loaderService: LoaderService) { }
 
     ngOnInit() {
         this._mapService.SelectedSite.subscribe((Response) => {
+            this.getUrlSites();
+            if (this.urlSites[0] !== Response.name) {
+                this.urlSites = [Response.name];
+                this.urlParams.set('sites', [Response.name]);
+                this.updateQueryParams();
+            }
             this.selectedSites = [Response.name];
             this.getResultData();
         });
         this._mapService.MultSelect.subscribe((Response) => {
+            this.getUrlSites();
+            if (this.urlSites.indexOf(Response.name) === -1) {
+                this.urlSites.push(Response.name);
+                for (let i = 0; i < this.urlSites.length; i++) {
+                    if (i === 0) {this.urlParams.set('sites', this.urlSites[i]);
+                    } else {this.urlParams.append('sites', this.urlSites[i]); }
+                }
+                this.updateQueryParams();
+            }
             if (this.selectedSites.indexOf(Response.name) === -1) {
                 this.selectedSites.push(Response.name);
             }
@@ -65,12 +79,16 @@ export class DataviewComponent implements OnInit {
         });
 
         this._mapService.SiteChange.subscribe((geojson) => {
-            this.geojson = geojson; this.selectedSites = [];
-            this.geoJSONsiteCount = geojson.features.length;
-            this.showSiteData = false; this.noData = false;
+            this.getUrlSites();
+            this.geojson = geojson; this.geoJSONsiteCount = geojson.features.length;
             this.siteFilterData = this._mapService.filterOptions;
-            this.createStatChart(this.typeChart, 'Site Type Stats', 'searchType');
-            this.createStatChart(this.orgChart, 'Site Organization Stats', 'orgName');
+            // if site given on load, will skip making statistic charts
+            if (this.urlSites.length === 0) {
+                this.selectedSites = [];
+                this.showSiteData = false; this.noData = false;
+                this.createStatChart(this.typeChart, 'Site Type Stats', 'searchType');
+                this.createStatChart(this.orgChart, 'Site Organization Stats', 'orgName');
+            }
         });
         this._siteChartOptions = {
             credits: {
@@ -209,6 +227,15 @@ export class DataviewComponent implements OnInit {
 
     } // End NgOnInit
 
+    public updateQueryParams() {
+        window.history.replaceState({}, '', decodeURIComponent(`${location.pathname}?${this.urlParams}`));
+    }
+
+    public getUrlSites() {
+        this.urlParams = new URLSearchParams(window.location.search);
+        this.urlSites = this.urlParams.getAll('sites');
+    }
+
     public getResultData() {
         if (this.subscription) { this.subscription.unsubscribe(); }
         this._loaderService.showDataLoad();
@@ -245,7 +272,14 @@ export class DataviewComponent implements OnInit {
                 if (sites.length === 1 && !this.siteChart2.series.data && this.siteChart.series[0].data.length === 0) {
                     this.noGraphData = true;
                 }
+            }, error => {
+                this.handleError(error);
             });
+    }
+
+    private handleError (error: Response | any) {
+        this._loaderService.hideDataLoad();
+        console.log(error);
     }
 
     public csvJSON(csv) {
