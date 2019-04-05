@@ -33,7 +33,7 @@ export class MapService {
         service: 'wfs',
         version: '2.0.0',
         typeNames: 'wqp_sites',
-        SEARCHPARAMS: 'countrycode:US;statecode:US:36;countycode:US:36:059|US:36:103;characteristicName:Nitrate;minresults:1',
+        SEARCHPARAMS: 'countrycode:US;statecode:US:36;countycode:US:36:059|US:36:103;minresults:1;sampleMedia:Water;characteristicName:Nitrate;',
         outputFormat: 'application/json'
     };
 

@@ -41,28 +41,28 @@ export class DataviewComponent implements OnInit {
     public urlParams;
     public urlSites;
     public subscription;
+    public charsWithSites = [];
 
     constructor(private _mapService: MapService, private _http: Http, private _loaderService: LoaderService) { }
 
     ngOnInit() {
         this._mapService.SelectedSite.subscribe((Response) => {
+            this.charsWithSites = [];
             this.getUrlSites();
             if (this.urlSites[0] !== Response.name) {
                 this.urlSites = [Response.name];
-                this.urlParams.set('sites', [Response.name]);
+                this.urlParams.set('sites', this.urlSites.join(','));
                 this.updateQueryParams();
             }
             this.selectedSites = [Response.name];
             this.getResultData();
         });
         this._mapService.MultSelect.subscribe((Response) => {
+            this.charsWithSites = [];
             this.getUrlSites();
             if (this.urlSites.indexOf(Response.name) === -1) {
                 this.urlSites.push(Response.name);
-                for (let i = 0; i < this.urlSites.length; i++) {
-                    if (i === 0) {this.urlParams.set('sites', this.urlSites[i]);
-                    } else {this.urlParams.append('sites', this.urlSites[i]); }
-                }
+                this.urlParams.set('sites', this.urlSites.join(','));
                 this.updateQueryParams();
             }
             if (this.selectedSites.indexOf(Response.name) === -1) {
@@ -233,7 +233,8 @@ export class DataviewComponent implements OnInit {
 
     public getUrlSites() {
         this.urlParams = new URLSearchParams(window.location.search);
-        this.urlSites = this.urlParams.getAll('sites');
+        if (this.urlParams.get('sites') !== null) {this.urlSites = this.urlParams.get('sites').split(',');
+        } else {this.urlSites = []; }
     }
 
     public getResultData() {
@@ -303,6 +304,9 @@ export class DataviewComponent implements OnInit {
         const array = [];
         for (let i = 0; i < this.resultJson.length; i++) { // creating separate series based on properties
             const value = this.resultJson[i][char];
+            if (this.charsWithSites.indexOf(this.resultJson[i].CharacteristicName) === -1) {
+                this.charsWithSites.push(this.resultJson[i].CharacteristicName);
+            }
             if (value !== '' && array.indexOf(value) === -1) {
                 array.push(value);
             } else if (value === '' && array.indexOf('N/A') === -1 && char !== 'ResultMeasure/MeasureUnitCode') { array.push('N/A'); }
@@ -393,6 +397,9 @@ export class DataviewComponent implements OnInit {
                     if (value !== '' && array.indexOf(value) === -1) {
                         array.push(value);
                     }
+                }
+                if (this.charsWithSites.indexOf(result.CharacteristicName) === -1) {
+                    this.charsWithSites.push(result.CharacteristicName);
                 }
             }
             for (const unit of array) {
