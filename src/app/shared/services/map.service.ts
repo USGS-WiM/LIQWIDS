@@ -4,7 +4,6 @@ import { Map } from 'leaflet';
 import { Observable, throwError, BehaviorSubject, Subject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { LoaderService } from '../../shared/services/loader.service';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 declare let L;
 import 'leaflet';
@@ -65,8 +64,7 @@ export class MapService {
         return this._siteChangeSubject.asObservable();
     }
 
-    constructor(private _http: HttpClient, private _loaderService: LoaderService, private router: Router,
-        private route: ActivatedRoute) {
+    constructor(private _http: HttpClient, private _loaderService: LoaderService) {
         this.chosenBaseLayer = 'Topo';
 
         this.baseMaps = {

@@ -5,6 +5,8 @@ import { Ioutput } from '../interfaces/output.interface';
 import { Subject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { Http, Response, RequestOptions, URLSearchParams, Headers } from '@angular/http';
+import { Config } from '../interfaces/config';
+import { ConfigService } from './config.service';
 
 @Injectable({
     providedIn: 'root'
@@ -25,7 +27,11 @@ export class SummariesService {
     public summary_data;
     public jsonFile;
 
-    constructor(private _http: Http) {}
+    private configSettings: Config;
+
+    constructor(private _http: Http, private _configService: ConfigService) {
+        this.configSettings = this._configService.getConfiguration();
+    }
 
     private _summaryDataSubject: Subject<Array<Ioutput>> = new Subject<Array<Ioutput>>();
 
@@ -46,9 +52,7 @@ export class SummariesService {
 
     // get list of organizations
     public getOrgData() {
-        const orgUrl =
-            'https://www.waterqualitydata.us/data/Organization/search?mimeType=csv&zip=no&countrycode=US' +
-            '&countycode=US%3A36%3A059&countycode=US%3A36%3A103&statecode=US%3A36';
+        const orgUrl = this.configSettings.orgUrl + this.configSettings.sumUrlSettings;
         this._http.get(orgUrl).subscribe(data => {
             this.csvOrgFile = data;
             this.jsonOrgFile = this.csvJSON(this.csvOrgFile._body);
@@ -62,11 +66,8 @@ export class SummariesService {
 
     // get summary data for each org
     public getSummaryData(i) {
-        const sumUrl =
-            'https://www.waterqualitydata.us/data/summary/monitoringlocation/search?mimeType=csv&zip=no' +
-            '&countycode=US%3A36%3A059&countycode=US%3A36%3A103&organization=' +
-            this.orgList[i].OrganizationIdentifier +
-            '&statecode=US%3A36&dataProfile=periodOfRecord';
+        const sumUrl = this.configSettings.summaryUrl + this.configSettings.sumUrlSettings +
+            '&organization=' + this.orgList[i].OrganizationIdentifier + '&statecode=US%3A36&dataProfile=periodOfRecord';
         this._http.get(sumUrl).subscribe(data => {
             this.csvSumFile = data;
             this.sumList = JSON.parse(this.csvJSON(this.csvSumFile._body));

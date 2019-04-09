@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 
 import { MapService } from 'src/app/shared/services/map.service';
 import { LoaderService } from '../../shared/services/loader.service';
+import { ConfigService } from 'src/app/shared/services/config.service';
 
 @Component({
     selector: 'app-sidebar',
@@ -25,8 +26,12 @@ export class SidebarComponent implements OnInit {
     public urlSelSites;
     public firstLoad = true;
     public filterSelections;
+    private lookups;
 
-    constructor(private _mapService: MapService, private formBuilder: FormBuilder, private _loaderService: LoaderService) {}
+    constructor(private _mapService: MapService, private formBuilder: FormBuilder, private _loaderService: LoaderService,
+        private _configService: ConfigService) {
+            this.lookups = this._configService.getLookup();
+    }
 
     ngOnInit() {
         this.urlParams = new URLSearchParams(window.location.search);
@@ -43,7 +48,7 @@ export class SidebarComponent implements OnInit {
             characteristic: [this.defaultParameterFilter]
         });
 
-        if (this.urlParams.get('sites') !== null) {this.urlSelSites = this.urlParams.get('sites').split(',');
+        if (this.urlParams.get('site') !== null) {this.urlSelSites = this.urlParams.get('site').split(',');
         } else {this.urlSelSites = []; }
         if (this.urlParams.get('characteristic') !== null) {this.urlCharParam = this.urlParams.get('characteristic').split(',');
         } else {this.urlCharParam = []; }
@@ -134,9 +139,7 @@ export class SidebarComponent implements OnInit {
     public setChar(characteristics) {
         for (let i = 0; i < characteristics.length; i ++) {
             const char = characteristics[i];
-            if (char === 'Nitrogen, mixed forms') {
-                characteristics[i] = 'Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)';
-            } else if (char === 'Inorganic nitrogen') {characteristics[i] = 'Inorganic nitrogen (nitrate and nitrite)'; }
+            if (this.lookups[char]) {characteristics[i] = this.lookups[char]; }
         }
         this._mapService._characteristicFilterSubject.next(characteristics);
         const characteristic = characteristics.join('|');
@@ -171,7 +174,7 @@ export class SidebarComponent implements OnInit {
                 });
             }
             // remove selected sites from url
-            this.urlParams.delete('sites');
+            this.urlParams.delete('site');
             this.updateQueryParams();
         });
     }

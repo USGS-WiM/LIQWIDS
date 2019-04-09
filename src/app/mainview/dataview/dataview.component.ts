@@ -6,6 +6,8 @@ import { TabsComponent } from '../../shared/components/tabs/tabs.component';
 import { MapService } from 'src/app/shared/services/map.service';
 import { LoaderService } from '../../shared/services/loader.service';
 import { Http } from '@angular/http';
+import { Config } from 'protractor';
+import { ConfigService } from 'src/app/shared/services/config.service';
 
 @Component({
     selector: 'app-dataview',
@@ -42,8 +44,13 @@ export class DataviewComponent implements OnInit {
     public urlSites;
     public subscription;
     public charsWithSites = [];
+    private configSettings: Config;
+    private resultSettings = 'search?mimeType=csv&countrycode=US&minactivities=1';
 
-    constructor(private _mapService: MapService, private _http: Http, private _loaderService: LoaderService) { }
+    constructor(private _mapService: MapService, private _http: Http, private _loaderService: LoaderService,
+        private _configService: ConfigService) {
+            this.configSettings = this._configService.getConfiguration();
+     }
 
     ngOnInit() {
         this._mapService.SelectedSite.subscribe((Response) => {
@@ -51,7 +58,7 @@ export class DataviewComponent implements OnInit {
             this.getUrlSites();
             if (this.urlSites[0] !== Response.name) {
                 this.urlSites = [Response.name];
-                this.urlParams.set('sites', this.urlSites.join(','));
+                this.urlParams.set('site', this.urlSites.join(','));
                 this.updateQueryParams();
             }
             this.selectedSites = [Response.name];
@@ -62,7 +69,7 @@ export class DataviewComponent implements OnInit {
             this.getUrlSites();
             if (this.urlSites.indexOf(Response.name) === -1) {
                 this.urlSites.push(Response.name);
-                this.urlParams.set('sites', this.urlSites.join(','));
+                this.urlParams.set('site', this.urlSites.join(','));
                 this.updateQueryParams();
             }
             if (this.selectedSites.indexOf(Response.name) === -1) {
@@ -233,7 +240,7 @@ export class DataviewComponent implements OnInit {
 
     public getUrlSites() {
         this.urlParams = new URLSearchParams(window.location.search);
-        if (this.urlParams.get('sites') !== null) {this.urlSites = this.urlParams.get('sites').split(',');
+        if (this.urlParams.get('site') !== null) {this.urlSites = this.urlParams.get('site').split(',');
         } else {this.urlSites = []; }
     }
 
@@ -241,7 +248,7 @@ export class DataviewComponent implements OnInit {
         if (this.subscription) { this.subscription.unsubscribe(); }
         this._loaderService.showDataLoad();
         this.dataLoading = true;
-        let resultUrl = 'https://www.waterqualitydata.us/data/Result/search?mimeType=csv&countrycode=US&minactivities=1';
+        let resultUrl = this.configSettings.resultUrl + this.resultSettings;
         const sites = this.selectedSites;
         for (const site of this.selectedSites) {
             resultUrl += '&siteid=' + site;
