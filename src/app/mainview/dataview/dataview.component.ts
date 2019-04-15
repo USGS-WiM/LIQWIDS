@@ -6,8 +6,8 @@ import { TabsComponent } from '../../shared/components/tabs/tabs.component';
 import { MapService } from 'src/app/shared/services/map.service';
 import { LoaderService } from '../../shared/services/loader.service';
 import { Http } from '@angular/http';
-import { Config } from 'protractor';
 import { ConfigService } from 'src/app/shared/services/config.service';
+import { Config } from 'src/app/shared/interfaces/config';
 
 @Component({
     selector: 'app-dataview',
@@ -28,7 +28,7 @@ export class DataviewComponent implements OnInit {
     public resultCsv;
     public resultJson;
     public filterSelections;
-    public queryChar = ['Nitrate'];
+    public queryChar = 'Nitrate';
     private siteFilterData;
     private geoJSONsiteCount;
     private geojson;
@@ -45,7 +45,11 @@ export class DataviewComponent implements OnInit {
     public subscription;
     public charsWithSites = [];
     private configSettings: Config;
-    private resultSettings = 'search?mimeType=csv&countrycode=US&minactivities=1';
+    public resultParams = {
+        mimeType: 'csv',
+        zip: 'no',
+        minactivities: 1
+    };
 
     constructor(private _mapService: MapService, private _http: Http, private _loaderService: LoaderService,
         private _configService: ConfigService) {
@@ -80,9 +84,6 @@ export class DataviewComponent implements OnInit {
         this._mapService.SelectedChar.subscribe((Response) => {
             this.queryChar = Response;
             this.noData = false;
-            if (typeof Response === 'string') {
-                this.queryChar = [Response];
-            } else { this.queryChar = Response; }
         });
 
         this._mapService.SiteChange.subscribe((geojson) => {
@@ -248,15 +249,11 @@ export class DataviewComponent implements OnInit {
         if (this.subscription) { this.subscription.unsubscribe(); }
         this._loaderService.showDataLoad();
         this.dataLoading = true;
-        let resultUrl = this.configSettings.resultUrl + this.resultSettings;
+        this.resultParams['siteid'] = this.selectedSites;
+        this.resultParams['characteristicName'] = this.queryChar;
+        const resultUrl = this.configSettings.resultUrl;
         const sites = this.selectedSites;
-        for (const site of this.selectedSites) {
-            resultUrl += '&siteid=' + site;
-        }
-        for (const char of this.queryChar) {
-            resultUrl += '&characteristicName=' + char;
-        }
-        this.subscription = this._http.get(resultUrl)
+        this.subscription = this._http.get(resultUrl, {search: this.resultParams})
             .subscribe(csv => {
                 this.noGraphData = false;
                 this.resultCsv = csv; this.resultCsv = this.resultCsv._body;

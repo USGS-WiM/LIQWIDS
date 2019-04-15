@@ -152,6 +152,10 @@ export class SidebarComponent implements OnInit {
         // requery on wfs data on any parameter filter dropdown change
         this.parameterDropDownGroup.valueChanges.subscribe(selections => {
             // remove all other filters from url if characteristic changed after load
+            if (selections.characteristic.length === 0) {
+                selections.characteristic = [this.defaultParameterFilter];
+                this.parameterDropDownGroup.get('characteristic').setValue([this.defaultParameterFilter]);
+            }
             this.urlParams = new URLSearchParams([]);
             this.urlParams.set('characteristic', selections.characteristic.join(','));
             this.setChar(selections.characteristic);

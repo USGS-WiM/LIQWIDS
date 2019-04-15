@@ -9,6 +9,8 @@ declare let L;
 import 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.markercluster.freezable';
+import { ConfigService } from './config.service';
+import { Config } from '../interfaces/config';
 
 @Injectable({
     providedIn: 'root'
@@ -24,8 +26,8 @@ export class MapService {
     public filterOptions: any;
     public highlightMarkers = [];
     public markerClusters;
-
-    public geoJsonURL = 'https://www.waterqualitydata.us/ogcservices/wfs/';
+    public geoJsonURL;
+    private configSettings: Config;
 
     public URLparams = {
         request: 'GetFeature',
@@ -64,7 +66,9 @@ export class MapService {
         return this._siteChangeSubject.asObservable();
     }
 
-    constructor(private _http: HttpClient, private _loaderService: LoaderService) {
+    constructor(private _http: HttpClient, private _loaderService: LoaderService, private _configService: ConfigService) {
+        this.configSettings = this._configService.getConfiguration();
+        this.geoJsonURL = this.configSettings.geoJsonURL;
         this.chosenBaseLayer = 'Topo';
 
         this.baseMaps = {
@@ -226,9 +230,9 @@ export class MapService {
                             }
                         });
                     }
-                    if (run === true) {
+                    if (run) {
                         // control key used to select multiple sites
-                        if (e.originalEvent.ctrlKey === false) {
+                        if (!e.originalEvent.ctrlKey) {
                             if (self.selectedSiteLayer) {
                                 self.highlightMarkers.forEach(marker => self.selectedSiteLayer.remove(marker));
                             }
