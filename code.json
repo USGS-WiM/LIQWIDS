@@ -3,7 +3,7 @@
     "name": "LIQWIDS",
     "organization": "U.S. Geological Survey",
     "description": "LIQWIDS Project",
-    "version": "v0.0.4",
+    "version": "v0.0.5",
     "status": "Development",
 
     "permissions": {
