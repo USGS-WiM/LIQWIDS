@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 
 import { MapService } from 'src/app/shared/services/map.service';
 import { LoaderService } from '../../shared/services/loader.service';
+import { ConfigService } from 'src/app/shared/services/config.service';
 
 @Component({
     selector: 'app-sidebar',
@@ -25,8 +26,12 @@ export class SidebarComponent implements OnInit {
     public urlSelSites;
     public firstLoad = true;
     public filterSelections;
+    private lookups;
 
-    constructor(private _mapService: MapService, private formBuilder: FormBuilder, private _loaderService: LoaderService) {}
+    constructor(private _mapService: MapService, private formBuilder: FormBuilder, private _loaderService: LoaderService,
+        private _configService: ConfigService) {
+            this.lookups = this._configService.getLookup();
+    }
 
     ngOnInit() {
         this.urlParams = new URLSearchParams(window.location.search);
@@ -34,7 +39,7 @@ export class SidebarComponent implements OnInit {
         // for now we can keep this a static list but ultimately could pull from here in a service
         // https://www.waterqualitydata.us/Codes/Characteristicname?mimeType=xml
         this.parameterFilterData = {
-            characteristics: ['Nitrate', 'Nitrogen']
+            characteristics: ['Nitrate', 'Nitrogen', 'Inorganic nitrogen', 'Nitrogen, mixed forms']
         };
 
         this.defaultParameterFilter = 'Nitrate';
@@ -43,19 +48,18 @@ export class SidebarComponent implements OnInit {
             characteristic: [this.defaultParameterFilter]
         });
 
-        this.urlSelSites = this.urlParams.getAll('sites');
-        this.urlCharParam = this.urlParams.getAll('characteristicType');
+        if (this.urlParams.get('site') !== null) {this.urlSelSites = this.urlParams.get('site').split(',');
+        } else {this.urlSelSites = []; }
+        if (this.urlParams.get('characteristic') !== null) {this.urlCharParam = this.urlParams.get('characteristic').split(',');
+        } else {this.urlCharParam = []; }
 
         // use characteristic sent through in url, otherwise 'Nitrate'
         if (this.urlCharParam.length > 0 && this.urlCharParam[0] !== null) {
             this.parameterDropDownGroup.get('characteristic').setValue(this.urlCharParam);
-            this._mapService._characteristicFilterSubject.next(this.urlCharParam);
-            const characteristic = this.urlCharParam.join('|');
-            // update URL params
-            this._mapService.URLparams.SEARCHPARAMS =
-                this._mapService.URLparams.SEARCHPARAMS.split('characteristicName:')[0] + 'characteristicName:' + characteristic;
+            this.setChar(this.urlCharParam);
         } else {
-            this.urlParams.set('characteristicType', [this.defaultParameterFilter]);
+            this.urlParams.set('characteristic', this.defaultParameterFilter);
+            this.updateQueryParams();
             this.parameterDropDownGroup.get('characteristic').setValue([this.defaultParameterFilter]);
         }
 
@@ -100,8 +104,8 @@ export class SidebarComponent implements OnInit {
     public setFilters() {
         // change dropdown filters to match url on load
         Object.keys(this.siteDropDownGroup.controls).forEach(key => {
-            const paramKey = this.urlParams.getAll(key);
-            if (paramKey.length > 0) { this.siteDropDownGroup.get(key).setValue(paramKey); }
+            const paramKey = this.urlParams.get(key);
+            if (paramKey !== null) { this.siteDropDownGroup.get(key).setValue(paramKey.split(',')); }
         });
     }
 
@@ -132,18 +136,29 @@ export class SidebarComponent implements OnInit {
         window.history.replaceState({}, '', decodeURIComponent(`${location.pathname}?${this.urlParams}`));
     }
 
+    public setChar(characteristics) {
+        for (let i = 0; i < characteristics.length; i ++) {
+            const char = characteristics[i];
+            if (this.lookups[char]) {characteristics[i] = this.lookups[char]; }
+        }
+        this._mapService._characteristicFilterSubject.next(characteristics);
+        const characteristic = characteristics.join('|');
+        // update URL params
+        this._mapService.URLparams.SEARCHPARAMS =
+            this._mapService.URLparams.SEARCHPARAMS.split('characteristicName:')[0] + 'characteristicName:' + characteristic;
+    }
+
     private onChanges(): void {
         // requery on wfs data on any parameter filter dropdown change
         this.parameterDropDownGroup.valueChanges.subscribe(selections => {
-            this._mapService._characteristicFilterSubject.next(selections.characteristic);
-            const self = this;
             // remove all other filters from url if characteristic changed after load
-            this.urlParams.forEach(function(value, key) {
-                self.urlParams.delete(key);
-            });
-            for (const char of selections.characteristic) {
-                this.urlParams.append('characteristicType', char);
+            if (selections.characteristic.length === 0) {
+                selections.characteristic = [this.defaultParameterFilter];
+                this.parameterDropDownGroup.get('characteristic').setValue([this.defaultParameterFilter]);
             }
+            this.urlParams = new URLSearchParams([]);
+            this.urlParams.set('characteristic', selections.characteristic.join(','));
+            this.setChar(selections.characteristic);
             this.updateQueryParams();
             this.reQuery();
         });
@@ -155,31 +170,20 @@ export class SidebarComponent implements OnInit {
             if (!this.firstLoad) {
                 Object.keys(selections).forEach(key => {
                     this.urlParams.delete(key);
-                    if (selections[key].length > 1) {
-                        selections[key].forEach(sel => {
-                            this.urlParams.append(key, sel);
-                        });
-                    } else if (selections[key].length === 1) {
-                        this.urlParams.set(key, selections[key]);
+                    if (selections[key].length > 0) {
+                        this.urlParams.set(key, selections[key].join(','));
                     } else {
                         this.urlParams.delete(key);
                     }
                 });
             }
             // remove selected sites from url
-            this.urlParams.delete('sites');
+            this.urlParams.delete('site');
             this.updateQueryParams();
         });
     }
 
     public reQuery(): void {
-        // pull values from form
-        const characteristic = this.parameterDropDownGroup.get('characteristic').value.join('|');
-
-        // update URL params
-        this._mapService.URLparams.SEARCHPARAMS =
-            this._mapService.URLparams.SEARCHPARAMS.split('characteristicName:')[0] + 'characteristicName:' + characteristic;
-
         // issue new request with updated URL params
         this._mapService.getData().subscribe(response => {
             // repopulate site filter dropdowns

@@ -4,12 +4,13 @@ import { Map } from 'leaflet';
 import { Observable, throwError, BehaviorSubject, Subject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { LoaderService } from '../../shared/services/loader.service';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 declare let L;
 import 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.markercluster.freezable';
+import { ConfigService } from './config.service';
+import { Config } from '../interfaces/config';
 
 @Injectable({
     providedIn: 'root'
@@ -25,15 +26,15 @@ export class MapService {
     public filterOptions: any;
     public highlightMarkers = [];
     public markerClusters;
-
-    public geoJsonURL = 'https://www.waterqualitydata.us/ogcservices/wfs/';
+    public geoJsonURL;
+    private configSettings: Config;
 
     public URLparams = {
         request: 'GetFeature',
         service: 'wfs',
         version: '2.0.0',
         typeNames: 'wqp_sites',
-        SEARCHPARAMS: 'countrycode:US;statecode:US:36;countycode:US:36:059|US:36:103;characteristicName:Nitrate;minresults:1',
+        SEARCHPARAMS: 'countrycode:US;statecode:US:36;countycode:US:36:059|US:36:103;minresults:1;sampleMedia:Water;characteristicName:Nitrate;',
         outputFormat: 'application/json'
     };
 
@@ -65,8 +66,9 @@ export class MapService {
         return this._siteChangeSubject.asObservable();
     }
 
-    constructor(private _http: HttpClient, private _loaderService: LoaderService, private router: Router,
-        private route: ActivatedRoute) {
+    constructor(private _http: HttpClient, private _loaderService: LoaderService, private _configService: ConfigService) {
+        this.configSettings = this._configService.getConfiguration();
+        this.geoJsonURL = this.configSettings.geoJsonURL;
         this.chosenBaseLayer = 'Topo';
 
         this.baseMaps = {
@@ -228,9 +230,9 @@ export class MapService {
                             }
                         });
                     }
-                    if (run === true) {
+                    if (run) {
                         // control key used to select multiple sites
-                        if (e.originalEvent.ctrlKey === false) {
+                        if (!e.originalEvent.ctrlKey) {
                             if (self.selectedSiteLayer) {
                                 self.highlightMarkers.forEach(marker => self.selectedSiteLayer.remove(marker));
                             }

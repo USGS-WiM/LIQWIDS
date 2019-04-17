@@ -5,21 +5,22 @@
 
     <div class="site-meta">
         <h1>Data</h1>
-        <h3 *ngIf="showSiteData == true && noData == false">{{selectedSites.join(", ")}}</h3>
+        <h3 *ngIf="showSiteData && !noData"><b>Sites:</b> {{selectedSites.join(", ")}}</h3>
+        <h3 *ngIf="showSiteData && !noData"><b>Characteristics:</b> {{charsWithSites.join(", ")}}</h3>
     </div>
 
-    <div [class.hidden]="showSiteData == true" class="chart-wrapper">
+    <div [class.hidden]="showSiteData" class="chart-wrapper">
         <div class="chart" id="typeChart"></div>
         <div class="chart" id="orgChart"></div>
     </div>
 
-    <div [class.hidden]="showSiteData == false || noData == true">
+    <div [class.hidden]="!showSiteData || noData">
 
-        <div *ngIf="noGraphData == true" id="noGraphData">
+        <div *ngIf="noGraphData" id="noGraphData">
                 <h5>No data points to graph.</h5>
             </div>
 
-        <div [class.hidden]="selectedSites.length > 1 || noGraphData == true" class="chart-wrapper">
+        <div [class.hidden]="selectedSites.length > 1 || noGraphData" class="chart-wrapper">
             <div class="chart" id="siteChart2"></div>
             <div class="chart" [class.hidden]="unitCodes.length == 1" id="siteChart"></div>
         </div>
@@ -37,7 +38,8 @@
                 <tr class="row header">
                     <th *ngIf="selectedSites.length > 1">Site Name</th>
                     <th>Activity Start Date</th>
-                    <th>Depth</th>
+                    <th>Characteristic</th>
+                    <th *ngIf="unitCodes.length > 1 || unitCodes[0] !== 'N/A'">Depth</th>
                     <th>Value</th>
                     <th>Hydrologic Event</th>
                     <th>Aquifer</th>
@@ -48,7 +50,8 @@
                 <tr *ngFor="let sample of resultJson" class="row">
                     <td *ngIf="selectedSites.length > 1">{{sample.MonitoringLocationIdentifier}}</td>
                     <td>{{sample.ActivityStartDate}}</td>
-                    <td>{{sample['ActivityBottomDepthHeightMeasure/MeasureValue']}}
+                    <td>{{sample.CharacteristicName}}</td>
+                    <td *ngIf="unitCodes.length > 1 || unitCodes[0] !== 'N/A'">{{sample['ActivityBottomDepthHeightMeasure/MeasureValue']}}
                         {{sample['ActivityBottomDepthHeightMeasure/MeasureUnitCode']}}</td>
                     <td>{{sample.ResultMeasureValue}} {{sample['ResultMeasure/MeasureUnitCode']}}</td>
                     <td>{{sample.HydrologicEvent}}</td>
@@ -59,7 +62,7 @@
         </table>
 
     </div>
-    <div *ngIf="noData == true" id="noData">
+    <div *ngIf="noData" id="noData">
         <h2>No data was returned</h2>
     </div>
 </div>
@@ -71,7 +74,8 @@
             <div class="modal-close" (click)="showModal = false">&times;</div>
         </div>
         <div class="modal-content" id="printArea">
-            <h4>{{selectedSites.join(", ")}}</h4>
+            <h4><b>Sites:</b> {{selectedSites.join(", ")}}</h4>
+            <h4><b>Characteristics:</b> {{charsWithSites.join(", ")}}</h4>
             <div class="chart" id="modalChart"></div>
             <div id="modalChart2" [class]="unitCodes.length == 1 || selectedSites.length > 1 ? 'hidden hidden-print': 'chart'"></div>
             <div id="modalTable"></div>

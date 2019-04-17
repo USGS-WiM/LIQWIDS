@@ -6,6 +6,8 @@ import { TabsComponent } from '../../shared/components/tabs/tabs.component';
 import { MapService } from 'src/app/shared/services/map.service';
 import { LoaderService } from '../../shared/services/loader.service';
 import { Http } from '@angular/http';
+import { ConfigService } from 'src/app/shared/services/config.service';
+import { Config } from 'src/app/shared/interfaces/config';
 
 @Component({
     selector: 'app-dataview',
@@ -26,7 +28,7 @@ export class DataviewComponent implements OnInit {
     public resultCsv;
     public resultJson;
     public filterSelections;
-    public queryChar = ['Nitrate'];
+    public queryChar = 'Nitrate';
     private siteFilterData;
     private geoJSONsiteCount;
     private geojson;
@@ -41,28 +43,37 @@ export class DataviewComponent implements OnInit {
     public urlParams;
     public urlSites;
     public subscription;
+    public charsWithSites = [];
+    private configSettings: Config;
+    public resultParams = {
+        mimeType: 'csv',
+        zip: 'no',
+        minactivities: 1
+    };
 
-    constructor(private _mapService: MapService, private _http: Http, private _loaderService: LoaderService) { }
+    constructor(private _mapService: MapService, private _http: Http, private _loaderService: LoaderService,
+        private _configService: ConfigService) {
+            this.configSettings = this._configService.getConfiguration();
+     }
 
     ngOnInit() {
         this._mapService.SelectedSite.subscribe((Response) => {
+            this.charsWithSites = [];
             this.getUrlSites();
             if (this.urlSites[0] !== Response.name) {
                 this.urlSites = [Response.name];
-                this.urlParams.set('sites', [Response.name]);
+                this.urlParams.set('site', this.urlSites.join(','));
                 this.updateQueryParams();
             }
             this.selectedSites = [Response.name];
             this.getResultData();
         });
         this._mapService.MultSelect.subscribe((Response) => {
+            this.charsWithSites = [];
             this.getUrlSites();
             if (this.urlSites.indexOf(Response.name) === -1) {
                 this.urlSites.push(Response.name);
-                for (let i = 0; i < this.urlSites.length; i++) {
-                    if (i === 0) {this.urlParams.set('sites', this.urlSites[i]);
-                    } else {this.urlParams.append('sites', this.urlSites[i]); }
-                }
+                this.urlParams.set('site', this.urlSites.join(','));
                 this.updateQueryParams();
             }
             if (this.selectedSites.indexOf(Response.name) === -1) {
@@ -73,9 +84,6 @@ export class DataviewComponent implements OnInit {
         this._mapService.SelectedChar.subscribe((Response) => {
             this.queryChar = Response;
             this.noData = false;
-            if (typeof Response === 'string') {
-                this.queryChar = [Response];
-            } else { this.queryChar = Response; }
         });
 
         this._mapService.SiteChange.subscribe((geojson) => {
@@ -233,22 +241,19 @@ export class DataviewComponent implements OnInit {
 
     public getUrlSites() {
         this.urlParams = new URLSearchParams(window.location.search);
-        this.urlSites = this.urlParams.getAll('sites');
+        if (this.urlParams.get('site') !== null) {this.urlSites = this.urlParams.get('site').split(',');
+        } else {this.urlSites = []; }
     }
 
     public getResultData() {
         if (this.subscription) { this.subscription.unsubscribe(); }
         this._loaderService.showDataLoad();
         this.dataLoading = true;
-        let resultUrl = 'https://www.waterqualitydata.us/data/Result/search?mimeType=csv&countrycode=US&minactivities=1';
+        this.resultParams['siteid'] = this.selectedSites;
+        this.resultParams['characteristicName'] = this.queryChar;
+        const resultUrl = this.configSettings.resultUrl;
         const sites = this.selectedSites;
-        for (const site of this.selectedSites) {
-            resultUrl += '&siteid=' + site;
-        }
-        for (const char of this.queryChar) {
-            resultUrl += '&characteristicName=' + char;
-        }
-        this.subscription = this._http.get(resultUrl)
+        this.subscription = this._http.get(resultUrl, {search: this.resultParams})
             .subscribe(csv => {
                 this.noGraphData = false;
                 this.resultCsv = csv; this.resultCsv = this.resultCsv._body;
@@ -303,6 +308,9 @@ export class DataviewComponent implements OnInit {
         const array = [];
         for (let i = 0; i < this.resultJson.length; i++) { // creating separate series based on properties
             const value = this.resultJson[i][char];
+            if (this.charsWithSites.indexOf(this.resultJson[i].CharacteristicName) === -1) {
+                this.charsWithSites.push(this.resultJson[i].CharacteristicName);
+            }
             if (value !== '' && array.indexOf(value) === -1) {
                 array.push(value);
             } else if (value === '' && array.indexOf('N/A') === -1 && char !== 'ResultMeasure/MeasureUnitCode') { array.push('N/A'); }
@@ -393,6 +401,9 @@ export class DataviewComponent implements OnInit {
                     if (value !== '' && array.indexOf(value) === -1) {
                         array.push(value);
                     }
+                }
+                if (this.charsWithSites.indexOf(result.CharacteristicName) === -1) {
+                    this.charsWithSites.push(result.CharacteristicName);
                 }
             }
             for (const unit of array) {
