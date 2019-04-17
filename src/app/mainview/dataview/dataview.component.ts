@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
+import * as regression from 'regression';
 
 import { TabsComponent } from '../../shared/components/tabs/tabs.component';
 import { MapService } from 'src/app/shared/services/map.service';
 import { LoaderService } from '../../shared/services/loader.service';
-import { validateConfig } from '@angular/router/src/config';
 import { Http } from '@angular/http';
-import { DataLoaderComponent } from 'src/app/shared/components/loader/dataloader.component';
+import { ConfigService } from 'src/app/shared/services/config.service';
+import { Config } from 'src/app/shared/interfaces/config';
 
 @Component({
     selector: 'app-dataview',
@@ -27,48 +28,75 @@ export class DataviewComponent implements OnInit {
     public resultCsv;
     public resultJson;
     public filterSelections;
-    public characteristics = ['Nitrate'];
+    public queryChar = 'Nitrate';
     private siteFilterData;
     private geoJSONsiteCount;
     private geojson;
     private showSiteData = false;
     private selectedSites = [];
     private noData = false;
+    private noGraphData = false;
     private dataLoading = false;
     private unitCodes = [];
     private uniqueData = [];
     public showModal = false;
+    public urlParams;
+    public urlSites;
+    public subscription;
+    public charsWithSites = [];
+    private configSettings: Config;
+    public resultParams = {
+        mimeType: 'csv',
+        zip: 'no',
+        minactivities: 1
+    };
 
-    constructor(private _mapService: MapService, private _http: Http, private _loaderService: LoaderService) { }
+    constructor(private _mapService: MapService, private _http: Http, private _loaderService: LoaderService,
+        private _configService: ConfigService) {
+            this.configSettings = this._configService.getConfiguration();
+     }
 
     ngOnInit() {
         this._mapService.SelectedSite.subscribe((Response) => {
+            this.charsWithSites = [];
+            this.getUrlSites();
+            if (this.urlSites[0] !== Response.name) {
+                this.urlSites = [Response.name];
+                this.urlParams.set('site', this.urlSites.join(','));
+                this.updateQueryParams();
+            }
             this.selectedSites = [Response.name];
             this.getResultData();
         });
         this._mapService.MultSelect.subscribe((Response) => {
+            this.charsWithSites = [];
+            this.getUrlSites();
+            if (this.urlSites.indexOf(Response.name) === -1) {
+                this.urlSites.push(Response.name);
+                this.urlParams.set('site', this.urlSites.join(','));
+                this.updateQueryParams();
+            }
             if (this.selectedSites.indexOf(Response.name) === -1) {
                 this.selectedSites.push(Response.name);
             }
             this.getResultData();
         });
         this._mapService.SelectedChar.subscribe((Response) => {
+            this.queryChar = Response;
             this.noData = false;
-            if (typeof Response === 'string') {
-            this.characteristics = [Response];
-            } else { this.characteristics = Response; }
-            if (this.characteristics.indexOf('Nitrogen') > -1) {
-                this.characteristics.push('Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)');
-            }
         });
 
         this._mapService.SiteChange.subscribe((geojson) => {
-            this.geojson = geojson; this.selectedSites = [];
-            this.geoJSONsiteCount = geojson.features.length;
-            this.showSiteData = false; this.noData = false;
+            this.getUrlSites();
+            this.geojson = geojson; this.geoJSONsiteCount = geojson.features.length;
             this.siteFilterData = this._mapService.filterOptions;
-            this.createStatChart(this.typeChart, 'Site Type Stats', 'searchType');
-            this.createStatChart(this.orgChart, 'Site Organization Stats', 'orgName');
+            // if site given on load, will skip making statistic charts
+            if (this.urlSites.length === 0) {
+                this.selectedSites = [];
+                this.showSiteData = false; this.noData = false;
+                this.createStatChart(this.typeChart, 'Site Type Stats', 'searchType');
+                this.createStatChart(this.orgChart, 'Site Organization Stats', 'orgName');
+            }
         });
         this._siteChartOptions = {
             credits: {
@@ -207,26 +235,35 @@ export class DataviewComponent implements OnInit {
 
     } // End NgOnInit
 
+    public updateQueryParams() {
+        window.history.replaceState({}, '', decodeURIComponent(`${location.pathname}?${this.urlParams}`));
+    }
+
+    public getUrlSites() {
+        this.urlParams = new URLSearchParams(window.location.search);
+        if (this.urlParams.get('site') !== null) {this.urlSites = this.urlParams.get('site').split(',');
+        } else {this.urlSites = []; }
+    }
+
     public getResultData() {
+        if (this.subscription) { this.subscription.unsubscribe(); }
         this._loaderService.showDataLoad();
         this.dataLoading = true;
-        let resultUrl = 'https://www.waterqualitydata.us/data/Result/search?mimeType=csv&countrycode=US';
-        for (const site of this.selectedSites) {
-            resultUrl += '&siteid=' + site;
-        }
-        for (const char of this.characteristics) {
-            resultUrl += '&characteristicName=' + char;
-        }
-        this._http.get(resultUrl)
+        this.resultParams['siteid'] = this.selectedSites;
+        this.resultParams['characteristicName'] = this.queryChar;
+        const resultUrl = this.configSettings.resultUrl;
+        const sites = this.selectedSites;
+        this.subscription = this._http.get(resultUrl, {search: this.resultParams})
             .subscribe(csv => {
+                this.noGraphData = false;
                 this.resultCsv = csv; this.resultCsv = this.resultCsv._body;
                 this.resultJson = this.csvJSON(this.resultCsv);
                 this.resultJson = JSON.parse(this.resultJson);
                 this.showSiteData = true; this.noData = false; this.uniqueData = [];
-                if (this.resultJson.length > 0 && this.selectedSites.length === 1) {
+                if (this.resultJson.length > 0 && sites.length === 1) {
                     this.createSiteChart('ResultMeasure/MeasureUnitCode', this.siteChart2);
                     this.createSiteChart('ActivityBottomDepthHeightMeasure/MeasureValue', this.siteChart);
-                } else if (this.resultJson.length > 0 && this.selectedSites.length > 1) {
+                } else if (this.resultJson.length > 0 && sites.length > 1) {
                     this.createMultSiteChart(this.multSiteChart);
                 } else { this.noData = true; }
                 this._loaderService.hideDataLoad();
@@ -234,10 +271,20 @@ export class DataviewComponent implements OnInit {
 
                 // if duplicates, jitter the points, need to find a way of removing duplicates...
                 if (this.uniqueData.length < this.resultJson.length) {
-                    this.siteChart.options.plotOptions.scatter.jitter = {x: 0, y: 0.05};
-                    this.siteChart2.options.plotOptions.scatter.jitter = {x: 0, y: 0.05};
+                    this.siteChart.options.plotOptions.scatter.jitter = {x: 0, y: 0.01};
+                    this.siteChart2.options.plotOptions.scatter.jitter = {x: 0, y: 0.01};
                 }
+                if (sites.length === 1 && !this.siteChart2.series.data && this.siteChart.series[0].data.length === 0) {
+                    this.noGraphData = true;
+                }
+            }, error => {
+                this.handleError(error);
             });
+    }
+
+    private handleError (error: Response | any) {
+        this._loaderService.hideDataLoad();
+        console.log(error);
     }
 
     public csvJSON(csv) {
@@ -256,13 +303,17 @@ export class DataviewComponent implements OnInit {
     }
 
     public createSiteChart(char, chart) {
-        while (chart.series.length > 0) { chart.series[0].remove(true); }
+        const seriesData = [];
+        while (chart.series && chart.series.length > 0) { chart.series[0].remove(true); }
         const array = [];
         for (let i = 0; i < this.resultJson.length; i++) { // creating separate series based on properties
             const value = this.resultJson[i][char];
+            if (this.charsWithSites.indexOf(this.resultJson[i].CharacteristicName) === -1) {
+                this.charsWithSites.push(this.resultJson[i].CharacteristicName);
+            }
             if (value !== '' && array.indexOf(value) === -1) {
                 array.push(value);
-            } else if (value === '' && array.indexOf('N/A') === -1) { array.push('N/A'); }
+            } else if (value === '' && array.indexOf('N/A') === -1 && char !== 'ResultMeasure/MeasureUnitCode') { array.push('N/A'); }
         }
 
         if (char === 'ActivityBottomDepthHeightMeasure/MeasureValue') {this.unitCodes = array; }
@@ -273,16 +324,47 @@ export class DataviewComponent implements OnInit {
                 if (currentValue === array[item] || (currentValue === '' && array[item] === 'N/A')) {
                     if (/\d/.test(result.ResultMeasureValue)) {
                         val = Number(result.ResultMeasureValue);
-                    } else { val = 0; }
-                    let date = result.ActivityStartDate.split('-');
-                    date = Date.UTC(date[0], Number(date[1]) - 1, date[2]);
-                    data.push({ x: date, y: val, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
-                    if (JSON.stringify(this.uniqueData).indexOf(JSON.stringify([date, val])) === -1) { this.uniqueData.push([date, val]); }
+                        let date = result.ActivityStartDate.split('-');
+                        date = Date.UTC(date[0], Number(date[1]) - 1, date[2]);
+                        if (result['ResultMeasure/MeasureUnitCode'] === 'ug/l')  {
+                            data.push({ x: date, y: val / 1000, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
+                        } else if (result['ResultMeasure/MeasureUnitCode'] === 'umol') {
+                            data.push({ x: date, y: val / 4.31, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
+                        } else {
+                            data.push({ x: date, y: val, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
+                        }
+                        if (JSON.stringify(this.uniqueData).indexOf(JSON.stringify([date, val])) === -1) {
+                            this.uniqueData.push([date, val]);
+                        }
+                        seriesData.push([date / 10000000000, val]);
+                    } // skip if no value
                 }
             }
             if (chart === this.siteChart) {chart.addSeries({ name: 'Depth: ' + array[item], data: data });
-        } else {chart.addSeries({ name: array[item], data: data }); }
+            } else { chart.addSeries({ name: array[item], data: data }); }
         }
+
+        // create regression
+        if (seriesData.length > 2) {this.createRegression(chart, seriesData); }
+    }
+
+    public createRegression(chart, data) {
+        const ymxb = regression.linear(data);
+        const m = ymxb.equation[0]; const b = ymxb.equation[1];
+        const xs = [];
+        data.forEach(function(d) {
+            xs.push(d[0]);
+        });
+
+        const x0 = Math.min.apply(null, xs);
+        let y0 = m * x0 + b;
+        const xf = Math.max.apply(null, xs);
+        let yf = m * xf + b;
+
+        if (y0 < 0) {y0 = 0; }
+        if (yf < 0) {yf = 0; }
+
+        chart.addSeries({type: 'line', name: 'Regression Line', data: [[x0 * 10000000000, y0], [xf * 10000000000, yf]]});
     }
 
     public makeModalChart() {
@@ -309,32 +391,51 @@ export class DataviewComponent implements OnInit {
     }
 
     public createMultSiteChart(chart) {
+        const seriesData = [];
         while (chart.series && chart.series.length > 0) { chart.series[0].remove(true); }
         this.selectedSites.forEach((site) => {
-            let val; const data = new Array();
+            const array = new Array();
             for (const result of this.resultJson) {
                 if (result.MonitoringLocationIdentifier === site) {
-                    if (/\d/.test(result.ResultMeasureValue)) {
-                        val = Number(result.ResultMeasureValue);
-                    } else { val = 0; }
-                    let date = result.ActivityStartDate.split('-');
-                    date = Date.UTC(date[0], Number(date[1]) - 1, date[2]);
-                    if (result['ResultMeasure/MeasureUnitCode'] === 'ug/l')  {
-                        data.push({ x: date, y: val / 1000, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
-                    } else if (result['ResultMeasure/MeasureUnitCode'] === 'umol') {
-                        data.push({ x: date, y: val / 4.31, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
-                    } else {
-                        data.push({ x: date, y: val, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
+                    const value = result['ResultMeasure/MeasureUnitCode'];
+                    if (value !== '' && array.indexOf(value) === -1) {
+                        array.push(value);
                     }
-                    if (JSON.stringify(this.uniqueData).indexOf(JSON.stringify([date, val])) === -1) { this.uniqueData.push([date, val]); }
+                }
+                if (this.charsWithSites.indexOf(result.CharacteristicName) === -1) {
+                    this.charsWithSites.push(result.CharacteristicName);
                 }
             }
-            chart.addSeries({name: site, data: data});
+            for (const unit of array) {
+                let val; const data = new Array();
+                for (const result of this.resultJson) {
+                    if (result.MonitoringLocationIdentifier === site && result['ResultMeasure/MeasureUnitCode'] === unit) {
+                        if (/\d/.test(result.ResultMeasureValue)) {
+                            val = Number(result.ResultMeasureValue);
+                            let date = result.ActivityStartDate.split('-');
+                            date = Date.UTC(date[0], Number(date[1]) - 1, date[2]);
+                            if (result['ResultMeasure/MeasureUnitCode'] === 'ug/l')  {
+                                data.push({ x: date, y: val / 1000, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
+                            } else if (result['ResultMeasure/MeasureUnitCode'] === 'umol') {
+                                data.push({ x: date, y: val / 4.31, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
+                            } else {
+                                data.push({ x: date, y: val, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
+                            }
+                            if (JSON.stringify(this.uniqueData).indexOf(JSON.stringify([date, val])) === -1) {
+                                this.uniqueData.push([date, val]);
+                            }
+                            seriesData.push([date / 10000000000, val]);
+                        } // skip if no value
+                    }
+                }
+                chart.addSeries({name: site + ', ' + unit, data: data});
+            }
         });
+        if (seriesData.length > 2) {this.createRegression(chart, seriesData); }
     }
 
     public createStatChart(chart, name, property) {
-        while (chart.series.length > 0) { chart.series[0].remove(true); }
+        while (chart.series && chart.series.length > 0) { chart.series[0].remove(true); }
         const propData = [];
         this.siteFilterData[property].forEach(prop => {
             const count = this.geojson.features.filter(function (feat) {

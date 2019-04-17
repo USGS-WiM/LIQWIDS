@@ -9,6 +9,8 @@ declare let L;
 import 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.markercluster.freezable';
+import { ConfigService } from './config.service';
+import { Config } from '../interfaces/config';
 
 @Injectable({
     providedIn: 'root'
@@ -24,15 +26,15 @@ export class MapService {
     public filterOptions: any;
     public highlightMarkers = [];
     public markerClusters;
-
-    public geoJsonURL = 'https://www.waterqualitydata.us/ogcservices/wfs/';
+    public geoJsonURL;
+    private configSettings: Config;
 
     public URLparams = {
         request: 'GetFeature',
         service: 'wfs',
         version: '2.0.0',
         typeNames: 'wqp_sites',
-        SEARCHPARAMS: 'countrycode:US;statecode:US:36;countycode:US:36:059|US:36:103;characteristicName:Nitrate',
+        SEARCHPARAMS: 'countrycode:US;statecode:US:36;countycode:US:36:059|US:36:103;minresults:1;sampleMedia:Water;characteristicName:Nitrate;',
         outputFormat: 'application/json'
     };
 
@@ -64,7 +66,9 @@ export class MapService {
         return this._siteChangeSubject.asObservable();
     }
 
-    constructor(private _http: HttpClient, private _loaderService: LoaderService) {
+    constructor(private _http: HttpClient, private _loaderService: LoaderService, private _configService: ConfigService) {
+        this.configSettings = this._configService.getConfiguration();
+        this.geoJsonURL = this.configSettings.geoJsonURL;
         this.chosenBaseLayer = 'Topo';
 
         this.baseMaps = {
@@ -148,7 +152,6 @@ export class MapService {
                         }
                     }
                 });
-                this._loaderService.hideFullPageLoad();
                 return this.filterOptions;
             }),
             catchError(this.handleError)
@@ -222,14 +225,14 @@ export class MapService {
                     let run = true;
                     if (self.selectedSiteLayer) {
                         self.selectedSiteLayer.eachLayer(site => {
-                            if (site._latlng === this._latlng) {
+                            if (site._latlng['lat'] === this._latlng['lat'] && site._latlng['lng'] === this._latlng['lng']) {
                                 run = false;
                             }
                         });
                     }
-                    if (run === true) {
+                    if (run) {
                         // control key used to select multiple sites
-                        if (e.originalEvent.ctrlKey === false) {
+                        if (!e.originalEvent.ctrlKey) {
                             if (self.selectedSiteLayer) {
                                 self.highlightMarkers.forEach(marker => self.selectedSiteLayer.remove(marker));
                             }
@@ -250,7 +253,24 @@ export class MapService {
         this.markerClusters = L.markerClusterGroup({
             showCoverageOnHover: false,
             maxClusterRadius: 0.05,
-            spiderfyDistanceMultiplier: 2
+            spiderfyDistanceMultiplier: 2,
+            iconCreateFunction: function(cluster) {
+                const children = cluster.getAllChildMarkers();
+                const props = new Array();
+                for (const child of children) {
+                    const prop = child.feature.properties.searchType;
+                    if (props.indexOf(prop) === -1) {props.push(prop); }
+                }
+                if (props.length === 1) {
+                    return new L.DivIcon({html: '<div class="' + props[0].toLowerCase() + '"><span>' + cluster.getChildCount() +
+                    '</span></div>', className: 'marker-cluster marker-cluster-small border-' + props[0].toLowerCase(),
+                    iconSize: new L.Point(4, 4) });
+                } else {
+                    return new L.DivIcon({html: '<div class="multiple-types"><span>' + cluster.getChildCount() +
+                    '</span></div>', className: 'marker-cluster marker-cluster-small border-multiple-types',
+                    iconSize: new L.Point(4, 4) });
+                }
+            }
         });
         this.markerClusters.addLayer(this.sitesLayer);
         this.map.addLayer(this.markerClusters);
@@ -272,7 +292,12 @@ export class MapService {
             fillColor: '#9b0004',
             fillOpacity: 0.5
         };
-        this.highlightMarkers.push(L.circleMarker(site.latlng, highlightOptions));
+        if (site.latlng) { this.highlightMarkers.push(L.circleMarker(site.latlng, highlightOptions));
+        } else if (site.geometry.coordinates) {
+            const latlng = {};
+            latlng['lat'] = site.geometry.coordinates[1];
+            latlng['lng'] = site.geometry.coordinates[0];
+            this.highlightMarkers.push(L.circleMarker(latlng, highlightOptions)); }
         this.selectedSiteLayer = L.featureGroup([]);
         this.highlightMarkers.forEach(marker => marker.addTo(this.selectedSiteLayer));
         this.selectedSiteLayer.addTo(this.map);
