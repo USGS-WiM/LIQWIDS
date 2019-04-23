@@ -29,6 +29,7 @@ export class DataviewComponent implements OnInit {
     public resultJson;
     public filterSelections;
     public queryChar = 'Nitrate';
+    public charTypes = [];
     private siteFilterData;
     private geoJSONsiteCount;
     private geojson;
@@ -39,6 +40,7 @@ export class DataviewComponent implements OnInit {
     private dataLoading = false;
     private unitCodes = [];
     private uniqueData = [];
+    private fractionTypes = ['Dissolved', 'Total', ''];
     public showModal = false;
     public urlParams;
     public urlSites;
@@ -174,12 +176,12 @@ export class DataviewComponent implements OnInit {
                 }]
             }
         };
-        this.siteChart = new Highcharts.Chart('siteChart', this._siteChartOptions);
+        /* this.siteChart = new Highcharts.Chart('siteChart', this._siteChartOptions);
         this.siteChart2 = new Highcharts.Chart('siteChart2', this._siteChartOptions);
         this.multSiteChart = new Highcharts.Chart('multSiteChart', this._siteChartOptions);
         this.siteChart.setTitle({ text: 'Result Measure Value by Depth' });
         this.siteChart2.setTitle({ text: 'Result Measure Value by Measurement Type' });
-        this.multSiteChart.setTitle({text: 'Result Measure Value by Site'});
+        this.multSiteChart.setTitle({text: 'Result Measure Value by Site'});*/
 
         this._typeChartOptions = {
             credits: {
@@ -260,49 +262,92 @@ export class DataviewComponent implements OnInit {
                 this.resultJson = this.csvJSON(this.resultCsv);
                 this.resultJson = JSON.parse(this.resultJson);
                 this.showSiteData = true; this.noData = false; this.uniqueData = [];
-                if (this.resultJson.length > 0 && sites.length === 1) {
-                    this.createSiteChart('ResultMeasure/MeasureUnitCode', this.siteChart2);
-                    this.createSiteChart('ActivityBottomDepthHeightMeasure/MeasureValue', this.siteChart);
-                } else if (this.resultJson.length > 0 && sites.length > 1) {
-                    this.createMultSiteChart(this.multSiteChart);
+                if (this.resultJson.length > 0 && sites.length > 0) {
+                    this.getCharTypes();
+                    this.createCharts(this.charTypes[0], false);
                 } else { this.noData = true; }
                 this._loaderService.hideDataLoad();
                 this.dataLoading = false;
 
-                // if duplicates, jitter the points, need to find a way of removing duplicates...
-                if (this.uniqueData.length < this.resultJson.length) {
-                    this.siteChart.options.plotOptions.scatter.jitter = {x: 0, y: 0.01};
-                    this.siteChart2.options.plotOptions.scatter.jitter = {x: 0, y: 0.01};
-                }
-                if (sites.length === 1 && !this.siteChart2.series.data && this.siteChart.series[0].data.length === 0) {
-                    this.noGraphData = true;
-                }
+                // need to say noGraphData thing...
+                this.addCoord();
             }, error => {
                 this.handleError(error);
             });
     }
 
-    private handleError (error: Response | any) {
-        this._loaderService.hideDataLoad();
-        console.log(error);
-    }
-
-    public csvJSON(csv) {
-        const lines = csv.split('\n');
-        const result = [];
-        const headers = lines[0].split(',');
-        for (let i = 1; i < lines.length; i++) {
-            const obj = {};
-            const currentline = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            for (let j = 0; j < headers.length; j++) {
-                obj[headers[j]] = currentline[j].replace(/['"]+/g, '');
+    public getCharTypes() {
+        this.charTypes = [];
+        for (let i = 0; i < this.resultJson.length; i++) {
+            const value = this.resultJson[i]['ResultMeasure/MeasureUnitCode'];
+            if (this.charsWithSites.indexOf(this.resultJson[i].CharacteristicName) === -1) {
+                this.charsWithSites.push(this.resultJson[i].CharacteristicName);
             }
-            result.push(obj);
+            if (value === '' && this.resultJson[i].ResultMeasureValue !== '' && this.charTypes.indexOf('N/A') === -1) {
+                this.charTypes.push('N/A');
+            } else if (value !== '' && this.charTypes.indexOf(value) === -1) {this.charTypes.push(value); }
         }
-        return JSON.stringify(result);
     }
 
-    public createSiteChart(char, chart) {
+    public createCharts(char, modal) {
+        let chartDiv;
+        if (!modal) {chartDiv = document.getElementById('charts');
+        } else {chartDiv = document.getElementById('modalCharts'); }
+        while (chartDiv.firstChild) {chartDiv.removeChild(chartDiv.firstChild); }
+        let chartNo = 1; const chartData = []; const uniqueData = [];
+        for (const fraction of this.fractionTypes) {
+            const series = [];
+            for (const site of this.selectedSites) {
+                const data = [];
+                for (const result of this.resultJson) {
+                    const resultVal = result['ResultMeasure/MeasureUnitCode']; let val;
+                    if (result.MonitoringLocationIdentifier === site && (resultVal === char || (resultVal === '' && char === 'N/A'))
+                        && result.ResultSampleFractionText === fraction) {
+                        if (/\d/.test(result.ResultMeasureValue)) {
+                            val = Number(result.ResultMeasureValue);
+                            let date = result.ActivityStartDate.split('-');
+                            date = Date.UTC(date[0], Number(date[1]) - 1, date[2]);
+                            if (result['ResultMeasure/MeasureUnitCode'] === 'ug/l')  {
+                                data.push({ x: date, y: val / 1000, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
+                            } else if (result['ResultMeasure/MeasureUnitCode'] === 'umol') {
+                                data.push({ x: date, y: val / 4.31, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
+                            } else {
+                                data.push({ x: date, y: val, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
+                            }
+                            if (JSON.stringify(uniqueData).indexOf(JSON.stringify([date, val])) === -1) {
+                                uniqueData.push([date, val]);
+                            }
+                            chartData.push([date / 10000000000, val]);
+                        } // skip if no value
+                    }
+                }
+                if (data.length > 0) {series.push({ name: site, data: data }); }
+            }
+            if (series.length > 0) {
+                let chartId;
+                if (!modal) {chartId = 'chart' + chartNo;
+                } else {chartId = 'modalChart' + chartNo; }
+                const newDiv = document.createElement('div');
+                newDiv.id = chartId;
+                newDiv.classList.add('new-charts');
+                chartDiv.appendChild(newDiv);
+                const newChart = Highcharts.chart(chartId, this._siteChartOptions);
+                if (fraction === '') {newChart.setTitle({text: char}, {}, false);
+                } else {newChart.setTitle({text: char + ', ' + fraction}, {}, false); }
+                for (const set of series) {
+                    newChart.addSeries(set);
+                    if (set.data.length > 2) { this.createRegression(newChart, set); }
+                }
+                if (uniqueData.length < chartData.length) {
+                    newChart.options.plotOptions.scatter.jitter = {x: 0, y: 0.01};
+                }
+                chartNo ++;
+            }
+        }
+        if (chartNo === 1) { this.noGraphData = true; }
+    }
+
+    /*public createSiteChart(char, chart) {
         const seriesData = [];
         while (chart.series && chart.series.length > 0) { chart.series[0].remove(true); }
         const array = [];
@@ -346,13 +391,17 @@ export class DataviewComponent implements OnInit {
 
         // create regression
         if (seriesData.length > 2) {this.createRegression(chart, seriesData); }
-    }
+    }*/
 
-    public createRegression(chart, data) {
-        const ymxb = regression.linear(data);
+    public createRegression(chart, series) {
+        for (const data of series.data) {
+            data[0] = data.x / 10000000000; delete data.x;
+            data[1] = data.y; delete data.y;
+        }
+        const ymxb = regression.linear(series.data);
         const m = ymxb.equation[0]; const b = ymxb.equation[1];
         const xs = [];
-        data.forEach(function(d) {
+        series.data.forEach(function(d) {
             xs.push(d[0]);
         });
 
@@ -364,33 +413,22 @@ export class DataviewComponent implements OnInit {
         if (y0 < 0) {y0 = 0; }
         if (yf < 0) {yf = 0; }
 
-        chart.addSeries({type: 'line', name: 'Regression Line', data: [[x0 * 10000000000, y0], [xf * 10000000000, yf]]});
+        chart.addSeries({type: 'line', name: 'Regression, ' + series.name, data: [[x0 * 10000000000, y0], [xf * 10000000000, yf]]});
     }
 
     public makeModalChart() {
+        // need to fix this, have modal boolean option in createcharts?
         this.showModal = true;
         const self = this;
         setTimeout(function() {
-            if (self.selectedSites.length === 1) {
-                self.modalChart2 = new Highcharts.Chart('modalChart2', self._siteChartOptions);
-                self.modalChart2.setTitle({ text: 'Result Measure Value by Depth' });
-                self.createSiteChart('ActivityBottomDepthHeightMeasure/MeasureValue', self.modalChart2);
-                self.modalChart = new Highcharts.Chart('modalChart', self._siteChartOptions);
-                self.modalChart.setTitle({ text: 'Result Measure Value by Measurement Type' });
-                self.createSiteChart('ResultMeasure/MeasureUnitCode', self.modalChart);
-            } else {
-                self.modalChart = new Highcharts.Chart('modalChart', self._siteChartOptions);
-                self.modalChart.setTitle({ text: 'Result Measure Value' });
-                self.createMultSiteChart(self.modalChart);
-                document.getElementById('modalChart2').innerHTML = '';
-            }
+            self.createCharts(self.charTypes[0], true);
             const table = document.getElementById('dataTable').cloneNode(true);
             const modalTable = document.getElementById('modalTable');
             modalTable.appendChild(table);
         }, 100);
     }
 
-    public createMultSiteChart(chart) {
+    /*public createMultSiteChart(chart) {
         const seriesData = [];
         while (chart.series && chart.series.length > 0) { chart.series[0].remove(true); }
         this.selectedSites.forEach((site) => {
@@ -432,7 +470,7 @@ export class DataviewComponent implements OnInit {
             }
         });
         if (seriesData.length > 2) {this.createRegression(chart, seriesData); }
-    }
+    }*/
 
     public createStatChart(chart, name, property) {
         while (chart.series && chart.series.length > 0) { chart.series[0].remove(true); }
@@ -447,6 +485,63 @@ export class DataviewComponent implements OnInit {
             }
         });
         chart.addSeries({ name: name, colorByPoint: true, data: propData });
+    }
+
+    private handleError (error: Response | any) {
+        this._loaderService.hideDataLoad();
+        console.log(error);
+    }
+
+    public addCoord() {
+        // adding latitude and longitude to resultCSV --> MOVE THIS to the first response??
+        for (const result of this.resultJson) {
+            const features = this._mapService.geoJson.features;
+            const jsonIndex = features.findIndex(site => {
+                return site.properties.name === result.MonitoringLocationIdentifier;
+            });
+            result.Latitude = features[jsonIndex].geometry.coordinates[1];
+            result.Longitude = features[jsonIndex].geometry.coordinates[0];
+        }
+        this.resultCsv = this.jsonToCSV(this.resultJson);
+    }
+
+    public csvJSON(csv) {
+        const lines = csv.split('\n');
+        const result = [];
+        const headers = lines[0].split(',');
+        for (let i = 1; i < lines.length; i++) {
+            const obj = {};
+            const currentline = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            for (let j = 0; j < headers.length; j++) {
+                obj[headers[j]] = currentline[j].replace(/['"]+/g, '');
+            }
+            result.push(obj);
+        }
+        return JSON.stringify(result);
+    }
+
+    public jsonToCSV(json) {
+        let str = '';
+        let line = '';
+        Object.keys(json[0]).forEach(function(key) {
+            if (line !== '') {line += ','; }
+            line += key;
+        });
+        str += line + '\r\n';
+
+        for (let i = 0; i < json.length; i++) {
+            line = '';
+            Object.keys(json[i]).forEach(function(key) {
+                if (line !== '') {line += ','; }
+                if (typeof json[i][key] === 'string' && json[i][key].indexOf(',') !== -1) {
+                    line += '"' + json[i][key] + '"';
+                } else {line += json[i][key]; }
+            });
+
+            str += line + '\r\n';
+        }
+
+        return str;
     }
 
     public downloadFile() {

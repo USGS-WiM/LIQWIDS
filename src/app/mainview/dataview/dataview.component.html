@@ -15,19 +15,18 @@
     </div>
 
     <div [class.hidden]="!showSiteData || noData">
+        <div *ngIf="charTypes.length > 1">
+            <label class="charType">Measurement Type:</label>
+            <select (change)="createCharts($event.target.value, false)">
+                <option *ngFor="let char of charTypes" [value]="char">{{char}}</option>
+            </select>
+        </div>
+        <div class="chart-wrapper" id="charts"></div>
 
         <div *ngIf="noGraphData" id="noGraphData">
                 <h5>No data points to graph.</h5>
             </div>
 
-        <div [class.hidden]="selectedSites.length > 1 || noGraphData" class="chart-wrapper">
-            <div class="chart" id="siteChart2"></div>
-            <div class="chart" [class.hidden]="unitCodes.length == 1" id="siteChart"></div>
-        </div>
-
-        <div [class.hidden]="selectedSites.length == 1" class="chart-wrapper">
-            <div class="chart" id="multSiteChart"></div>
-        </div>
         <div style="text-align: center;" [class.hidden]="noGraphData"><i class="fa fa-mouse-pointer"></i>Drag a box around points on the graph to
             zoom in</div>
 
@@ -41,8 +40,7 @@
                     <th>Characteristic</th>
                     <th *ngIf="unitCodes.length > 1 || unitCodes[0] !== 'N/A'">Depth</th>
                     <th>Value</th>
-                    <th>Hydrologic Event</th>
-                    <th>Aquifer</th>
+                    <th>Fraction</th>
                     <th>Provider</th>
                 </tr>
             </thead>
@@ -54,8 +52,7 @@
                     <td *ngIf="unitCodes.length > 1 || unitCodes[0] !== 'N/A'">{{sample['ActivityBottomDepthHeightMeasure/MeasureValue']}}
                         {{sample['ActivityBottomDepthHeightMeasure/MeasureUnitCode']}}</td>
                     <td>{{sample.ResultMeasureValue}} {{sample['ResultMeasure/MeasureUnitCode']}}</td>
-                    <td>{{sample.HydrologicEvent}}</td>
-                    <td>{{sample.SampleAquifer}}</td>
+                    <td>{{sample.ResultSampleFractionText}}</td>
                     <td>{{sample.ProviderName}}</td>
                 </tr>
             </tbody>
@@ -76,8 +73,13 @@
         <div class="modal-content" id="printArea">
             <h4><b>Sites:</b> {{selectedSites.join(", ")}}</h4>
             <h4><b>Characteristics:</b> {{charsWithSites.join(", ")}}</h4>
-            <div class="chart" id="modalChart"></div>
-            <div id="modalChart2" [class]="unitCodes.length == 1 || selectedSites.length > 1 ? 'hidden hidden-print': 'chart'"></div>
+            <div *ngIf="charTypes.length > 1">
+                    <label class="charType">Measurement Type:</label>
+                    <select (change)="createCharts($event.target.value, true)">
+                        <option *ngFor="let char of charTypes" [value]="char">{{char}}</option>
+                    </select>
+                </div>
+            <div class="chart" id="modalCharts"></div>
             <div id="modalTable"></div>
             <div class="modal-actions hidden-print">
                 <button (click)="printReport()"><i class="fa fa-print"></i>Print</button>

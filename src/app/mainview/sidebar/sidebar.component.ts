@@ -39,7 +39,7 @@ export class SidebarComponent implements OnInit {
         // for now we can keep this a static list but ultimately could pull from here in a service
         // https://www.waterqualitydata.us/Codes/Characteristicname?mimeType=xml
         this.parameterFilterData = {
-            characteristics: ['Nitrate', 'Nitrogen', 'Inorganic nitrogen', 'Nitrogen, mixed forms']
+            characteristics: ['Nitrate', 'Nitrogen', 'Nitrate and Nitrite', 'Nitrogen (mixed forms)']
         };
 
         this.defaultParameterFilter = 'Nitrate';
@@ -67,7 +67,6 @@ export class SidebarComponent implements OnInit {
             huc8: [[]],
             location: [[]],
             name: [[]],
-            orgId: [[]],
             orgName: [[]],
             provider: [[]],
             searchType: [[]],
@@ -137,12 +136,13 @@ export class SidebarComponent implements OnInit {
     }
 
     public setChar(characteristics) {
-        for (let i = 0; i < characteristics.length; i ++) {
-            const char = characteristics[i];
-            if (this.lookups[char]) {characteristics[i] = this.lookups[char]; }
+        const copyChar = characteristics;
+        for (let i = 0; i < copyChar.length; i ++) {
+            const char = copyChar[i];
+            if (this.lookups[char]) {copyChar[i] = this.lookups[char]; }
         }
-        this._mapService._characteristicFilterSubject.next(characteristics);
-        const characteristic = characteristics.join('|');
+        this._mapService._characteristicFilterSubject.next(copyChar);
+        const characteristic = copyChar.join('|');
         // update URL params
         this._mapService.URLparams.SEARCHPARAMS =
             this._mapService.URLparams.SEARCHPARAMS.split('characteristicName:')[0] + 'characteristicName:' + characteristic;
@@ -153,8 +153,10 @@ export class SidebarComponent implements OnInit {
         this.parameterDropDownGroup.valueChanges.subscribe(selections => {
             // remove all other filters from url if characteristic changed after load
             if (selections.characteristic.length === 0) {
-                selections.characteristic = [this.defaultParameterFilter];
-                this.parameterDropDownGroup.get('characteristic').setValue([this.defaultParameterFilter]);
+                this._mapService.clearSites();
+                this.urlParams.delete('characteristic');
+                alert('There are too many sites. A parameter filter must be selected.'); // do this in toast when available?
+                return;
             }
             this.urlParams = new URLSearchParams([]);
             this.urlParams.set('characteristic', selections.characteristic.join(','));
@@ -255,6 +257,7 @@ export class SidebarComponent implements OnInit {
         this._mapService.map.removeLayer(this._mapService.baseMaps['Terrain']);
         this._mapService.map.removeLayer(this._mapService.baseMaps['Satellite']);
         this._mapService.map.removeLayer(this._mapService.baseMaps['Gray']);
+        this._mapService.map.removeLayer(this._mapService.baseMaps['Nautical']);
         this._mapService.map.addLayer(this._mapService.baseMaps[newVal]);
     }
 }
