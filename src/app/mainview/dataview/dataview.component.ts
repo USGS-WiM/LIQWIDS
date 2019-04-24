@@ -253,24 +253,19 @@ export class DataviewComponent implements OnInit {
         this.dataLoading = true;
         this.resultParams['siteid'] = this.selectedSites;
         this.resultParams['characteristicName'] = this.queryChar;
-        const resultUrl = this.configSettings.resultUrl;
-        const sites = this.selectedSites;
-        this.subscription = this._http.get(resultUrl, {search: this.resultParams})
+        this.subscription = this._http.get(this.configSettings.resultUrl, {search: this.resultParams})
             .subscribe(csv => {
                 this.noGraphData = false;
-                this.resultCsv = csv; this.resultCsv = this.resultCsv._body;
+                this.resultCsv = csv['_body'];
                 this.resultJson = this.csvJSON(this.resultCsv);
-                this.resultJson = JSON.parse(this.resultJson);
-                this.showSiteData = true; this.noData = false; this.uniqueData = [];
-                if (this.resultJson.length > 0 && sites.length > 0) {
+                this.showSiteData = true; this.noData = false;
+                if (this.resultJson.length > 0 && this.selectedSites.length > 0) {
                     this.getCharTypes();
                     this.createCharts(this.charTypes[0], false);
+                    this.addProps();
                 } else { this.noData = true; }
                 this._loaderService.hideDataLoad();
                 this.dataLoading = false;
-
-                // need to say noGraphData thing...
-                this.addCoord();
             }, error => {
                 this.handleError(error);
             });
@@ -489,11 +484,11 @@ export class DataviewComponent implements OnInit {
 
     private handleError (error: Response | any) {
         this._loaderService.hideDataLoad();
+        this.dataLoading = false; this.noData = true;
         console.log(error);
     }
 
-    public addCoord() {
-        // adding latitude and longitude to resultCSV --> MOVE THIS to the first response??
+    public addProps() {
         for (const result of this.resultJson) {
             const features = this._mapService.geoJson.features;
             const jsonIndex = features.findIndex(site => {
@@ -501,6 +496,11 @@ export class DataviewComponent implements OnInit {
             });
             result.Latitude = features[jsonIndex].geometry.coordinates[1];
             result.Longitude = features[jsonIndex].geometry.coordinates[0];
+            result.Datum = 'WGS 84';
+            result.Huc8 = features[jsonIndex].properties.huc8;
+            result.LocName = features[jsonIndex].properties.locName;
+            result.Type = features[jsonIndex].properties.type;
+            result.SearchType = features[jsonIndex].properties.searchType;
         }
         this.resultCsv = this.jsonToCSV(this.resultJson);
     }
@@ -517,7 +517,7 @@ export class DataviewComponent implements OnInit {
             }
             result.push(obj);
         }
-        return JSON.stringify(result);
+        return result;
     }
 
     public jsonToCSV(json) {
@@ -528,7 +528,6 @@ export class DataviewComponent implements OnInit {
             line += key;
         });
         str += line + '\r\n';
-
         for (let i = 0; i < json.length; i++) {
             line = '';
             Object.keys(json[i]).forEach(function(key) {
@@ -537,10 +536,8 @@ export class DataviewComponent implements OnInit {
                     line += '"' + json[i][key] + '"';
                 } else {line += json[i][key]; }
             });
-
             str += line + '\r\n';
         }
-
         return str;
     }
 

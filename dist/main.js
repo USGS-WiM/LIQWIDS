@@ -490,29 +490,23 @@ var DataviewComponent = /** @class */ (function () {
         this.dataLoading = true;
         this.resultParams['siteid'] = this.selectedSites;
         this.resultParams['characteristicName'] = this.queryChar;
-        var resultUrl = this.configSettings.resultUrl;
-        var sites = this.selectedSites;
-        this.subscription = this._http.get(resultUrl, { search: this.resultParams })
+        this.subscription = this._http.get(this.configSettings.resultUrl, { search: this.resultParams })
             .subscribe(function (csv) {
             _this.noGraphData = false;
-            _this.resultCsv = csv;
-            _this.resultCsv = _this.resultCsv._body;
+            _this.resultCsv = csv['_body'];
             _this.resultJson = _this.csvJSON(_this.resultCsv);
-            _this.resultJson = JSON.parse(_this.resultJson);
             _this.showSiteData = true;
             _this.noData = false;
-            _this.uniqueData = [];
-            if (_this.resultJson.length > 0 && sites.length > 0) {
+            if (_this.resultJson.length > 0 && _this.selectedSites.length > 0) {
                 _this.getCharTypes();
                 _this.createCharts(_this.charTypes[0], false);
+                _this.addProps();
             }
             else {
                 _this.noData = true;
             }
             _this._loaderService.hideDataLoad();
             _this.dataLoading = false;
-            // need to say noGraphData thing...
-            _this.addCoord();
         }, function (error) {
             _this.handleError(error);
         });
@@ -763,9 +757,11 @@ var DataviewComponent = /** @class */ (function () {
     };
     DataviewComponent.prototype.handleError = function (error) {
         this._loaderService.hideDataLoad();
+        this.dataLoading = false;
+        this.noData = true;
         console.log(error);
     };
-    DataviewComponent.prototype.addCoord = function () {
+    DataviewComponent.prototype.addProps = function () {
         var _loop_1 = function (result) {
             var features = this_1._mapService.geoJson.features;
             var jsonIndex = features.findIndex(function (site) {
@@ -773,9 +769,13 @@ var DataviewComponent = /** @class */ (function () {
             });
             result.Latitude = features[jsonIndex].geometry.coordinates[1];
             result.Longitude = features[jsonIndex].geometry.coordinates[0];
+            result.Datum = 'WGS 84';
+            result.Huc8 = features[jsonIndex].properties.huc8;
+            result.LocName = features[jsonIndex].properties.locName;
+            result.Type = features[jsonIndex].properties.type;
+            result.SearchType = features[jsonIndex].properties.searchType;
         };
         var this_1 = this;
-        // adding latitude and longitude to resultCSV --> MOVE THIS to the first response??
         for (var _i = 0, _a = this.resultJson; _i < _a.length; _i++) {
             var result = _a[_i];
             _loop_1(result);
@@ -794,7 +794,7 @@ var DataviewComponent = /** @class */ (function () {
             }
             result.push(obj);
         }
-        return JSON.stringify(result);
+        return result;
     };
     DataviewComponent.prototype.jsonToCSV = function (json) {
         var str = '';
@@ -1247,6 +1247,7 @@ var SidebarComponent = /** @class */ (function () {
             if (selections.characteristic.length === 0) {
                 _this._mapService.clearSites();
                 _this.urlParams.delete('characteristic');
+                _this.updateQueryParams();
                 alert('There are too many sites. A parameter filter must be selected.'); // do this in toast when available?
                 return;
             }

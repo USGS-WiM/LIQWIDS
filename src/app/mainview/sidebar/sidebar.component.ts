@@ -155,6 +155,7 @@ export class SidebarComponent implements OnInit {
             if (selections.characteristic.length === 0) {
                 this._mapService.clearSites();
                 this.urlParams.delete('characteristic');
+                this.updateQueryParams();
                 alert('There are too many sites. A parameter filter must be selected.'); // do this in toast when available?
                 return;
             }
