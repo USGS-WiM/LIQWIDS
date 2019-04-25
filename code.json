@@ -29,10 +29,7 @@
     ],
 
     "languages": [
-      "HTML",
-      "SCSS",
-      "CSS",
-      "Javascript"
+      "Angular"
     ],
 
     "contact": {
@@ -41,7 +38,7 @@
     },
 
     "date": {
-      "metadataLastUpdated": "2018-11-15"
+      "metadataLastUpdated": "2018-4-24"
     }
   }
 ]

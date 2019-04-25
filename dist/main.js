@@ -7,7 +7,7 @@
 /*! exports provided: name, version, scripts, private, dependencies, devDependencies, default */
 /***/ (function(module) {
 
-module.exports = {"name":"liqwids","version":"0.0.5","scripts":{"ng":"ng","start":"ng serve","build":"ng build","patch":"bump patch package.json code.json && ng build","minor":"bump minor package.json code.json && ng build","major":"bump major package.json code.json && ng build","test":"ng test","lint":"ng lint","e2e":"ng e2e","live":"ng serve --configuration hmr"},"private":true,"dependencies":{"@angular/animations":"~7.0.0","@angular/cdk":"~7.3.3","@angular/common":"~7.0.0","@angular/compiler":"~7.0.0","@angular/core":"~7.0.0","@angular/forms":"~7.0.0","@angular/http":"~7.0.0","@angular/material":"^7.3.3","@angular/platform-browser":"~7.0.0","@angular/platform-browser-dynamic":"~7.0.0","@angular/router":"~7.0.0","@ng-select/ng-select":"^2.16.0","@types/geojson":"^7946.0.5","@types/leaflet":"^1.2.14","classlist.js":"^1.1.20150312","core-js":"^2.5.4","highcharts":"^7.0.3","leaflet":"^1.3.4","leaflet.markercluster":"^1.4.1","leaflet.markercluster.freezable":"^1.0.0","regression":"^2.0.1","rxjs":"~6.3.3","version-bump-prompt":"^5.0.0","web-animations-js":"^2.3.1","zone.js":"~0.8.26"},"devDependencies":{"@angular-devkit/build-angular":"^0.13.0","@angular/cli":"~7.0.5","@angular/compiler-cli":"^7.2.5","@angular/language-service":"~7.0.0","@angularclass/hmr":"^2.1.3","@types/highcharts":"^5.0.36","@types/jasmine":"~2.8.8","@types/jasminewd2":"~2.0.3","@types/node":"~8.9.4","codelyzer":"~4.5.0","jasmine-core":"~2.99.1","jasmine-spec-reporter":"~4.2.1","karma":"~3.0.0","karma-chrome-launcher":"~2.2.0","karma-coverage-istanbul-reporter":"~2.0.1","karma-jasmine":"~1.1.2","karma-jasmine-html-reporter":"^0.2.2","protractor":"~5.4.0","ts-node":"~7.0.0","tslint":"~5.11.0","typescript":"~3.1.6"}};
+module.exports = {"name":"liqwids","version":"0.0.4","scripts":{"ng":"ng","start":"ng serve","build":"ng build","patch":"bump patch package.json code.json && ng build","minor":"bump minor package.json code.json && ng build","major":"bump major package.json code.json && ng build","test":"ng test","lint":"ng lint","e2e":"ng e2e","live":"ng serve --configuration hmr"},"private":true,"dependencies":{"@angular/animations":"~7.0.0","@angular/cdk":"~7.3.3","@angular/common":"~7.0.0","@angular/compiler":"~7.0.0","@angular/core":"~7.0.0","@angular/forms":"~7.0.0","@angular/http":"~7.0.0","@angular/material":"^7.3.3","@angular/platform-browser":"~7.0.0","@angular/platform-browser-dynamic":"~7.0.0","@angular/router":"~7.0.0","@ng-select/ng-select":"^2.16.0","@types/geojson":"^7946.0.5","@types/leaflet":"^1.2.14","classlist.js":"^1.1.20150312","core-js":"^2.5.4","esri-leaflet":"^2.2.4","highcharts":"^7.0.3","leaflet":"^1.3.4","leaflet.markercluster":"^1.4.1","leaflet.markercluster.freezable":"^1.0.0","regression":"^2.0.1","rxjs":"~6.3.3","version-bump-prompt":"^5.0.0","web-animations-js":"^2.3.1","zone.js":"~0.8.26"},"devDependencies":{"@angular-devkit/build-angular":"^0.13.0","@angular/cli":"~7.0.5","@angular/compiler-cli":"^7.2.5","@angular/language-service":"~7.0.0","@angularclass/hmr":"^2.1.3","@types/highcharts":"^5.0.36","@types/jasmine":"~2.8.8","@types/jasminewd2":"~2.0.3","@types/node":"~8.9.4","codelyzer":"~4.5.0","jasmine-core":"~2.99.1","jasmine-spec-reporter":"~4.2.1","karma":"~3.0.0","karma-chrome-launcher":"~2.2.0","karma-coverage-istanbul-reporter":"~2.0.1","karma-jasmine":"~1.1.2","karma-jasmine-html-reporter":"^0.2.2","protractor":"~5.4.0","ts-node":"~7.0.0","tslint":"~5.11.0","typescript":"~3.1.6"}};
 
 /***/ }),
 
@@ -222,7 +222,7 @@ var AppModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"dataView\" [ngClass]=\"{'data-blur': dataLoading == true }\">\r\n\r\n    <app-dataloader-div id=\"dataLoader\"></app-dataloader-div>\r\n\r\n\r\n    <div class=\"site-meta\">\r\n        <h1>Data</h1>\r\n        <h3 *ngIf=\"showSiteData && !noData\"><b>Sites:</b> {{selectedSites.join(\", \")}}</h3>\r\n        <h3 *ngIf=\"showSiteData && !noData\"><b>Characteristics:</b> {{charsWithSites.join(\", \")}}</h3>\r\n    </div>\r\n\r\n    <div [class.hidden]=\"showSiteData\" class=\"chart-wrapper\">\r\n        <div class=\"chart\" id=\"typeChart\"></div>\r\n        <div class=\"chart\" id=\"orgChart\"></div>\r\n    </div>\r\n\r\n    <div [class.hidden]=\"!showSiteData || noData\">\r\n\r\n        <div *ngIf=\"noGraphData\" id=\"noGraphData\">\r\n                <h5>No data points to graph.</h5>\r\n            </div>\r\n\r\n        <div [class.hidden]=\"selectedSites.length > 1 || noGraphData\" class=\"chart-wrapper\">\r\n            <div class=\"chart\" id=\"siteChart2\"></div>\r\n            <div class=\"chart\" [class.hidden]=\"unitCodes.length == 1\" id=\"siteChart\"></div>\r\n        </div>\r\n\r\n        <div [class.hidden]=\"selectedSites.length == 1\" class=\"chart-wrapper\">\r\n            <div class=\"chart\" id=\"multSiteChart\"></div>\r\n        </div>\r\n        <div style=\"text-align: center;\" [class.hidden]=\"noGraphData\"><i class=\"fa fa-mouse-pointer\"></i>Drag a box around points on the graph to\r\n            zoom in</div>\r\n\r\n        <button (click)=\"downloadFile()\"><i class=\"fa fa-file-download\"></i>Download Results CSV</button>\r\n        <button (click)=\"makeModalChart()\"><i class=\"fa fa-book-open\"></i>Report</button>\r\n        <table id=\"dataTable\">\r\n            <thead>\r\n                <tr class=\"row header\">\r\n                    <th *ngIf=\"selectedSites.length > 1\">Site Name</th>\r\n                    <th>Activity Start Date</th>\r\n                    <th>Characteristic</th>\r\n                    <th *ngIf=\"unitCodes.length > 1 || unitCodes[0] !== 'N/A'\">Depth</th>\r\n                    <th>Value</th>\r\n                    <th>Hydrologic Event</th>\r\n                    <th>Aquifer</th>\r\n                    <th>Provider</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor=\"let sample of resultJson\" class=\"row\">\r\n                    <td *ngIf=\"selectedSites.length > 1\">{{sample.MonitoringLocationIdentifier}}</td>\r\n                    <td>{{sample.ActivityStartDate}}</td>\r\n                    <td>{{sample.CharacteristicName}}</td>\r\n                    <td *ngIf=\"unitCodes.length > 1 || unitCodes[0] !== 'N/A'\">{{sample['ActivityBottomDepthHeightMeasure/MeasureValue']}}\r\n                        {{sample['ActivityBottomDepthHeightMeasure/MeasureUnitCode']}}</td>\r\n                    <td>{{sample.ResultMeasureValue}} {{sample['ResultMeasure/MeasureUnitCode']}}</td>\r\n                    <td>{{sample.HydrologicEvent}}</td>\r\n                    <td>{{sample.SampleAquifer}}</td>\r\n                    <td>{{sample.ProviderName}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n\r\n    </div>\r\n    <div *ngIf=\"noData\" id=\"noData\">\r\n        <h2>No data was returned</h2>\r\n    </div>\r\n</div>\r\n\r\n<div class=\"modal-wrapper\" *ngIf=\"showModal\" (click)=\"showModal = false\">\r\n    <div class=\"modal\" id=\"reportModal\" (click)=\"$event.stopPropagation()\">\r\n        <div class=\"modal-header hidden-print\">\r\n            <div class=\"title\">Report</div>\r\n            <div class=\"modal-close\" (click)=\"showModal = false\">&times;</div>\r\n        </div>\r\n        <div class=\"modal-content\" id=\"printArea\">\r\n            <h4><b>Sites:</b> {{selectedSites.join(\", \")}}</h4>\r\n            <h4><b>Characteristics:</b> {{charsWithSites.join(\", \")}}</h4>\r\n            <div class=\"chart\" id=\"modalChart\"></div>\r\n            <div id=\"modalChart2\" [class]=\"unitCodes.length == 1 || selectedSites.length > 1 ? 'hidden hidden-print': 'chart'\"></div>\r\n            <div id=\"modalTable\"></div>\r\n            <div class=\"modal-actions hidden-print\">\r\n                <button (click)=\"printReport()\"><i class=\"fa fa-print\"></i>Print</button>\r\n            </div>\r\n        </div>\r\n\r\n    </div>\r\n</div>"
+module.exports = "<div id=\"dataView\" [ngClass]=\"{'data-blur': dataLoading == true }\">\r\n\r\n    <app-dataloader-div id=\"dataLoader\"></app-dataloader-div>\r\n\r\n\r\n    <div class=\"site-meta\">\r\n        <h1>Data</h1>\r\n        <h3 *ngIf=\"showSiteData && !noData\"><b>Sites:</b> {{selectedSites.join(\", \")}}</h3>\r\n        <h3 *ngIf=\"showSiteData && !noData\"><b>Characteristics:</b> {{charsWithSites.join(\", \")}}</h3>\r\n    </div>\r\n\r\n    <div [class.hidden]=\"showSiteData || noData\" class=\"chart-wrapper\">\r\n        <div class=\"chart\" id=\"typeChart\"></div>\r\n        <div class=\"chart\" id=\"orgChart\"></div>\r\n    </div>\r\n\r\n    <div [class.hidden]=\"!showSiteData || noData\">\r\n        <div *ngIf=\"charTypes.length > 1\">\r\n            <label class=\"charType\">Measurement Type:</label>\r\n            <select [(ngModel)]=\"selectedChar\" (change)=\"createCharts($event.target.value, false)\">\r\n                <option *ngFor=\"let char of charTypes\" [value]=\"char\">{{char}}</option>\r\n            </select>\r\n        </div>\r\n        <div class=\"chart-wrapper\" id=\"charts\"></div>\r\n\r\n        <div *ngIf=\"noGraphData\" id=\"noGraphData\">\r\n                <h5>No data points to graph.</h5>\r\n            </div>\r\n\r\n        <div style=\"text-align: center;\" [class.hidden]=\"noGraphData\"><i class=\"fa fa-mouse-pointer\"></i>Drag a box around points on the graph to\r\n            zoom in</div>\r\n\r\n        <button (click)=\"downloadFile()\"><i class=\"fa fa-file-download\"></i>Download Results CSV</button>\r\n        <button (click)=\"makeModalChart()\"><i class=\"fa fa-book-open\"></i>Report</button>\r\n        <table id=\"dataTable\">\r\n            <thead>\r\n                <tr class=\"row header\">\r\n                    <th *ngIf=\"selectedSites.length > 1\">Site Name</th>\r\n                    <th>Activity Start Date</th>\r\n                    <th>Characteristic</th>\r\n                    <th>Depth</th>\r\n                    <th>Value</th>\r\n                    <th>Fraction</th>\r\n                    <th>Provider</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor=\"let sample of resultJson\" class=\"row\">\r\n                    <td *ngIf=\"selectedSites.length > 1\">{{sample.MonitoringLocationIdentifier}}</td>\r\n                    <td>{{sample.ActivityStartDate}}</td>\r\n                    <td>{{sample.CharacteristicName}}</td>\r\n                    <td>{{sample['ActivityBottomDepthHeightMeasure/MeasureValue']}}\r\n                        {{sample['ActivityBottomDepthHeightMeasure/MeasureUnitCode']}}</td>\r\n                    <td>{{sample.ResultMeasureValue}} {{sample['ResultMeasure/MeasureUnitCode']}}</td>\r\n                    <td>{{sample.ResultSampleFractionText}}</td>\r\n                    <td>{{sample.ProviderName}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n\r\n    </div>\r\n    <div *ngIf=\"noData\" id=\"noData\">\r\n        <h2>No data was returned</h2>\r\n    </div>\r\n</div>\r\n\r\n<div class=\"modal-wrapper\" *ngIf=\"showModal\" (click)=\"showModal = false\">\r\n    <div class=\"modal\" id=\"reportModal\" (click)=\"$event.stopPropagation()\">\r\n        <div class=\"modal-header hidden-print\">\r\n            <div class=\"title\">Report</div>\r\n            <div class=\"modal-close\" (click)=\"showModal = false\">&times;</div>\r\n        </div>\r\n        <div class=\"modal-content\" id=\"printArea\">\r\n            <h4><b>Sites:</b> {{selectedSites.join(\", \")}}</h4>\r\n            <h4><b>Characteristics:</b> {{charsWithSites.join(\", \")}}</h4>\r\n            <div *ngIf=\"charTypes.length > 1\">\r\n                <label class=\"charType\">Measurement Type:</label>\r\n                <select [(ngModel)]=\"selectedChar\" (change)=\"createCharts($event.target.value, true)\">\r\n                    <option *ngFor=\"let char of charTypes\" [value]=\"char\">{{char}}</option>\r\n                </select>\r\n            </div>\r\n            <div class=\"chart\" id=\"modalCharts\"></div>\r\n            <div id=\"modalTable\"></div>\r\n            <div class=\"modal-actions hidden-print\">\r\n                <button (click)=\"window.print()\"><i class=\"fa fa-print\"></i>Print</button>\r\n            </div>\r\n        </div>\r\n\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -233,7 +233,8 @@ module.exports = "<div id=\"dataView\" [ngClass]=\"{'data-blur': dataLoading == 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "@import url(\"https://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Poppins:300,400,600,700\");\n#noData {\n  color: #F23D47;\n  font-size: 14px;\n  display: block; }\n#noGraphData {\n  text-align: center;\n  color: #F23D47; }\n#dataView {\n  display: block;\n  box-sizing: border-box;\n  position: relative;\n  width: 100%;\n  max-width: 100%;\n  margin: 0; }\n#dataView.data-blur *:not(#dataLoader) {\n    -webkit-filter: blur(3px);\n            filter: blur(3px); }\n#dataView .site-meta {\n    display: block;\n    box-sizing: border-box;\n    padding: 15px 25px; }\n#dataView .site-meta h1 {\n      font-size: 26px;\n      font-weight: 600; }\n#dataView .site-meta h3 {\n      font-size: 18px;\n      font-weight: 500; }\n.chart-wrapper {\n  display: flex;\n  justify-content: space-between;\n  box-sizing: border-box;\n  padding: 20px 25px 10px 25px; }\n.chart-wrapper .chart {\n    display: block;\n    margin: 0 auto;\n    width: 50%; }\n#siteChart,\n#siteChart2,\n#modalChart,\n#modalChart2,\n#multSiteChart {\n  display: block;\n  width: 48%;\n  height: 320px; }\n#dataTable {\n  display: flex;\n  flex-direction: column;\n  border: 1px solid rgba(16, 16, 16, 0.2);\n  box-sizing: border-box;\n  padding: 15px;\n  border-radius: 10px;\n  margin-bottom: 55px; }\n#dataTable tr {\n    display: flex;\n    width: 100%; }\n#dataTable tr:nth-child(even) {\n      background-color: rgba(10, 10, 50, 0.08); }\n#dataTable tr td, #dataTable tr th {\n      display: flex;\n      flex-direction: column;\n      justify-content: center;\n      text-align: center;\n      font-size: 12px;\n      line-height: 13px;\n      color: #101010;\n      height: 40px;\n      width: 10%;\n      flex-grow: 3;\n      box-sizing: border-box;\n      padding: 0 10px;\n      text-align: left; }\n#dataTable tr td:nth-child(1), #dataTable tr th:nth-child(1) {\n        font-weight: bolder; }\n#dataTable tr.header div {\n      font-weight: bolder; }\n.hidden {\n  display: none !important; }\nbutton {\n  margin: 45px 5px 5px 0px; }\ni {\n  padding: 5px; }\n#reportModal {\n  min-width: 60% !important;\n  min-height: 80%;\n  max-height: -webkit-max-content;\n  max-height: -moz-max-content;\n  max-height: max-content; }\n#reportModal .modal-content {\n    max-height: -webkit-max-content;\n    max-height: -moz-max-content;\n    max-height: max-content; }\n#reportModal h4 {\n    margin: 10px 20px;\n    font-weight: 500; }\n#reportModal .chart {\n    margin-left: auto;\n    margin-right: auto; }\n.modal-wrapper .modal .modal-content {\n  overflow-x: hidden;\n  overflow-y: auto; }\n#modalTable {\n  margin: 5px;\n  margin-bottom: 0px; }\n@media print {\n  body * {\n    visibility: hidden;\n    -webkit-print-color-adjust: exact !important; }\n  .hidden-print {\n    display: none !important; }\n  .modal, .modal-wrapper {\n    /**Remove scrollbar for printing.**/\n    overflow: visible !important;\n    /**Needs to be relative for printing in IE11**/\n    position: absolute;\n    left: 0;\n    top: 0;\n    margin: 0;\n    padding-right: 20px;\n    min-height: 550px;\n    visibility: visible; }\n  .modal-dialog, .modal-content {\n    width: 100%;\n    padding: 0;\n    margin: 20px;\n    visibility: visible !important;\n    /**Remove scrollbar for printing.**/\n    overflow: visible !important; }\n  .modal-footer {\n    border-top: 0; }\n  .leaflet-control-container {\n    display: none !important; }\n  .chart {\n    overflow: unset;\n    width: 100% !important; }\n  #modalTable {\n    page-break-inside: auto;\n    width: 120%;\n    border: none; }\n    #modalTable tr, #modalTable td, #modalTable th {\n      page-break-inside: avoid !important;\n      page-break-after: auto; }\n    #modalTable th {\n      font-weight: bold; }\n  .identifier {\n    padding-bottom: 2em; } }\n@media print and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /* IE10+ CSS styles go here */\n  .modal {\n    /**Needs to be relative for printing in IE11**/\n    position: relative; } }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbWFpbnZpZXcvZGF0YXZpZXcvQzpcXE5ZQmFja3VwXFxHaXRIdWJcXExJUVdJRFMvc3JjXFxhcHBcXHZhcmlhYmxlcy5zY3NzIiwic3JjL2FwcC9tYWludmlldy9kYXRhdmlldy9DOlxcTllCYWNrdXBcXEdpdEh1YlxcTElRV0lEUy9zcmNcXGFwcFxcbWFpbnZpZXdcXGRhdGF2aWV3XFxkYXRhdmlldy5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFDQSxvR0FBWTtBQ0NaO0VBQ0ksY0RLUztFQ0pULGVBQWU7RUFDZixjQUFjLEVBQUE7QUFHbEI7RUFDSSxrQkFBa0I7RUFDbEIsY0RGUyxFQUFBO0FDS2I7RUFDSSxjQUFjO0VBQ2Qsc0JBQXNCO0VBQ3RCLGtCQUFrQjtFQUNsQixXQUFXO0VBQ1gsZUFBZTtFQUNmLFNBQVMsRUFBQTtBQU5iO0lBWVkseUJBQWlCO1lBQWpCLGlCQUFpQixFQUFBO0FBWjdCO0lBbUJRLGNBQWM7SUFDZCxzQkFBc0I7SUFDdEIsa0JBQWtCLEVBQUE7QUFyQjFCO01Bd0JZLGVBQWU7TUFDZixnQkFBZ0IsRUFBQTtBQXpCNUI7TUE2QlksZUFBZTtNQUNmLGdCQUFnQixFQUFBO0FBSzVCO0VBQ0ksYUFBYTtFQUNiLDhCQUE4QjtFQUM5QixzQkFBc0I7RUFDdEIsNEJBQTRCLEVBQUE7QUFKaEM7SUFPUSxjQUFjO0lBQ2QsY0FBYztJQUNkLFVBQVUsRUFBQTtBQUdsQjs7Ozs7RUFLSSxjQUFjO0VBQ2QsVUFBVTtFQUNWLGFBQWEsRUFBQTtBQUdqQjtFQUNJLGFBQWE7RUFDYixzQkFBc0I7RUFDdEIsdUNBQXVDO0VBQ3ZDLHNCQUFzQjtFQUN0QixhQUFjO0VBQ2QsbUJBQW1CO0VBQ25CLG1CQUFtQixFQUFBO0FBUHZCO0lBVVEsYUFBYTtJQUNiLFdBQVcsRUFBQTtBQVhuQjtNQWNZLHdDQUFxQyxFQUFBO0FBZGpEO01Ba0JZLGFBQWE7TUFDYixzQkFBc0I7TUFDdEIsdUJBQXVCO01BQ3ZCLGtCQUFrQjtNQUNsQixlQUFlO01BQ2YsaUJBQWlCO01BQ2pCLGNEekZHO01DMEZILFlBQVk7TUFDWixVQUFVO01BQ1YsWUFBWTtNQUNaLHNCQUFzQjtNQUN0QixlQUFlO01BQ2YsZ0JBQWdCLEVBQUE7QUE5QjVCO1FBaUNnQixtQkFBbUIsRUFBQTtBQWpDbkM7TUF3Q2dCLG1CQUFtQixFQUFBO0FBTW5DO0VBQ0ksd0JBQXdCLEVBQUE7QUFHNUI7RUFDSSx3QkFBd0IsRUFBQTtBQUc1QjtFQUNJLFlBQVksRUFBQTtBQUdoQjtFQUNJLHlCQUF5QjtFQUN6QixlQUFlO0VBQ2YsK0JBQXVCO0VBQXZCLDRCQUF1QjtFQUF2Qix1QkFBdUIsRUFBQTtBQUgzQjtJQUtRLCtCQUF1QjtJQUF2Qiw0QkFBdUI7SUFBdkIsdUJBQXVCLEVBQUE7QUFML0I7SUFRUSxpQkFBaUI7SUFDakIsZ0JBQWdCLEVBQUE7QUFUeEI7SUFZUSxpQkFBaUI7SUFDakIsa0JBQWtCLEVBQUE7QUFJMUI7RUFDSSxrQkFBa0I7RUFDbEIsZ0JBQWdCLEVBQUE7QUFHcEI7RUFDSSxXQUFXO0VBQ1gsa0JBQWtCLEVBQUE7QUFHdEI7RUFDSTtJQUNJLGtCQUFrQjtJQUNsQiw0Q0FBNEMsRUFBQTtFQUVoRDtJQUNJLHdCQUF3QixFQUFBO0VBRTVCO0lBQ0ksbUNBQUE7SUFDQSw0QkFBNEI7SUFDNUIsOENBQUE7SUFDQSxrQkFBa0I7SUFDbEIsT0FBTztJQUNQLE1BQU07SUFDTixTQUFTO0lBQ1QsbUJBQWtCO0lBQ2xCLGlCQUFnQjtJQUNoQixtQkFBbUIsRUFBQTtFQUV2QjtJQUNJLFdBQVc7SUFDWCxVQUFVO0lBQ1YsWUFBVztJQUNYLDhCQUE4QjtJQUM5QixtQ0FBQTtJQUNBLDRCQUE0QixFQUFBO0VBRWhDO0lBQ0ksYUFBWSxFQUFBO0VBRWhCO0lBQ0ksd0JBQXVCLEVBQUE7RUFHM0I7SUFDSSxlQUFlO0lBQ2Ysc0JBQXNCLEVBQUE7RUFHMUI7SUFDSSx1QkFBdUI7SUFDdkIsV0FBVztJQUNYLFlBQVksRUFBQTtJQUhoQjtNQUtRLG1DQUFtQztNQUNuQyxzQkFBc0IsRUFBQTtJQU45QjtNQVNRLGlCQUFpQixFQUFBO0VBSXpCO0lBQ0ksbUJBQW1CLEVBQUEsRUFDdEI7QUFHTDtFQUNJLDZCQUFBO0VBQ0E7SUFDSSw4Q0FBQTtJQUNBLGtCQUFrQixFQUFBLEVBQ3JCIiwiZmlsZSI6InNyYy9hcHAvbWFpbnZpZXcvZGF0YXZpZXcvZGF0YXZpZXcuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIvLyBGb250c1xyXG5AaW1wb3J0IHVybCgnaHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbS9jc3M/ZmFtaWx5PU9wZW4rU2Fuczo0MDAsNjAwLDcwMHxQb3BwaW5zOjMwMCw0MDAsNjAwLDcwMCcpO1xyXG5cclxuXHJcbi8vIFZhcmlhYmxlc1xyXG4kYmxhY2s6ICMxMDEwMTA7XHJcbiR3aGl0ZTogI2ZmZjtcclxuJGJnOiAjRjlGQUZFO1xyXG4kcmVkOiAjRjIzRDQ3O1xyXG4kYmx1ZTogIzNFM0JGQjtcclxuJHByaW1hcnk6ICRibHVlO1xyXG4kZ3JleTogI0Y4RjdGODtcclxuJHRleHQ6IGZhZGUtb3V0KCRibGFjaywgMC4xKTtcclxuJHN1YnRsZTogZmFkZS1vdXQoJGJsYWNrLCAwLjUpO1xyXG5cclxuJGJvcmRlckNvbG9yOiBmYWRlLW91dCgkYmxhY2ssIDAuODUpO1xyXG4kYm9yZGVyUmFkaXVzOiA0cHg7XHJcbiRib3JkZXJSYWRpdXNNOiA4cHg7XHJcbiRib3JkZXJSYWRpdXNMOiAxNnB4O1xyXG5cclxuLy8gRm9udHNcclxuJHBvcHBpbnM6ICdQb3BwaW5zJywgc2Fucy1zZXJpZjtcclxuJHNhbnM6ICdPcGVuIFNhbnMnLCBzYW5zLXNlcmlmO1xyXG5cclxuXHJcbiR0cmFuc2l0aW9uOiAwLjE1cztcclxuJGJvcmRlclJhZGl1czogNHB4O1xyXG5cclxuLy8gSGVpZ2h0cyBhbmQgbWVhc3VyZW1lbnRzXHJcbiR0b3BCYXJIZWlnaHQ6IDU0cHg7XHJcblxyXG5cclxuLy8gUmVzcG9uc2l2ZW5lc3NcclxuJGZ1bGxNb2JpbGU6IDQ2MHB4OyIsIkBpbXBvcnQgJy4uLy4uL3ZhcmlhYmxlcy5zY3NzJztcclxuXHJcbiNub0RhdGF7XHJcbiAgICBjb2xvcjogJHJlZDtcclxuICAgIGZvbnQtc2l6ZTogMTRweDtcclxuICAgIGRpc3BsYXk6IGJsb2NrO1xyXG59XHJcblxyXG4jbm9HcmFwaERhdGEge1xyXG4gICAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gICAgY29sb3I6ICRyZWQ7XHJcbn1cclxuXHJcbiNkYXRhVmlld3tcclxuICAgIGRpc3BsYXk6IGJsb2NrO1xyXG4gICAgYm94LXNpemluZzogYm9yZGVyLWJveDtcclxuICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG4gICAgbWF4LXdpZHRoOiAxMDAlO1xyXG4gICAgbWFyZ2luOiAwO1xyXG5cclxuICAgICYuZGF0YS1ibHVye1xyXG5cclxuICAgICAgICAvLyBCbHVyIGV2ZXJ5dGhpbmcgZXhjZXB0IHRoZSBsb2FkZXJcclxuICAgICAgICAqOm5vdCgjZGF0YUxvYWRlcil7XHJcbiAgICAgICAgICAgIGZpbHRlcjogYmx1cigzcHgpO1xyXG4gICAgICAgIH1cclxuICAgIH1cclxuXHJcbiAgICAvLyBTaXRlIG1ldGFcclxuICAgIC8vIE5hbWUsIGlkLCBldGNcclxuICAgIC5zaXRlLW1ldGF7XHJcbiAgICAgICAgZGlzcGxheTogYmxvY2s7XHJcbiAgICAgICAgYm94LXNpemluZzogYm9yZGVyLWJveDtcclxuICAgICAgICBwYWRkaW5nOiAxNXB4IDI1cHg7XHJcblxyXG4gICAgICAgIGgxe1xyXG4gICAgICAgICAgICBmb250LXNpemU6IDI2cHg7XHJcbiAgICAgICAgICAgIGZvbnQtd2VpZ2h0OiA2MDA7XHJcbiAgICAgICAgfVxyXG5cclxuICAgICAgICBoM3tcclxuICAgICAgICAgICAgZm9udC1zaXplOiAxOHB4O1xyXG4gICAgICAgICAgICBmb250LXdlaWdodDogNTAwO1xyXG4gICAgICAgIH1cclxuICAgIH1cclxufVxyXG5cclxuLmNoYXJ0LXdyYXBwZXJ7XHJcbiAgICBkaXNwbGF5OiBmbGV4O1xyXG4gICAganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuO1xyXG4gICAgYm94LXNpemluZzogYm9yZGVyLWJveDtcclxuICAgIHBhZGRpbmc6IDIwcHggMjVweCAxMHB4IDI1cHg7XHJcblxyXG4gICAgLmNoYXJ0e1xyXG4gICAgICAgIGRpc3BsYXk6IGJsb2NrO1xyXG4gICAgICAgIG1hcmdpbjogMCBhdXRvO1xyXG4gICAgICAgIHdpZHRoOiA1MCU7XHJcbiAgICB9XHJcbn1cclxuI3NpdGVDaGFydCxcclxuI3NpdGVDaGFydDIsXHJcbiNtb2RhbENoYXJ0LFxyXG4jbW9kYWxDaGFydDIsXHJcbiNtdWx0U2l0ZUNoYXJ0e1xyXG4gICAgZGlzcGxheTogYmxvY2s7XHJcbiAgICB3aWR0aDogNDglO1xyXG4gICAgaGVpZ2h0OiAzMjBweDtcclxufVxyXG5cclxuI2RhdGFUYWJsZXtcclxuICAgIGRpc3BsYXk6IGZsZXg7XHJcbiAgICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xyXG4gICAgYm9yZGVyOiAxcHggc29saWQgZmFkZS1vdXQoJGJsYWNrLCAwLjgpO1xyXG4gICAgYm94LXNpemluZzogYm9yZGVyLWJveDtcclxuICAgIHBhZGRpbmc6ICAxNXB4O1xyXG4gICAgYm9yZGVyLXJhZGl1czogMTBweDtcclxuICAgIG1hcmdpbi1ib3R0b206IDU1cHg7XHJcblxyXG4gICAgdHJ7XHJcbiAgICAgICAgZGlzcGxheTogZmxleDtcclxuICAgICAgICB3aWR0aDogMTAwJTtcclxuXHJcbiAgICAgICAgJjpudGgtY2hpbGQoZXZlbil7XHJcbiAgICAgICAgICAgIGJhY2tncm91bmQtY29sb3I6IHJnYmEoMTAsMTAsNTAsMC4wOCk7XHJcbiAgICAgICAgfVxyXG5cclxuICAgICAgICB0ZCx0aHtcclxuICAgICAgICAgICAgZGlzcGxheTogZmxleDtcclxuICAgICAgICAgICAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcclxuICAgICAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XHJcbiAgICAgICAgICAgIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICAgICAgICAgICAgZm9udC1zaXplOiAxMnB4O1xyXG4gICAgICAgICAgICBsaW5lLWhlaWdodDogMTNweDtcclxuICAgICAgICAgICAgY29sb3I6ICRibGFjaztcclxuICAgICAgICAgICAgaGVpZ2h0OiA0MHB4O1xyXG4gICAgICAgICAgICB3aWR0aDogMTAlO1xyXG4gICAgICAgICAgICBmbGV4LWdyb3c6IDM7XHJcbiAgICAgICAgICAgIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XHJcbiAgICAgICAgICAgIHBhZGRpbmc6IDAgMTBweDtcclxuICAgICAgICAgICAgdGV4dC1hbGlnbjogbGVmdDtcclxuXHJcbiAgICAgICAgICAgICY6bnRoLWNoaWxkKDEpe1xyXG4gICAgICAgICAgICAgICAgZm9udC13ZWlnaHQ6IGJvbGRlcjtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgIH1cclxuXHJcbiAgICAgICAgJi5oZWFkZXJ7XHJcblxyXG4gICAgICAgICAgICBkaXZ7XHJcbiAgICAgICAgICAgICAgICBmb250LXdlaWdodDogYm9sZGVyO1xyXG4gICAgICAgICAgICB9XHJcbiAgICAgICAgfVxyXG4gICAgfVxyXG59IFxyXG5cclxuLmhpZGRlbntcclxuICAgIGRpc3BsYXk6IG5vbmUgIWltcG9ydGFudDtcclxufVxyXG5cclxuYnV0dG9ue1xyXG4gICAgbWFyZ2luOiA0NXB4IDVweCA1cHggMHB4O1xyXG59XHJcblxyXG5pe1xyXG4gICAgcGFkZGluZzogNXB4O1xyXG59XHJcblxyXG4jcmVwb3J0TW9kYWx7XHJcbiAgICBtaW4td2lkdGg6IDYwJSAhaW1wb3J0YW50O1xyXG4gICAgbWluLWhlaWdodDogODAlO1xyXG4gICAgbWF4LWhlaWdodDogbWF4LWNvbnRlbnQ7XHJcbiAgICAubW9kYWwtY29udGVudHtcclxuICAgICAgICBtYXgtaGVpZ2h0OiBtYXgtY29udGVudDtcclxuICAgIH1cclxuICAgIGg0e1xyXG4gICAgICAgIG1hcmdpbjogMTBweCAyMHB4O1xyXG4gICAgICAgIGZvbnQtd2VpZ2h0OiA1MDA7XHJcbiAgICB9XHJcbiAgICAuY2hhcnR7XHJcbiAgICAgICAgbWFyZ2luLWxlZnQ6IGF1dG87XHJcbiAgICAgICAgbWFyZ2luLXJpZ2h0OiBhdXRvO1xyXG4gICAgfVxyXG59XHJcblxyXG4ubW9kYWwtd3JhcHBlciAubW9kYWwgLm1vZGFsLWNvbnRlbnR7XHJcbiAgICBvdmVyZmxvdy14OiBoaWRkZW47XHJcbiAgICBvdmVyZmxvdy15OiBhdXRvO1xyXG59XHJcblxyXG4jbW9kYWxUYWJsZSB7XHJcbiAgICBtYXJnaW46IDVweDtcclxuICAgIG1hcmdpbi1ib3R0b206IDBweDtcclxufVxyXG5cclxuQG1lZGlhIHByaW50e1xyXG4gICAgYm9keSAqIHtcclxuICAgICAgICB2aXNpYmlsaXR5OiBoaWRkZW47XHJcbiAgICAgICAgLXdlYmtpdC1wcmludC1jb2xvci1hZGp1c3Q6IGV4YWN0ICFpbXBvcnRhbnQ7XHJcbiAgICB9XHJcbiAgICAuaGlkZGVuLXByaW50IHtcclxuICAgICAgICBkaXNwbGF5OiBub25lICFpbXBvcnRhbnQ7XHJcbiAgICB9XHJcbiAgICAubW9kYWwsIC5tb2RhbC13cmFwcGVye1xyXG4gICAgICAgIC8qKlJlbW92ZSBzY3JvbGxiYXIgZm9yIHByaW50aW5nLioqL1xyXG4gICAgICAgIG92ZXJmbG93OiB2aXNpYmxlICFpbXBvcnRhbnQ7XHJcbiAgICAgICAgLyoqTmVlZHMgdG8gYmUgcmVsYXRpdmUgZm9yIHByaW50aW5nIGluIElFMTEqKi9cclxuICAgICAgICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbiAgICAgICAgbGVmdDogMDtcclxuICAgICAgICB0b3A6IDA7XHJcbiAgICAgICAgbWFyZ2luOiAwO1xyXG4gICAgICAgIHBhZGRpbmctcmlnaHQ6MjBweDtcclxuICAgICAgICBtaW4taGVpZ2h0OjU1MHB4O1xyXG4gICAgICAgIHZpc2liaWxpdHk6IHZpc2libGU7XHJcbiAgICB9XHJcbiAgICAubW9kYWwtZGlhbG9nLCAubW9kYWwtY29udGVudCB7XHJcbiAgICAgICAgd2lkdGg6IDEwMCU7XHJcbiAgICAgICAgcGFkZGluZzogMDtcclxuICAgICAgICBtYXJnaW46MjBweDtcclxuICAgICAgICB2aXNpYmlsaXR5OiB2aXNpYmxlICFpbXBvcnRhbnQ7XHJcbiAgICAgICAgLyoqUmVtb3ZlIHNjcm9sbGJhciBmb3IgcHJpbnRpbmcuKiovXHJcbiAgICAgICAgb3ZlcmZsb3c6IHZpc2libGUgIWltcG9ydGFudDtcclxuICAgIH1cclxuICAgIC5tb2RhbC1mb290ZXIge1xyXG4gICAgICAgIGJvcmRlci10b3A6MDtcclxuICAgIH1cclxuICAgIC5sZWFmbGV0LWNvbnRyb2wtY29udGFpbmVye1xyXG4gICAgICAgIGRpc3BsYXk6IG5vbmUhaW1wb3J0YW50O1xyXG4gICAgfVxyXG5cclxuICAgIC5jaGFydCB7XHJcbiAgICAgICAgb3ZlcmZsb3c6IHVuc2V0O1xyXG4gICAgICAgIHdpZHRoOiAxMDAlICFpbXBvcnRhbnQ7XHJcbiAgICB9XHJcblxyXG4gICAgI21vZGFsVGFibGV7XHJcbiAgICAgICAgcGFnZS1icmVhay1pbnNpZGU6IGF1dG87XHJcbiAgICAgICAgd2lkdGg6IDEyMCU7XHJcbiAgICAgICAgYm9yZGVyOiBub25lO1xyXG4gICAgICAgIHRyLCB0ZCwgdGh7XHJcbiAgICAgICAgICAgIHBhZ2UtYnJlYWstaW5zaWRlOiBhdm9pZCAhaW1wb3J0YW50O1xyXG4gICAgICAgICAgICBwYWdlLWJyZWFrLWFmdGVyOiBhdXRvO1xyXG4gICAgICAgIH1cclxuICAgICAgICB0aHtcclxuICAgICAgICAgICAgZm9udC13ZWlnaHQ6IGJvbGQ7XHJcbiAgICAgICAgfVxyXG4gICAgfVxyXG5cclxuICAgIC5pZGVudGlmaWVyIHtcclxuICAgICAgICBwYWRkaW5nLWJvdHRvbTogMmVtO1xyXG4gICAgfVxyXG59XHJcblxyXG5AbWVkaWEgcHJpbnQgYW5kICgtbXMtaGlnaC1jb250cmFzdDogbm9uZSksICgtbXMtaGlnaC1jb250cmFzdDogYWN0aXZlKSB7XHJcbiAgICAvKiBJRTEwKyBDU1Mgc3R5bGVzIGdvIGhlcmUgKi9cclxuICAgIC5tb2RhbCB7XHJcbiAgICAgICAgLyoqTmVlZHMgdG8gYmUgcmVsYXRpdmUgZm9yIHByaW50aW5nIGluIElFMTEqKi9cclxuICAgICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgICB9XHJcbn0iXX0= */"
+
+module.exports = "@import url(\"https://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Poppins:300,400,600,700\");\n#noData {\n  color: #F23D47;\n  font-size: 14px;\n  display: block;\n  padding-left: 25px; }\n#noGraphData {\n  text-align: center;\n  color: #F23D47; }\n#dataView {\n  display: block;\n  box-sizing: border-box;\n  position: relative;\n  width: 100%;\n  max-width: 100%;\n  margin: 0; }\n#dataView.data-blur *:not(#dataLoader) {\n    -webkit-filter: blur(3px);\n            filter: blur(3px); }\n#dataView .site-meta {\n    display: block;\n    box-sizing: border-box;\n    padding: 15px 25px; }\n#dataView .site-meta h1 {\n      font-size: 26px;\n      font-weight: 600; }\n#dataView .site-meta h3 {\n      font-size: 18px;\n      font-weight: 500; }\n.chart-wrapper {\n  display: flex;\n  justify-content: space-between;\n  box-sizing: border-box;\n  padding: 20px 25px 10px 25px; }\n:host ::ng-deep .new-charts {\n  display: block;\n  margin: 0 auto;\n  width: 50%;\n  height: 320px; }\n#dataTable {\n  display: flex;\n  flex-direction: column;\n  border: 1px solid rgba(16, 16, 16, 0.2);\n  box-sizing: border-box;\n  padding: 15px;\n  border-radius: 10px;\n  margin-bottom: 55px; }\n#dataTable tr {\n    display: flex;\n    width: 100%; }\n#dataTable tr:nth-child(even) {\n      background-color: rgba(10, 10, 50, 0.08); }\n#dataTable tr td, #dataTable tr th {\n      display: flex;\n      flex-direction: column;\n      justify-content: center;\n      text-align: center;\n      font-size: 12px;\n      line-height: 13px;\n      color: #101010;\n      height: 40px;\n      width: 10%;\n      flex-grow: 3;\n      box-sizing: border-box;\n      padding: 0 10px;\n      text-align: left; }\n#dataTable tr td:nth-child(1), #dataTable tr th:nth-child(1) {\n        font-weight: bolder; }\n#dataTable tr.header div {\n      font-weight: bolder; }\n.charType {\n  color: black;\n  display: inline-block;\n  padding: 15px 25px;\n  font-size: 14px; }\nselect {\n  border: 0;\n  background-color: #fff;\n  border-bottom: 2px solid #e0e3e6;\n  line-height: inherit;\n  padding: 0 10px;\n  height: 24px;\n  display: inline-block; }\n.hidden {\n  display: none !important; }\nbutton {\n  margin: 45px 5px 5px 0px; }\ni {\n  padding: 5px; }\n:host ::ng-deep #reportModal {\n  min-width: 60% !important;\n  min-height: 80%;\n  max-height: -webkit-max-content;\n  max-height: -moz-max-content;\n  max-height: max-content; }\n:host ::ng-deep #reportModal .modal-content {\n    max-height: -webkit-max-content;\n    max-height: -moz-max-content;\n    max-height: max-content; }\n:host ::ng-deep #reportModal h4 {\n    margin: 10px 20px;\n    font-weight: 500; }\n:host ::ng-deep #reportModal .new-charts {\n    margin-left: auto;\n    margin-right: auto; }\n.modal-wrapper .modal .modal-content {\n  overflow-x: hidden;\n  overflow-y: auto; }\n#modalTable {\n  margin: 5px;\n  margin-bottom: 0px; }\n@media print {\n  :host ::ng-deep body * {\n    visibility: hidden;\n    -webkit-print-color-adjust: exact !important; }\n  :host ::ng-deep .hidden-print {\n    display: none !important; }\n  :host ::ng-deep .modal, :host ::ng-deep .modal-wrapper {\n    /**Remove scrollbar for printing.**/\n    overflow: visible !important;\n    /**Needs to be relative for printing in IE11**/\n    position: absolute;\n    left: 0;\n    top: 0;\n    margin: 0;\n    padding-right: 20px;\n    min-height: 550px;\n    visibility: visible; }\n  :host ::ng-deep .modal-dialog, :host ::ng-deep .modal-content {\n    width: 100%;\n    padding: 0;\n    margin: 20px;\n    visibility: visible !important;\n    /**Remove scrollbar for printing.**/\n    overflow: visible !important; }\n  :host ::ng-deep .modal-footer {\n    border-top: 0; }\n  :host ::ng-deep .leaflet-control-container {\n    display: none !important; }\n  :host ::ng-deep .new-charts {\n    overflow: unset;\n    width: 100% !important; }\n  :host ::ng-deep #modalTable {\n    page-break-inside: auto;\n    width: 120%;\n    border: none; }\n    :host ::ng-deep #modalTable tr, :host ::ng-deep #modalTable td, :host ::ng-deep #modalTable th {\n      page-break-inside: avoid !important;\n      page-break-after: auto; }\n    :host ::ng-deep #modalTable th {\n      font-weight: bold; }\n  :host ::ng-deep .identifier {\n    padding-bottom: 2em; } }\n@media print and (-ms-high-contrast: none), (-ms-high-contrast: active) {\n  /* IE10+ CSS styles go here */\n  .modal {\n    /**Needs to be relative for printing in IE11**/\n    position: relative; } }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbWFpbnZpZXcvZGF0YXZpZXcvQzpcXFVzZXJzXFxramFjb2JzZW5cXERvY3VtZW50c1xcd2ltX3Byb2plY3RzXFxMSVFXSURTL3NyY1xcYXBwXFx2YXJpYWJsZXMuc2NzcyIsInNyYy9hcHAvbWFpbnZpZXcvZGF0YXZpZXcvQzpcXFVzZXJzXFxramFjb2JzZW5cXERvY3VtZW50c1xcd2ltX3Byb2plY3RzXFxMSVFXSURTL3NyY1xcYXBwXFxtYWludmlld1xcZGF0YXZpZXdcXGRhdGF2aWV3LmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUNBLG9HQUFZO0FDQ1o7RUFDSSxjREtTO0VDSlQsZUFBZTtFQUNmLGNBQWM7RUFDZCxrQkFBa0IsRUFBQTtBQUd0QjtFQUNJLGtCQUFrQjtFQUNsQixjREhTLEVBQUE7QUNNYjtFQUNJLGNBQWM7RUFDZCxzQkFBc0I7RUFDdEIsa0JBQWtCO0VBQ2xCLFdBQVc7RUFDWCxlQUFlO0VBQ2YsU0FBUyxFQUFBO0FBTmI7SUFZWSx5QkFBaUI7WUFBakIsaUJBQWlCLEVBQUE7QUFaN0I7SUFtQlEsY0FBYztJQUNkLHNCQUFzQjtJQUN0QixrQkFBa0IsRUFBQTtBQXJCMUI7TUF3QlksZUFBZTtNQUNmLGdCQUFnQixFQUFBO0FBekI1QjtNQTZCWSxlQUFlO01BQ2YsZ0JBQWdCLEVBQUE7QUFLNUI7RUFDSSxhQUFhO0VBQ2IsOEJBQThCO0VBQzlCLHNCQUFzQjtFQUN0Qiw0QkFBNEIsRUFBQTtBQUdoQztFQUNJLGNBQWM7RUFDZCxjQUFjO0VBQ2QsVUFBVTtFQUNWLGFBQWEsRUFBQTtBQUdqQjtFQUNJLGFBQWE7RUFDYixzQkFBc0I7RUFDdEIsdUNBQXVDO0VBQ3ZDLHNCQUFzQjtFQUN0QixhQUFjO0VBQ2QsbUJBQW1CO0VBQ25CLG1CQUFtQixFQUFBO0FBUHZCO0lBVVEsYUFBYTtJQUNiLFdBQVcsRUFBQTtBQVhuQjtNQWNZLHdDQUFxQyxFQUFBO0FBZGpEO01Ba0JZLGFBQWE7TUFDYixzQkFBc0I7TUFDdEIsdUJBQXVCO01BQ3ZCLGtCQUFrQjtNQUNsQixlQUFlO01BQ2YsaUJBQWlCO01BQ2pCLGNEbEZHO01DbUZILFlBQVk7TUFDWixVQUFVO01BQ1YsWUFBWTtNQUNaLHNCQUFzQjtNQUN0QixlQUFlO01BQ2YsZ0JBQWdCLEVBQUE7QUE5QjVCO1FBaUNnQixtQkFBbUIsRUFBQTtBQWpDbkM7TUF3Q2dCLG1CQUFtQixFQUFBO0FBTW5DO0VBQ0ksWUFBWTtFQUNaLHFCQUFxQjtFQUNyQixrQkFBa0I7RUFDbEIsZUFBZSxFQUFBO0FBR25CO0VBQ0ksU0FBUztFQUNULHNCQUFzQjtFQUN0QixnQ0FBZ0M7RUFDaEMsb0JBQW9CO0VBQ3BCLGVBQWU7RUFDZixZQUFZO0VBQ1oscUJBQXFCLEVBQUE7QUFHekI7RUFDSSx3QkFBd0IsRUFBQTtBQUc1QjtFQUNJLHdCQUF3QixFQUFBO0FBRzVCO0VBQ0ksWUFBWSxFQUFBO0FBR2hCO0VBQ0kseUJBQXlCO0VBQ3pCLGVBQWU7RUFDZiwrQkFBdUI7RUFBdkIsNEJBQXVCO0VBQXZCLHVCQUF1QixFQUFBO0FBSDNCO0lBS1EsK0JBQXVCO0lBQXZCLDRCQUF1QjtJQUF2Qix1QkFBdUIsRUFBQTtBQUwvQjtJQVFRLGlCQUFpQjtJQUNqQixnQkFBZ0IsRUFBQTtBQVR4QjtJQVlRLGlCQUFpQjtJQUNqQixrQkFBa0IsRUFBQTtBQUkxQjtFQUNJLGtCQUFrQjtFQUNsQixnQkFBZ0IsRUFBQTtBQUdwQjtFQUNJLFdBQVc7RUFDWCxrQkFBa0IsRUFBQTtBQUlsQjtFQURKO0lBR1ksa0JBQWtCO0lBQ2xCLDRDQUE0QyxFQUFBO0VBSnhEO0lBT1ksd0JBQXdCLEVBQUE7RUFQcEM7SUFVWSxtQ0FBQTtJQUNBLDRCQUE0QjtJQUM1Qiw4Q0FBQTtJQUNBLGtCQUFrQjtJQUNsQixPQUFPO0lBQ1AsTUFBTTtJQUNOLFNBQVM7SUFDVCxtQkFBa0I7SUFDbEIsaUJBQWdCO0lBQ2hCLG1CQUFtQixFQUFBO0VBbkIvQjtJQXNCWSxXQUFXO0lBQ1gsVUFBVTtJQUNWLFlBQVc7SUFDWCw4QkFBOEI7SUFDOUIsbUNBQUE7SUFDQSw0QkFBNEIsRUFBQTtFQTNCeEM7SUE4QlksYUFBWSxFQUFBO0VBOUJ4QjtJQWlDWSx3QkFBdUIsRUFBQTtFQWpDbkM7SUFxQ1ksZUFBZTtJQUNmLHNCQUFzQixFQUFBO0VBdENsQztJQTBDWSx1QkFBdUI7SUFDdkIsV0FBVztJQUNYLFlBQVksRUFBQTtJQTVDeEI7TUE4Q2dCLG1DQUFtQztNQUNuQyxzQkFBc0IsRUFBQTtJQS9DdEM7TUFrRGdCLGlCQUFpQixFQUFBO0VBbERqQztJQXVEWSxtQkFBbUIsRUFBQSxFQUN0QjtBQUlUO0VBQ0ksNkJBQUE7RUFDQTtJQUNJLDhDQUFBO0lBQ0Esa0JBQWtCLEVBQUEsRUFDckIiLCJmaWxlIjoic3JjL2FwcC9tYWludmlldy9kYXRhdmlldy9kYXRhdmlldy5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi8vIEZvbnRzXHJcbkBpbXBvcnQgdXJsKCdodHRwczovL2ZvbnRzLmdvb2dsZWFwaXMuY29tL2Nzcz9mYW1pbHk9T3BlbitTYW5zOjQwMCw2MDAsNzAwfFBvcHBpbnM6MzAwLDQwMCw2MDAsNzAwJyk7XHJcblxyXG5cclxuLy8gVmFyaWFibGVzXHJcbiRibGFjazogIzEwMTAxMDtcclxuJHdoaXRlOiAjZmZmO1xyXG4kYmc6ICNGOUZBRkU7XHJcbiRyZWQ6ICNGMjNENDc7XHJcbiRibHVlOiAjM0UzQkZCO1xyXG4kcHJpbWFyeTogJGJsdWU7XHJcbiRncmV5OiAjRjhGN0Y4O1xyXG4kdGV4dDogZmFkZS1vdXQoJGJsYWNrLCAwLjEpO1xyXG4kc3VidGxlOiBmYWRlLW91dCgkYmxhY2ssIDAuNSk7XHJcblxyXG4kYm9yZGVyQ29sb3I6IGZhZGUtb3V0KCRibGFjaywgMC44NSk7XHJcbiRib3JkZXJSYWRpdXM6IDRweDtcclxuJGJvcmRlclJhZGl1c006IDhweDtcclxuJGJvcmRlclJhZGl1c0w6IDE2cHg7XHJcblxyXG4vLyBGb250c1xyXG4kcG9wcGluczogJ1BvcHBpbnMnLCBzYW5zLXNlcmlmO1xyXG4kc2FuczogJ09wZW4gU2FucycsIHNhbnMtc2VyaWY7XHJcblxyXG5cclxuJHRyYW5zaXRpb246IDAuMTVzO1xyXG4kYm9yZGVyUmFkaXVzOiA0cHg7XHJcblxyXG4vLyBIZWlnaHRzIGFuZCBtZWFzdXJlbWVudHNcclxuJHRvcEJhckhlaWdodDogNTRweDtcclxuXHJcblxyXG4vLyBSZXNwb25zaXZlbmVzc1xyXG4kZnVsbE1vYmlsZTogNDYwcHg7IiwiQGltcG9ydCAnLi4vLi4vdmFyaWFibGVzLnNjc3MnO1xyXG5cclxuI25vRGF0YXtcclxuICAgIGNvbG9yOiAkcmVkO1xyXG4gICAgZm9udC1zaXplOiAxNHB4O1xyXG4gICAgZGlzcGxheTogYmxvY2s7XHJcbiAgICBwYWRkaW5nLWxlZnQ6IDI1cHg7XHJcbn1cclxuXHJcbiNub0dyYXBoRGF0YSB7XHJcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbiAgICBjb2xvcjogJHJlZDtcclxufVxyXG5cclxuI2RhdGFWaWV3e1xyXG4gICAgZGlzcGxheTogYmxvY2s7XHJcbiAgICBib3gtc2l6aW5nOiBib3JkZXItYm94O1xyXG4gICAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbiAgICBtYXgtd2lkdGg6IDEwMCU7XHJcbiAgICBtYXJnaW46IDA7XHJcblxyXG4gICAgJi5kYXRhLWJsdXJ7XHJcblxyXG4gICAgICAgIC8vIEJsdXIgZXZlcnl0aGluZyBleGNlcHQgdGhlIGxvYWRlclxyXG4gICAgICAgICo6bm90KCNkYXRhTG9hZGVyKXtcclxuICAgICAgICAgICAgZmlsdGVyOiBibHVyKDNweCk7XHJcbiAgICAgICAgfVxyXG4gICAgfVxyXG5cclxuICAgIC8vIFNpdGUgbWV0YVxyXG4gICAgLy8gTmFtZSwgaWQsIGV0Y1xyXG4gICAgLnNpdGUtbWV0YXtcclxuICAgICAgICBkaXNwbGF5OiBibG9jaztcclxuICAgICAgICBib3gtc2l6aW5nOiBib3JkZXItYm94O1xyXG4gICAgICAgIHBhZGRpbmc6IDE1cHggMjVweDtcclxuXHJcbiAgICAgICAgaDF7XHJcbiAgICAgICAgICAgIGZvbnQtc2l6ZTogMjZweDtcclxuICAgICAgICAgICAgZm9udC13ZWlnaHQ6IDYwMDtcclxuICAgICAgICB9XHJcblxyXG4gICAgICAgIGgze1xyXG4gICAgICAgICAgICBmb250LXNpemU6IDE4cHg7XHJcbiAgICAgICAgICAgIGZvbnQtd2VpZ2h0OiA1MDA7XHJcbiAgICAgICAgfVxyXG4gICAgfVxyXG59XHJcblxyXG4uY2hhcnQtd3JhcHBlcntcclxuICAgIGRpc3BsYXk6IGZsZXg7XHJcbiAgICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XHJcbiAgICBib3gtc2l6aW5nOiBib3JkZXItYm94O1xyXG4gICAgcGFkZGluZzogMjBweCAyNXB4IDEwcHggMjVweDtcclxufVxyXG5cclxuOmhvc3QgOjpuZy1kZWVwIC5uZXctY2hhcnRze1xyXG4gICAgZGlzcGxheTogYmxvY2s7XHJcbiAgICBtYXJnaW46IDAgYXV0bztcclxuICAgIHdpZHRoOiA1MCU7XHJcbiAgICBoZWlnaHQ6IDMyMHB4O1xyXG59XHJcblxyXG4jZGF0YVRhYmxle1xyXG4gICAgZGlzcGxheTogZmxleDtcclxuICAgIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XHJcbiAgICBib3JkZXI6IDFweCBzb2xpZCBmYWRlLW91dCgkYmxhY2ssIDAuOCk7XHJcbiAgICBib3gtc2l6aW5nOiBib3JkZXItYm94O1xyXG4gICAgcGFkZGluZzogIDE1cHg7XHJcbiAgICBib3JkZXItcmFkaXVzOiAxMHB4O1xyXG4gICAgbWFyZ2luLWJvdHRvbTogNTVweDtcclxuXHJcbiAgICB0cntcclxuICAgICAgICBkaXNwbGF5OiBmbGV4O1xyXG4gICAgICAgIHdpZHRoOiAxMDAlO1xyXG5cclxuICAgICAgICAmOm50aC1jaGlsZChldmVuKXtcclxuICAgICAgICAgICAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSgxMCwxMCw1MCwwLjA4KTtcclxuICAgICAgICB9XHJcblxyXG4gICAgICAgIHRkLHRoe1xyXG4gICAgICAgICAgICBkaXNwbGF5OiBmbGV4O1xyXG4gICAgICAgICAgICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xyXG4gICAgICAgICAgICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcclxuICAgICAgICAgICAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gICAgICAgICAgICBmb250LXNpemU6IDEycHg7XHJcbiAgICAgICAgICAgIGxpbmUtaGVpZ2h0OiAxM3B4O1xyXG4gICAgICAgICAgICBjb2xvcjogJGJsYWNrO1xyXG4gICAgICAgICAgICBoZWlnaHQ6IDQwcHg7XHJcbiAgICAgICAgICAgIHdpZHRoOiAxMCU7XHJcbiAgICAgICAgICAgIGZsZXgtZ3JvdzogMztcclxuICAgICAgICAgICAgYm94LXNpemluZzogYm9yZGVyLWJveDtcclxuICAgICAgICAgICAgcGFkZGluZzogMCAxMHB4O1xyXG4gICAgICAgICAgICB0ZXh0LWFsaWduOiBsZWZ0O1xyXG5cclxuICAgICAgICAgICAgJjpudGgtY2hpbGQoMSl7XHJcbiAgICAgICAgICAgICAgICBmb250LXdlaWdodDogYm9sZGVyO1xyXG4gICAgICAgICAgICB9XHJcbiAgICAgICAgfVxyXG5cclxuICAgICAgICAmLmhlYWRlcntcclxuXHJcbiAgICAgICAgICAgIGRpdntcclxuICAgICAgICAgICAgICAgIGZvbnQtd2VpZ2h0OiBib2xkZXI7XHJcbiAgICAgICAgICAgIH1cclxuICAgICAgICB9XHJcbiAgICB9XHJcbn1cclxuXHJcbi5jaGFyVHlwZSB7XHJcbiAgICBjb2xvcjogYmxhY2s7XHJcbiAgICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XHJcbiAgICBwYWRkaW5nOiAxNXB4IDI1cHg7XHJcbiAgICBmb250LXNpemU6IDE0cHg7XHJcbn1cclxuXHJcbnNlbGVjdCB7XHJcbiAgICBib3JkZXI6IDA7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjZmZmO1xyXG4gICAgYm9yZGVyLWJvdHRvbTogMnB4IHNvbGlkICNlMGUzZTY7XHJcbiAgICBsaW5lLWhlaWdodDogaW5oZXJpdDtcclxuICAgIHBhZGRpbmc6IDAgMTBweDtcclxuICAgIGhlaWdodDogMjRweDtcclxuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcclxufVxyXG5cclxuLmhpZGRlbntcclxuICAgIGRpc3BsYXk6IG5vbmUgIWltcG9ydGFudDtcclxufVxyXG5cclxuYnV0dG9ue1xyXG4gICAgbWFyZ2luOiA0NXB4IDVweCA1cHggMHB4O1xyXG59XHJcblxyXG5pe1xyXG4gICAgcGFkZGluZzogNXB4O1xyXG59XHJcblxyXG46aG9zdCA6Om5nLWRlZXAgI3JlcG9ydE1vZGFse1xyXG4gICAgbWluLXdpZHRoOiA2MCUgIWltcG9ydGFudDtcclxuICAgIG1pbi1oZWlnaHQ6IDgwJTtcclxuICAgIG1heC1oZWlnaHQ6IG1heC1jb250ZW50O1xyXG4gICAgLm1vZGFsLWNvbnRlbnR7XHJcbiAgICAgICAgbWF4LWhlaWdodDogbWF4LWNvbnRlbnQ7XHJcbiAgICB9XHJcbiAgICBoNHtcclxuICAgICAgICBtYXJnaW46IDEwcHggMjBweDtcclxuICAgICAgICBmb250LXdlaWdodDogNTAwO1xyXG4gICAgfVxyXG4gICAgLm5ldy1jaGFydHN7XHJcbiAgICAgICAgbWFyZ2luLWxlZnQ6IGF1dG87XHJcbiAgICAgICAgbWFyZ2luLXJpZ2h0OiBhdXRvO1xyXG4gICAgfVxyXG59XHJcblxyXG4ubW9kYWwtd3JhcHBlciAubW9kYWwgLm1vZGFsLWNvbnRlbnR7XHJcbiAgICBvdmVyZmxvdy14OiBoaWRkZW47XHJcbiAgICBvdmVyZmxvdy15OiBhdXRvO1xyXG59XHJcblxyXG4jbW9kYWxUYWJsZSB7XHJcbiAgICBtYXJnaW46IDVweDtcclxuICAgIG1hcmdpbi1ib3R0b206IDBweDtcclxufVxyXG5cclxuOmhvc3QgOjpuZy1kZWVwIHtcclxuICAgIEBtZWRpYSBwcmludHtcclxuICAgICAgICBib2R5ICoge1xyXG4gICAgICAgICAgICB2aXNpYmlsaXR5OiBoaWRkZW47XHJcbiAgICAgICAgICAgIC13ZWJraXQtcHJpbnQtY29sb3ItYWRqdXN0OiBleGFjdCAhaW1wb3J0YW50O1xyXG4gICAgICAgIH1cclxuICAgICAgICAuaGlkZGVuLXByaW50IHtcclxuICAgICAgICAgICAgZGlzcGxheTogbm9uZSAhaW1wb3J0YW50O1xyXG4gICAgICAgIH1cclxuICAgICAgICAubW9kYWwsIC5tb2RhbC13cmFwcGVye1xyXG4gICAgICAgICAgICAvKipSZW1vdmUgc2Nyb2xsYmFyIGZvciBwcmludGluZy4qKi9cclxuICAgICAgICAgICAgb3ZlcmZsb3c6IHZpc2libGUgIWltcG9ydGFudDtcclxuICAgICAgICAgICAgLyoqTmVlZHMgdG8gYmUgcmVsYXRpdmUgZm9yIHByaW50aW5nIGluIElFMTEqKi9cclxuICAgICAgICAgICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgICAgICAgICBsZWZ0OiAwO1xyXG4gICAgICAgICAgICB0b3A6IDA7XHJcbiAgICAgICAgICAgIG1hcmdpbjogMDtcclxuICAgICAgICAgICAgcGFkZGluZy1yaWdodDoyMHB4O1xyXG4gICAgICAgICAgICBtaW4taGVpZ2h0OjU1MHB4O1xyXG4gICAgICAgICAgICB2aXNpYmlsaXR5OiB2aXNpYmxlO1xyXG4gICAgICAgIH1cclxuICAgICAgICAubW9kYWwtZGlhbG9nLCAubW9kYWwtY29udGVudCB7XHJcbiAgICAgICAgICAgIHdpZHRoOiAxMDAlO1xyXG4gICAgICAgICAgICBwYWRkaW5nOiAwO1xyXG4gICAgICAgICAgICBtYXJnaW46MjBweDtcclxuICAgICAgICAgICAgdmlzaWJpbGl0eTogdmlzaWJsZSAhaW1wb3J0YW50O1xyXG4gICAgICAgICAgICAvKipSZW1vdmUgc2Nyb2xsYmFyIGZvciBwcmludGluZy4qKi9cclxuICAgICAgICAgICAgb3ZlcmZsb3c6IHZpc2libGUgIWltcG9ydGFudDtcclxuICAgICAgICB9XHJcbiAgICAgICAgLm1vZGFsLWZvb3RlciB7XHJcbiAgICAgICAgICAgIGJvcmRlci10b3A6MDtcclxuICAgICAgICB9XHJcbiAgICAgICAgLmxlYWZsZXQtY29udHJvbC1jb250YWluZXJ7XHJcbiAgICAgICAgICAgIGRpc3BsYXk6IG5vbmUhaW1wb3J0YW50O1xyXG4gICAgICAgIH1cclxuICAgIFxyXG4gICAgICAgIC5uZXctY2hhcnRzIHtcclxuICAgICAgICAgICAgb3ZlcmZsb3c6IHVuc2V0O1xyXG4gICAgICAgICAgICB3aWR0aDogMTAwJSAhaW1wb3J0YW50O1xyXG4gICAgICAgIH1cclxuICAgIFxyXG4gICAgICAgICNtb2RhbFRhYmxle1xyXG4gICAgICAgICAgICBwYWdlLWJyZWFrLWluc2lkZTogYXV0bztcclxuICAgICAgICAgICAgd2lkdGg6IDEyMCU7XHJcbiAgICAgICAgICAgIGJvcmRlcjogbm9uZTtcclxuICAgICAgICAgICAgdHIsIHRkLCB0aHtcclxuICAgICAgICAgICAgICAgIHBhZ2UtYnJlYWstaW5zaWRlOiBhdm9pZCAhaW1wb3J0YW50O1xyXG4gICAgICAgICAgICAgICAgcGFnZS1icmVhay1hZnRlcjogYXV0bztcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICB0aHtcclxuICAgICAgICAgICAgICAgIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gICAgICAgICAgICB9XHJcbiAgICAgICAgfVxyXG4gICAgXHJcbiAgICAgICAgLmlkZW50aWZpZXIge1xyXG4gICAgICAgICAgICBwYWRkaW5nLWJvdHRvbTogMmVtO1xyXG4gICAgICAgIH1cclxuICAgIH1cclxufVxyXG5cclxuQG1lZGlhIHByaW50IGFuZCAoLW1zLWhpZ2gtY29udHJhc3Q6IG5vbmUpLCAoLW1zLWhpZ2gtY29udHJhc3Q6IGFjdGl2ZSkge1xyXG4gICAgLyogSUUxMCsgQ1NTIHN0eWxlcyBnbyBoZXJlICovXHJcbiAgICAubW9kYWwge1xyXG4gICAgICAgIC8qKk5lZWRzIHRvIGJlIHJlbGF0aXZlIGZvciBwcmludGluZyBpbiBJRTExKiovXHJcbiAgICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gICAgfVxyXG59Il19 */"
 
 /***/ }),
 
@@ -279,13 +280,13 @@ var DataviewComponent = /** @class */ (function () {
         this._loaderService = _loaderService;
         this._configService = _configService;
         this.queryChar = 'Nitrate';
+        this.charTypes = [];
         this.showSiteData = false;
         this.selectedSites = [];
         this.noData = false;
         this.noGraphData = false;
         this.dataLoading = false;
-        this.unitCodes = [];
-        this.uniqueData = [];
+        this.fractionTypes = ['Dissolved', 'Total', ''];
         this.showModal = false;
         this.charsWithSites = [];
         this.resultParams = {
@@ -322,8 +323,13 @@ var DataviewComponent = /** @class */ (function () {
             _this.getResultData();
         });
         this._mapService.SelectedChar.subscribe(function (Response) {
-            _this.queryChar = Response;
-            _this.noData = false;
+            if (Response.length === 0) {
+                _this.noData = true;
+            }
+            else {
+                _this.queryChar = Response;
+                _this.noData = false;
+            }
         });
         this._mapService.SiteChange.subscribe(function (geojson) {
             _this.getUrlSites();
@@ -413,12 +419,6 @@ var DataviewComponent = /** @class */ (function () {
                     }]
             }
         };
-        this.siteChart = new highcharts__WEBPACK_IMPORTED_MODULE_1__["Chart"]('siteChart', this._siteChartOptions);
-        this.siteChart2 = new highcharts__WEBPACK_IMPORTED_MODULE_1__["Chart"]('siteChart2', this._siteChartOptions);
-        this.multSiteChart = new highcharts__WEBPACK_IMPORTED_MODULE_1__["Chart"]('multSiteChart', this._siteChartOptions);
-        this.siteChart.setTitle({ text: 'Result Measure Value by Depth' });
-        this.siteChart2.setTitle({ text: 'Result Measure Value by Measurement Type' });
-        this.multSiteChart.setTitle({ text: 'Result Measure Value by Site' });
         this._typeChartOptions = {
             credits: {
                 enabled: false
@@ -488,126 +488,134 @@ var DataviewComponent = /** @class */ (function () {
         this.dataLoading = true;
         this.resultParams['siteid'] = this.selectedSites;
         this.resultParams['characteristicName'] = this.queryChar;
-        var resultUrl = this.configSettings.resultUrl;
-        var sites = this.selectedSites;
-        this.subscription = this._http.get(resultUrl, { search: this.resultParams })
+        this.subscription = this._http.get(this.configSettings.resultUrl, { search: this.resultParams })
             .subscribe(function (csv) {
             _this.noGraphData = false;
-            _this.resultCsv = csv;
-            _this.resultCsv = _this.resultCsv._body;
+            _this.resultCsv = csv['_body'];
             _this.resultJson = _this.csvJSON(_this.resultCsv);
-            _this.resultJson = JSON.parse(_this.resultJson);
             _this.showSiteData = true;
             _this.noData = false;
-            _this.uniqueData = [];
-            if (_this.resultJson.length > 0 && sites.length === 1) {
-                _this.createSiteChart('ResultMeasure/MeasureUnitCode', _this.siteChart2);
-                _this.createSiteChart('ActivityBottomDepthHeightMeasure/MeasureValue', _this.siteChart);
-            }
-            else if (_this.resultJson.length > 0 && sites.length > 1) {
-                _this.createMultSiteChart(_this.multSiteChart);
+            _this.charTypes = [];
+            if (_this.resultJson.length > 0 && _this.selectedSites.length > 0) {
+                _this.getCharTypes();
+                _this.selectedChar = _this.charTypes[0];
+                _this.createCharts(_this.charTypes[0], false);
+                _this.addProps();
             }
             else {
                 _this.noData = true;
             }
             _this._loaderService.hideDataLoad();
             _this.dataLoading = false;
-            // if duplicates, jitter the points, need to find a way of removing duplicates...
-            if (_this.uniqueData.length < _this.resultJson.length) {
-                _this.siteChart.options.plotOptions.scatter.jitter = { x: 0, y: 0.01 };
-                _this.siteChart2.options.plotOptions.scatter.jitter = { x: 0, y: 0.01 };
-            }
-            if (sites.length === 1 && !_this.siteChart2.series.data && _this.siteChart.series[0].data.length === 0) {
-                _this.noGraphData = true;
-            }
         }, function (error) {
             _this.handleError(error);
         });
     };
-    DataviewComponent.prototype.handleError = function (error) {
-        this._loaderService.hideDataLoad();
-        console.log(error);
-    };
-    DataviewComponent.prototype.csvJSON = function (csv) {
-        var lines = csv.split('\n');
-        var result = [];
-        var headers = lines[0].split(',');
-        for (var i = 1; i < lines.length; i++) {
-            var obj = {};
-            var currentline = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            for (var j = 0; j < headers.length; j++) {
-                obj[headers[j]] = currentline[j].replace(/['"]+/g, '');
-            }
-            result.push(obj);
-        }
-        return JSON.stringify(result);
-    };
-    DataviewComponent.prototype.createSiteChart = function (char, chart) {
-        var seriesData = [];
-        while (chart.series && chart.series.length > 0) {
-            chart.series[0].remove(true);
-        }
-        var array = [];
-        for (var i = 0; i < this.resultJson.length; i++) { // creating separate series based on properties
-            var value = this.resultJson[i][char];
+    DataviewComponent.prototype.getCharTypes = function () {
+        for (var i = 0; i < this.resultJson.length; i++) {
+            var value = this.resultJson[i]['ResultMeasure/MeasureUnitCode'];
             if (this.charsWithSites.indexOf(this.resultJson[i].CharacteristicName) === -1) {
                 this.charsWithSites.push(this.resultJson[i].CharacteristicName);
             }
-            if (value !== '' && array.indexOf(value) === -1) {
-                array.push(value);
+            if (value === '' && this.resultJson[i].ResultMeasureValue !== '' && this.charTypes.indexOf('N/A') === -1) {
+                this.charTypes.push('N/A');
             }
-            else if (value === '' && array.indexOf('N/A') === -1 && char !== 'ResultMeasure/MeasureUnitCode') {
-                array.push('N/A');
+            else if (value !== '' && this.charTypes.indexOf(value) === -1) {
+                this.charTypes.push(value);
             }
-        }
-        if (char === 'ActivityBottomDepthHeightMeasure/MeasureValue') {
-            this.unitCodes = array;
-        }
-        for (var item = 0; item < array.length; item++) {
-            var data = new Array();
-            for (var _i = 0, _a = this.resultJson; _i < _a.length; _i++) {
-                var result = _a[_i];
-                var val = void 0;
-                var currentValue = result[char];
-                if (currentValue === array[item] || (currentValue === '' && array[item] === 'N/A')) {
-                    if (/\d/.test(result.ResultMeasureValue)) {
-                        val = Number(result.ResultMeasureValue);
-                        var date = result.ActivityStartDate.split('-');
-                        date = Date.UTC(date[0], Number(date[1]) - 1, date[2]);
-                        if (result['ResultMeasure/MeasureUnitCode'] === 'ug/l') {
-                            data.push({ x: date, y: val / 1000, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
-                        }
-                        else if (result['ResultMeasure/MeasureUnitCode'] === 'umol') {
-                            data.push({ x: date, y: val / 4.31, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
-                        }
-                        else {
-                            data.push({ x: date, y: val, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
-                        }
-                        if (JSON.stringify(this.uniqueData).indexOf(JSON.stringify([date, val])) === -1) {
-                            this.uniqueData.push([date, val]);
-                        }
-                        seriesData.push([date / 10000000000, val]);
-                    } // skip if no value
-                }
-            }
-            if (chart === this.siteChart) {
-                chart.addSeries({ name: 'Depth: ' + array[item], data: data });
-            }
-            else {
-                chart.addSeries({ name: array[item], data: data });
-            }
-        }
-        // create regression
-        if (seriesData.length > 2) {
-            this.createRegression(chart, seriesData);
         }
     };
-    DataviewComponent.prototype.createRegression = function (chart, data) {
-        var ymxb = regression__WEBPACK_IMPORTED_MODULE_2__["linear"](data);
+    DataviewComponent.prototype.createCharts = function (char, modal) {
+        var chartDiv;
+        if (!modal) {
+            chartDiv = document.getElementById('charts');
+        }
+        else {
+            chartDiv = document.getElementById('modalCharts');
+        }
+        while (chartDiv.firstChild) {
+            chartDiv.removeChild(chartDiv.firstChild);
+        }
+        var chartNo = 1;
+        var chartData = [];
+        var uniqueData = [];
+        for (var _i = 0, _a = this.fractionTypes; _i < _a.length; _i++) {
+            var fraction = _a[_i];
+            var series = [];
+            for (var _b = 0, _c = this.selectedSites; _b < _c.length; _b++) {
+                var site = _c[_b];
+                var data = [];
+                for (var _d = 0, _e = this.resultJson; _d < _e.length; _d++) {
+                    var result = _e[_d];
+                    var resultVal = result['ResultMeasure/MeasureUnitCode'];
+                    var val = void 0;
+                    if (result.MonitoringLocationIdentifier === site && (resultVal === char || (resultVal === '' && char === 'N/A'))
+                        && result.ResultSampleFractionText === fraction) {
+                        if (/\d/.test(result.ResultMeasureValue)) {
+                            val = Number(result.ResultMeasureValue);
+                            var date = result.ActivityStartDate.split('-');
+                            date = Date.UTC(date[0], Number(date[1]) - 1, date[2]);
+                            data.push({ x: date, y: val, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
+                            if (JSON.stringify(uniqueData).indexOf(JSON.stringify([date, val])) === -1) {
+                                uniqueData.push([date, val]);
+                            }
+                            chartData.push([date / 10000000000, val]);
+                        } // skip if no value
+                    }
+                }
+                if (data.length > 0) {
+                    series.push({ name: site, data: data });
+                }
+            }
+            if (series.length > 0) {
+                var chartId = void 0;
+                if (!modal) {
+                    chartId = 'chart' + chartNo;
+                }
+                else {
+                    chartId = 'modalChart' + chartNo;
+                }
+                var newDiv = document.createElement('div');
+                newDiv.id = chartId;
+                newDiv.classList.add('new-charts');
+                chartDiv.appendChild(newDiv);
+                var newChart = highcharts__WEBPACK_IMPORTED_MODULE_1__["chart"](chartId, this._siteChartOptions);
+                if (fraction === '') {
+                    newChart.setTitle({ text: char }, {}, false);
+                }
+                else {
+                    newChart.setTitle({ text: char + ', ' + fraction }, {}, false);
+                }
+                for (var _f = 0, series_1 = series; _f < series_1.length; _f++) {
+                    var set = series_1[_f];
+                    newChart.addSeries(set);
+                    if (set.data.length > 2) {
+                        this.createRegression(newChart, set);
+                    }
+                }
+                if (uniqueData.length < chartData.length) {
+                    newChart.options.plotOptions.scatter.jitter = { x: 0, y: 0.01 };
+                }
+                chartNo++;
+            }
+        }
+        if (chartNo === 1) {
+            this.noGraphData = true;
+        }
+    };
+    DataviewComponent.prototype.createRegression = function (chart, series) {
+        for (var _i = 0, _a = series.data; _i < _a.length; _i++) {
+            var data = _a[_i];
+            data[0] = data.x / 10000000000;
+            delete data.x;
+            data[1] = data.y;
+            delete data.y;
+        }
+        var ymxb = regression__WEBPACK_IMPORTED_MODULE_2__["linear"](series.data);
         var m = ymxb.equation[0];
         var b = ymxb.equation[1];
         var xs = [];
-        data.forEach(function (d) {
+        series.data.forEach(function (d) {
             xs.push(d[0]);
         });
         var x0 = Math.min.apply(null, xs);
@@ -620,84 +628,17 @@ var DataviewComponent = /** @class */ (function () {
         if (yf < 0) {
             yf = 0;
         }
-        chart.addSeries({ type: 'line', name: 'Regression Line', data: [[x0 * 10000000000, y0], [xf * 10000000000, yf]] });
+        chart.addSeries({ type: 'line', name: 'Regression, ' + series.name, data: [[x0 * 10000000000, y0], [xf * 10000000000, yf]] });
     };
     DataviewComponent.prototype.makeModalChart = function () {
         this.showModal = true;
         var self = this;
         setTimeout(function () {
-            if (self.selectedSites.length === 1) {
-                self.modalChart2 = new highcharts__WEBPACK_IMPORTED_MODULE_1__["Chart"]('modalChart2', self._siteChartOptions);
-                self.modalChart2.setTitle({ text: 'Result Measure Value by Depth' });
-                self.createSiteChart('ActivityBottomDepthHeightMeasure/MeasureValue', self.modalChart2);
-                self.modalChart = new highcharts__WEBPACK_IMPORTED_MODULE_1__["Chart"]('modalChart', self._siteChartOptions);
-                self.modalChart.setTitle({ text: 'Result Measure Value by Measurement Type' });
-                self.createSiteChart('ResultMeasure/MeasureUnitCode', self.modalChart);
-            }
-            else {
-                self.modalChart = new highcharts__WEBPACK_IMPORTED_MODULE_1__["Chart"]('modalChart', self._siteChartOptions);
-                self.modalChart.setTitle({ text: 'Result Measure Value' });
-                self.createMultSiteChart(self.modalChart);
-                document.getElementById('modalChart2').innerHTML = '';
-            }
+            self.createCharts(self.selectedChar, true);
             var table = document.getElementById('dataTable').cloneNode(true);
             var modalTable = document.getElementById('modalTable');
             modalTable.appendChild(table);
         }, 100);
-    };
-    DataviewComponent.prototype.createMultSiteChart = function (chart) {
-        var _this = this;
-        var seriesData = [];
-        while (chart.series && chart.series.length > 0) {
-            chart.series[0].remove(true);
-        }
-        this.selectedSites.forEach(function (site) {
-            var array = new Array();
-            for (var _i = 0, _a = _this.resultJson; _i < _a.length; _i++) {
-                var result = _a[_i];
-                if (result.MonitoringLocationIdentifier === site) {
-                    var value = result['ResultMeasure/MeasureUnitCode'];
-                    if (value !== '' && array.indexOf(value) === -1) {
-                        array.push(value);
-                    }
-                }
-                if (_this.charsWithSites.indexOf(result.CharacteristicName) === -1) {
-                    _this.charsWithSites.push(result.CharacteristicName);
-                }
-            }
-            for (var _b = 0, array_1 = array; _b < array_1.length; _b++) {
-                var unit = array_1[_b];
-                var val = void 0;
-                var data = new Array();
-                for (var _c = 0, _d = _this.resultJson; _c < _d.length; _c++) {
-                    var result = _d[_c];
-                    if (result.MonitoringLocationIdentifier === site && result['ResultMeasure/MeasureUnitCode'] === unit) {
-                        if (/\d/.test(result.ResultMeasureValue)) {
-                            val = Number(result.ResultMeasureValue);
-                            var date = result.ActivityStartDate.split('-');
-                            date = Date.UTC(date[0], Number(date[1]) - 1, date[2]);
-                            if (result['ResultMeasure/MeasureUnitCode'] === 'ug/l') {
-                                data.push({ x: date, y: val / 1000, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
-                            }
-                            else if (result['ResultMeasure/MeasureUnitCode'] === 'umol') {
-                                data.push({ x: date, y: val / 4.31, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
-                            }
-                            else {
-                                data.push({ x: date, y: val, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
-                            }
-                            if (JSON.stringify(_this.uniqueData).indexOf(JSON.stringify([date, val])) === -1) {
-                                _this.uniqueData.push([date, val]);
-                            }
-                            seriesData.push([date / 10000000000, val]);
-                        } // skip if no value
-                    }
-                }
-                chart.addSeries({ name: site + ', ' + unit, data: data });
-            }
-        });
-        if (seriesData.length > 2) {
-            this.createRegression(chart, seriesData);
-        }
     };
     DataviewComponent.prototype.createStatChart = function (chart, name, property) {
         var _this = this;
@@ -715,6 +656,77 @@ var DataviewComponent = /** @class */ (function () {
             }
         });
         chart.addSeries({ name: name, colorByPoint: true, data: propData });
+    };
+    DataviewComponent.prototype.handleError = function (error) {
+        this._loaderService.hideDataLoad();
+        this.dataLoading = false;
+        this.noData = true;
+        console.log(error);
+    };
+    DataviewComponent.prototype.addProps = function () {
+        var _loop_1 = function (result) {
+            var features = this_1._mapService.geoJson.features;
+            var jsonIndex = features.findIndex(function (site) {
+                return site.properties.name === result.MonitoringLocationIdentifier;
+            });
+            result.Latitude = features[jsonIndex].geometry.coordinates[1];
+            result.Longitude = features[jsonIndex].geometry.coordinates[0];
+            result.Datum = 'WGS 84';
+            result.Huc8 = features[jsonIndex].properties.huc8;
+            result.LocName = features[jsonIndex].properties.locName;
+            result.Type = features[jsonIndex].properties.type;
+            result.SearchType = features[jsonIndex].properties.searchType;
+        };
+        var this_1 = this;
+        for (var _i = 0, _a = this.resultJson; _i < _a.length; _i++) {
+            var result = _a[_i];
+            _loop_1(result);
+        }
+        this.resultCsv = this.jsonToCSV(this.resultJson);
+    };
+    DataviewComponent.prototype.csvJSON = function (csv) {
+        var lines = csv.split('\n');
+        var result = [];
+        var headers = lines[0].split(',');
+        for (var i = 1; i < lines.length; i++) {
+            var obj = {};
+            var currentline = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            for (var j = 0; j < headers.length; j++) {
+                obj[headers[j]] = currentline[j].replace(/['"]+/g, '');
+            }
+            result.push(obj);
+        }
+        return result;
+    };
+    DataviewComponent.prototype.jsonToCSV = function (json) {
+        var str = '';
+        var line = '';
+        Object.keys(json[0]).forEach(function (key) {
+            if (line !== '') {
+                line += ',';
+            }
+            line += key;
+        });
+        str += line + '\r\n';
+        var _loop_2 = function (i) {
+            line = '';
+            Object.keys(json[i]).forEach(function (key) {
+                if (line !== '') {
+                    line += ',';
+                }
+                if (typeof json[i][key] === 'string' && json[i][key].indexOf(',') !== -1) {
+                    line += '"' + json[i][key] + '"';
+                }
+                else {
+                    line += json[i][key];
+                }
+            });
+            str += line + '\r\n';
+        };
+        for (var i = 0; i < json.length; i++) {
+            _loop_2(i);
+        }
+        return str;
     };
     DataviewComponent.prototype.downloadFile = function () {
         var filename = 'result.csv';
@@ -741,9 +753,6 @@ var DataviewComponent = /** @class */ (function () {
                 window.open(url);
             }
         }
-    };
-    DataviewComponent.prototype.printReport = function () {
-        window.print();
     };
     DataviewComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -954,7 +963,7 @@ var MapComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<i\r\n  class=\"far\"\r\n  id=\"sidebarToggle\"\r\n  (click)=\"expandSidebar = !expandSidebar\"\r\n  [ngClass]=\"{ 'fa-bars': !expandSidebar, 'fa-times': expandSidebar }\"\r\n  ></i>\r\n\r\n<div id=\"sidebar\" [ngClass]=\"{ 'expanded': expandSidebar }\">\r\n\r\n\r\n  <!--  Sidebar Parameter Filters  -->\r\n  <div id=\"siteCount\"><b>{{geoJSONsiteCount}}</b> sites showing</div>\r\n\r\n\r\n  <!-- Scrolling sidebar content -->\r\n  <div class=\"sidebar-scroll\">\r\n\r\n\r\n    <!--  Sidebar Basemaps  -->\r\n    <div class=\"sidebar-header\" (click)=\"showBasemaps = !showBasemaps\" [ngClass]=\"{ expanded: showBasemaps }\">\r\n      <i class=\"fal fa-map\"></i>\r\n      <b><span>Basemaps</span></b>\r\n    </div>\r\n\r\n    <!-- Basemaps content -->\r\n    <div class=\"sidebar-content\" [ngClass]=\"{ expanded: showBasemaps }\">\r\n      <div id=\"sidebarBasemaps\">\r\n        <div\r\n          class=\"basemap\"\r\n          id=\"basemap1\"\r\n          (click)=\"toggleLayer('OpenStreetMap')\"\r\n          [ngClass]=\"{ active: chosenBaseLayer == 'OpenStreetMap' }\"\r\n        >\r\n          Streets\r\n        </div>\r\n        <div\r\n          class=\"basemap\"\r\n          id=\"basemap2\"\r\n          (click)=\"toggleLayer('Topo')\"\r\n          [ngClass]=\"{ active: chosenBaseLayer == 'Topo' }\"\r\n        >\r\n          Topographic\r\n        </div>\r\n        <div\r\n          class=\"basemap\"\r\n          id=\"basemap3\"\r\n          (click)=\"toggleLayer('CartoDB')\"\r\n          [ngClass]=\"{ active: chosenBaseLayer == 'CartoDB' }\"\r\n        >\r\n          CartoDB\r\n        </div>\r\n        <div\r\n          class=\"basemap\"\r\n          id=\"basemap4\"\r\n          (click)=\"toggleLayer('Terrain')\"\r\n          [ngClass]=\"{ active: chosenBaseLayer == 'Terrain' }\"\r\n        >\r\n          Terrain\r\n        </div>\r\n        <div\r\n          class=\"basemap\"\r\n          id=\"basemap5\"\r\n          (click)=\"toggleLayer('Satellite')\"\r\n          [ngClass]=\"{ active: chosenBaseLayer == 'Satellite' }\"\r\n        >\r\n          Satellite\r\n        </div>\r\n        <div\r\n          class=\"basemap\"\r\n          id=\"basemap5\"\r\n          (click)=\"toggleLayer('Gray')\"\r\n          [ngClass]=\"{ active: chosenBaseLayer == 'Gray' }\"\r\n        >\r\n          Gray\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n\r\n    <div class=\"sidebar-header\" (click)=\"showParameterFilters = !showParameterFilters\" [ngClass]=\"{ expanded: showParameterFilters }\">\r\n      <i class=\"fal fa-filter\"></i>\r\n      <b><span>Parameter Filters</span></b>\r\n    </div>\r\n\r\n    <!-- Filters Parameter Content -->\r\n    <div class=\"sidebar-content\" [ngClass]=\"{ expanded: showParameterFilters }\">\r\n\r\n      <form *ngIf=\"parameterFilterData\" [formGroup]=\"parameterDropDownGroup\" id=\"sidebarParameterFilters\">\r\n\r\n        <!-- characteristic -->\r\n        <label for=\"characteristic\" class=\"multiselect-label\">Characteristic</label>\r\n        <ng-select \r\n          formControlName=\"characteristic\"\r\n          [items]=\"parameterFilterData.characteristics\"\r\n          [multiple]=\"true\"\r\n          bindLabel=\"name\"\r\n          placeholder=\"Select\">\r\n        </ng-select>\r\n\r\n      </form>\r\n\r\n    </div>\r\n\r\n    <!--  Sidebar Site Filters  -->\r\n\r\n    <div class=\"sidebar-header\" (click)=\"showSiteFilters = !showSiteFilters\" [ngClass]=\"{ expanded: showSiteFilters }\">\r\n      <i class=\"fal fa-sliders-v\"></i>\r\n      <b><span>Site Filters</span></b>\r\n    </div>\r\n    <!-- Filters Site Content -->\r\n      \r\n    <div class=\"sidebar-content\" [ngClass]=\"{ expanded: showSiteFilters }\">\r\n      <form *ngIf=\"siteFilterData\" [formGroup]=\"siteDropDownGroup\" id=\"sidebarSiteFilters\">\r\n\r\n        <!-- Huc8 -->\r\n        <label for=\"huc8\" class=\"multiselect-label\">Huc8</label>\r\n        <ng-select \r\n        formControlName=\"huc8\"\r\n          [items]=\"siteFilterData.huc8\"\r\n          [multiple]=\"true\"\r\n          bindLabel=\"name\"\r\n          placeholder=\"Select\">\r\n        </ng-select>\r\n\r\n        <!-- Org ID -->\r\n        <label for=\"orgId\" class=\"multiselect-label\">Organization Id</label>\r\n\r\n        <ng-select \r\n          formControlName=\"orgId\"\r\n          [items]=\"siteFilterData.orgId\"\r\n          [multiple]=\"true\"\r\n          bindLabel=\"name\"\r\n          placeholder=\"Select\">\r\n        </ng-select>\r\n\r\n        <!-- Org Name -->\r\n        <label for=\"orgName\" class=\"multiselect-label\">Organization Name</label>\r\n\r\n        <ng-select \r\n          formControlName=\"orgName\"\r\n          [items]=\"siteFilterData.orgName\"\r\n          [multiple]=\"true\"\r\n          bindLabel=\"name\"\r\n          placeholder=\"Select\">\r\n        </ng-select>\r\n\r\n        <!-- Data Provider -->\r\n        <label for=\"provider\" class=\"multiselect-label\">Data Provider</label>\r\n        <ng-select \r\n          formControlName=\"provider\"\r\n          [items]=\"siteFilterData.provider\"\r\n          [multiple]=\"true\"\r\n          bindLabel=\"name\"\r\n          placeholder=\"Select\">\r\n        </ng-select>\r\n\r\n        <!-- Data Provider -->\r\n        <label for=\"searchType\" class=\"multiselect-label\">Keyword</label>\r\n        <ng-select \r\n        formControlName=\"searchType\"\r\n          [items]=\"siteFilterData.searchType\"\r\n          [multiple]=\"true\"\r\n          bindLabel=\"name\"\r\n          placeholder=\"Select\">\r\n        </ng-select>\r\n\r\n        <label for=\"type\" class=\"multiselect-label\">Site Type</label>\r\n        <ng-select \r\n          formControlName=\"type\"\r\n          [items]=\"siteFilterData.type\"\r\n          [multiple]=\"true\"\r\n          bindLabel=\"name\"\r\n          placeholder=\"Select\">\r\n        </ng-select>\r\n\r\n      </form>\r\n\r\n      <button class=\"clearForm\" title=\"Clear All Selections\" (click)=\"clearForm()\">Clear Selections</button>\r\n\r\n    </div> <!-- End Sidebar Scroll -->\r\n  </div>\r\n\r\n\r\n</div>\r\n<!-- End Sidebar -->\r\n\r\n<!-- Sidebar lightbox for mobile -->\r\n<div id=\"sidebarLightbox\" [ngClass]=\"{ visible: expandSidebar }\" (click)=\"expandSidebar = false\"></div>"
+module.exports = "<i\r\n  class=\"far\"\r\n  id=\"sidebarToggle\"\r\n  (click)=\"expandSidebar = !expandSidebar\"\r\n  [ngClass]=\"{ 'fa-bars': !expandSidebar, 'fa-times': expandSidebar }\"\r\n  ></i>\r\n\r\n<div id=\"sidebar\" [ngClass]=\"{ 'expanded': expandSidebar }\">\r\n\r\n\r\n  <!--  Sidebar Parameter Filters  -->\r\n  <div id=\"siteCount\"><b>{{geoJSONsiteCount}}</b> sites showing</div>\r\n\r\n\r\n  <!-- Scrolling sidebar content -->\r\n  <div class=\"sidebar-scroll\">\r\n\r\n\r\n    <!--  Sidebar Basemaps  -->\r\n    <div class=\"sidebar-header\" (click)=\"showBasemaps = !showBasemaps\" [ngClass]=\"{ expanded: showBasemaps }\">\r\n      <i class=\"fal fa-map\"></i>\r\n      <b><span>Basemaps</span></b>\r\n    </div>\r\n\r\n    <!-- Basemaps content -->\r\n    <div class=\"sidebar-content\" [ngClass]=\"{ expanded: showBasemaps }\">\r\n      <div id=\"sidebarBasemaps\">\r\n        <div class=\"basemap\" id=\"basemap1\" (click)=\"toggleLayer('OpenStreetMap')\" [ngClass]=\"{ active: chosenBaseLayer == 'OpenStreetMap' }\">Streets</div>\r\n        <div class=\"basemap\" id=\"basemap2\" (click)=\"toggleLayer('Topo')\" [ngClass]=\"{ active: chosenBaseLayer == 'Topo' }\">Topographic</div>\r\n        <div class=\"basemap\" id=\"basemap3\" (click)=\"toggleLayer('CartoDB')\" [ngClass]=\"{ active: chosenBaseLayer == 'CartoDB' }\">CartoDB</div>\r\n        <div class=\"basemap\" id=\"basemap4\" (click)=\"toggleLayer('Terrain')\" [ngClass]=\"{ active: chosenBaseLayer == 'Terrain' }\">Terrain</div>\r\n        <div class=\"basemap\" id=\"basemap5\" (click)=\"toggleLayer('Satellite')\" [ngClass]=\"{ active: chosenBaseLayer == 'Satellite' }\">Satellite</div>\r\n        <div class=\"basemap\" id=\"basemap5\" (click)=\"toggleLayer('Gray')\" [ngClass]=\"{ active: chosenBaseLayer == 'Gray' }\">Gray</div>\r\n        <div class=\"basemap\" id=\"basemap6\" (click)=\"toggleLayer('Nautical')\" [ngClass]=\"{ active: chosenBaseLayer == 'Nautical' }\">Nautical</div>\r\n      </div>\r\n    </div>\r\n\r\n\r\n    <div class=\"sidebar-header\" (click)=\"showParameterFilters = !showParameterFilters\" [ngClass]=\"{ expanded: showParameterFilters }\">\r\n      <i class=\"fal fa-filter\"></i>\r\n      <b><span>Parameter Filters</span></b>\r\n    </div>\r\n\r\n    <!-- Filters Parameter Content -->\r\n    <div class=\"sidebar-content\" [ngClass]=\"{ expanded: showParameterFilters }\">\r\n\r\n      <form *ngIf=\"parameterFilterData\" [formGroup]=\"parameterDropDownGroup\" id=\"sidebarParameterFilters\">\r\n\r\n        <!-- characteristic -->\r\n        <label for=\"characteristic\" class=\"multiselect-label\">Characteristic</label>\r\n        <ng-select \r\n          formControlName=\"characteristic\"\r\n          [items]=\"parameterFilterData.characteristics\"\r\n          [multiple]=\"true\"\r\n          bindLabel=\"name\"\r\n          placeholder=\"Select\">\r\n        </ng-select>\r\n\r\n      </form>\r\n\r\n    </div>\r\n\r\n    <!--  Sidebar Site Filters  -->\r\n\r\n    <div class=\"sidebar-header\" (click)=\"showSiteFilters = !showSiteFilters\" [ngClass]=\"{ expanded: showSiteFilters }\">\r\n      <i class=\"fal fa-sliders-v\"></i>\r\n      <b><span>Site Filters</span></b>\r\n    </div>\r\n    <!-- Filters Site Content -->\r\n      \r\n    <div class=\"sidebar-content\" [ngClass]=\"{ expanded: showSiteFilters }\">\r\n      <form *ngIf=\"siteFilterData\" [formGroup]=\"siteDropDownGroup\" id=\"sidebarSiteFilters\">\r\n\r\n        <!-- Huc8 -->\r\n        <label for=\"huc8\" class=\"multiselect-label\">Huc8</label>\r\n        <ng-select \r\n        formControlName=\"huc8\"\r\n          [items]=\"siteFilterData.huc8\"\r\n          [multiple]=\"true\"\r\n          bindLabel=\"name\"\r\n          placeholder=\"Select\">\r\n        </ng-select>\r\n\r\n        <!-- Org Name -->\r\n        <label for=\"orgName\" class=\"multiselect-label\">Organization Name</label>\r\n\r\n        <ng-select \r\n          formControlName=\"orgName\"\r\n          [items]=\"siteFilterData.orgName\"\r\n          [multiple]=\"true\"\r\n          bindLabel=\"name\"\r\n          placeholder=\"Select\">\r\n        </ng-select>\r\n\r\n        <!-- Data Provider -->\r\n        <label for=\"provider\" class=\"multiselect-label\">Data Provider</label>\r\n        <ng-select \r\n          formControlName=\"provider\"\r\n          [items]=\"siteFilterData.provider\"\r\n          [multiple]=\"true\"\r\n          bindLabel=\"name\"\r\n          placeholder=\"Select\">\r\n        </ng-select>\r\n\r\n        <!-- Data Provider -->\r\n        <label for=\"searchType\" class=\"multiselect-label\">Keyword</label>\r\n        <ng-select \r\n        formControlName=\"searchType\"\r\n          [items]=\"siteFilterData.searchType\"\r\n          [multiple]=\"true\"\r\n          bindLabel=\"name\"\r\n          placeholder=\"Select\">\r\n        </ng-select>\r\n\r\n        <label for=\"type\" class=\"multiselect-label\">Site Type</label>\r\n        <ng-select \r\n          formControlName=\"type\"\r\n          [items]=\"siteFilterData.type\"\r\n          [multiple]=\"true\"\r\n          bindLabel=\"name\"\r\n          placeholder=\"Select\">\r\n        </ng-select>\r\n\r\n      </form>\r\n\r\n      <button class=\"clearForm\" title=\"Clear All Selections\" (click)=\"clearForm()\">Clear Selections</button>\r\n\r\n    </div> <!-- End Sidebar Scroll -->\r\n  </div>\r\n\r\n\r\n</div>\r\n<!-- End Sidebar -->\r\n\r\n<!-- Sidebar lightbox for mobile -->\r\n<div id=\"sidebarLightbox\" [ngClass]=\"{ visible: expandSidebar }\" (click)=\"expandSidebar = false\"></div>"
 
 /***/ }),
 
@@ -1017,7 +1026,7 @@ var SidebarComponent = /** @class */ (function () {
         // for now we can keep this a static list but ultimately could pull from here in a service
         // https://www.waterqualitydata.us/Codes/Characteristicname?mimeType=xml
         this.parameterFilterData = {
-            characteristics: ['Nitrate', 'Nitrogen', 'Inorganic nitrogen', 'Nitrogen, mixed forms']
+            characteristics: ['Nitrate', 'Nitrogen', 'Nitrate and Nitrite', 'Nitrogen (mixed forms)']
         };
         this.defaultParameterFilter = 'Nitrate';
         this.parameterDropDownGroup = this.formBuilder.group({
@@ -1049,7 +1058,6 @@ var SidebarComponent = /** @class */ (function () {
             huc8: [[]],
             location: [[]],
             name: [[]],
-            orgId: [[]],
             orgName: [[]],
             provider: [[]],
             searchType: [[]],
@@ -1117,14 +1125,15 @@ var SidebarComponent = /** @class */ (function () {
         window.history.replaceState({}, '', decodeURIComponent(location.pathname + "?" + this.urlParams));
     };
     SidebarComponent.prototype.setChar = function (characteristics) {
-        for (var i = 0; i < characteristics.length; i++) {
-            var char = characteristics[i];
+        var copyChar = characteristics;
+        for (var i = 0; i < copyChar.length; i++) {
+            var char = copyChar[i];
             if (this.lookups[char]) {
-                characteristics[i] = this.lookups[char];
+                copyChar[i] = this.lookups[char];
             }
         }
-        this._mapService._characteristicFilterSubject.next(characteristics);
-        var characteristic = characteristics.join('|');
+        this._mapService._characteristicFilterSubject.next(copyChar);
+        var characteristic = copyChar.join('|');
         // update URL params
         this._mapService.URLparams.SEARCHPARAMS =
             this._mapService.URLparams.SEARCHPARAMS.split('characteristicName:')[0] + 'characteristicName:' + characteristic;
@@ -1135,8 +1144,12 @@ var SidebarComponent = /** @class */ (function () {
         this.parameterDropDownGroup.valueChanges.subscribe(function (selections) {
             // remove all other filters from url if characteristic changed after load
             if (selections.characteristic.length === 0) {
-                selections.characteristic = [_this.defaultParameterFilter];
-                _this.parameterDropDownGroup.get('characteristic').setValue([_this.defaultParameterFilter]);
+                _this._mapService.clearSites();
+                _this.urlParams.delete('characteristic');
+                _this.updateQueryParams();
+                _this._mapService._characteristicFilterSubject.next(selections.characteristic);
+                alert('There are too many sites. A parameter filter must be selected.'); // do this in toast when available?
+                return;
             }
             _this.urlParams = new URLSearchParams([]);
             _this.urlParams.set('characteristic', selections.characteristic.join(','));
@@ -1230,6 +1243,7 @@ var SidebarComponent = /** @class */ (function () {
         this._mapService.map.removeLayer(this._mapService.baseMaps['Terrain']);
         this._mapService.map.removeLayer(this._mapService.baseMaps['Satellite']);
         this._mapService.map.removeLayer(this._mapService.baseMaps['Gray']);
+        this._mapService.map.removeLayer(this._mapService.baseMaps['Nautical']);
         this._mapService.map.addLayer(this._mapService.baseMaps[newVal]);
     };
     SidebarComponent = __decorate([
@@ -1758,11 +1772,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shared_services_loader_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../shared/services/loader.service */ "./src/app/shared/services/loader.service.ts");
 /* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! leaflet */ "./node_modules/leaflet/dist/leaflet-src.js");
 /* harmony import */ var leaflet__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(leaflet__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var leaflet_markercluster__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! leaflet.markercluster */ "./node_modules/leaflet.markercluster/dist/leaflet.markercluster-src.js");
-/* harmony import */ var leaflet_markercluster__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(leaflet_markercluster__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var leaflet_markercluster_freezable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! leaflet.markercluster.freezable */ "./node_modules/leaflet.markercluster.freezable/dist/leaflet.markercluster.freezable.js");
-/* harmony import */ var leaflet_markercluster_freezable__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(leaflet_markercluster_freezable__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _config_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./config.service */ "./src/app/shared/services/config.service.ts");
+/* harmony import */ var esri_leaflet__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! esri-leaflet */ "./node_modules/esri-leaflet/src/EsriLeaflet.js");
+/* harmony import */ var leaflet_markercluster__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! leaflet.markercluster */ "./node_modules/leaflet.markercluster/dist/leaflet.markercluster-src.js");
+/* harmony import */ var leaflet_markercluster__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(leaflet_markercluster__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var leaflet_markercluster_freezable__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! leaflet.markercluster.freezable */ "./node_modules/leaflet.markercluster.freezable/dist/leaflet.markercluster.freezable.js");
+/* harmony import */ var leaflet_markercluster_freezable__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(leaflet_markercluster_freezable__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _config_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./config.service */ "./src/app/shared/services/config.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1772,6 +1787,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -1836,6 +1852,10 @@ var MapService = /** @class */ (function () {
                 zIndex: 1,
                 attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
                 maxZoom: 16
+            }),
+            Nautical: esri_leaflet__WEBPACK_IMPORTED_MODULE_6__["imageMapLayer"]({
+                url: 'https://seamlessrnc.nauticalcharts.noaa.gov/arcgis/rest/services/RNC/NOAA_RNC/ImageServer',
+                zIndex: 1
             })
         };
         // if typeScript complains about searchParams, add it to the class in the leaflet@types definition
@@ -2099,6 +2119,16 @@ var MapService = /** @class */ (function () {
             fillOpacity: 0.5
         };
     };
+    MapService.prototype.clearSites = function () {
+        var _this = this;
+        if (this.markerClusters) {
+            this.markerClusters.remove();
+        }
+        if (this.selectedSiteLayer) {
+            this.highlightMarkers.forEach(function (marker) { return _this.selectedSiteLayer.remove(marker); });
+        }
+        this.sitesLayer.clearLayers();
+    };
     // use extent to get NWIS rt gages based on bounding box, display on map
     MapService.prototype.queryNWISrtGages = function (bbox) {
         var NWISmarkers = {};
@@ -2144,7 +2174,7 @@ var MapService = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
             providedIn: 'root'
         }),
-        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"], _shared_services_loader_service__WEBPACK_IMPORTED_MODULE_4__["LoaderService"], _config_service__WEBPACK_IMPORTED_MODULE_8__["ConfigService"]])
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"], _shared_services_loader_service__WEBPACK_IMPORTED_MODULE_4__["LoaderService"], _config_service__WEBPACK_IMPORTED_MODULE_9__["ConfigService"]])
     ], MapService);
     return MapService;
 }());

@@ -7,6 +7,7 @@ import { LoaderService } from '../../shared/services/loader.service';
 
 declare let L;
 import 'leaflet';
+import * as esri from 'esri-leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.markercluster.freezable';
 import { ConfigService } from './config.service';
@@ -111,7 +112,11 @@ export class MapService {
                     attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
                     maxZoom: 16
                 }
-            )
+            ),
+            Nautical: esri.imageMapLayer({
+                url: 'https://seamlessrnc.nauticalcharts.noaa.gov/arcgis/rest/services/RNC/NOAA_RNC/ImageServer',
+                zIndex: 1
+            })
         };
 
         // if typeScript complains about searchParams, add it to the class in the leaflet@types definition
@@ -342,6 +347,16 @@ export class MapService {
             opacity: 1,
             fillOpacity: 0.5
         };
+    }
+
+    public clearSites() {
+        if (this.markerClusters) {
+            this.markerClusters.remove();
+        }
+        if (this.selectedSiteLayer) {
+            this.highlightMarkers.forEach(marker => this.selectedSiteLayer.remove(marker));
+        }
+        this.sitesLayer.clearLayers();
     }
 
     // use extent to get NWIS rt gages based on bounding box, display on map
