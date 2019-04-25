@@ -9,7 +9,7 @@
         <h3 *ngIf="showSiteData && !noData"><b>Characteristics:</b> {{charsWithSites.join(", ")}}</h3>
     </div>
 
-    <div [class.hidden]="showSiteData" class="chart-wrapper">
+    <div [class.hidden]="showSiteData || noData" class="chart-wrapper">
         <div class="chart" id="typeChart"></div>
         <div class="chart" id="orgChart"></div>
     </div>
@@ -17,7 +17,7 @@
     <div [class.hidden]="!showSiteData || noData">
         <div *ngIf="charTypes.length > 1">
             <label class="charType">Measurement Type:</label>
-            <select (change)="createCharts($event.target.value, false)">
+            <select [(ngModel)]="selectedChar" (change)="createCharts($event.target.value, false)">
                 <option *ngFor="let char of charTypes" [value]="char">{{char}}</option>
             </select>
         </div>
@@ -38,7 +38,7 @@
                     <th *ngIf="selectedSites.length > 1">Site Name</th>
                     <th>Activity Start Date</th>
                     <th>Characteristic</th>
-                    <th *ngIf="unitCodes.length > 1 || unitCodes[0] !== 'N/A'">Depth</th>
+                    <th>Depth</th>
                     <th>Value</th>
                     <th>Fraction</th>
                     <th>Provider</th>
@@ -49,7 +49,7 @@
                     <td *ngIf="selectedSites.length > 1">{{sample.MonitoringLocationIdentifier}}</td>
                     <td>{{sample.ActivityStartDate}}</td>
                     <td>{{sample.CharacteristicName}}</td>
-                    <td *ngIf="unitCodes.length > 1 || unitCodes[0] !== 'N/A'">{{sample['ActivityBottomDepthHeightMeasure/MeasureValue']}}
+                    <td>{{sample['ActivityBottomDepthHeightMeasure/MeasureValue']}}
                         {{sample['ActivityBottomDepthHeightMeasure/MeasureUnitCode']}}</td>
                     <td>{{sample.ResultMeasureValue}} {{sample['ResultMeasure/MeasureUnitCode']}}</td>
                     <td>{{sample.ResultSampleFractionText}}</td>
@@ -74,15 +74,15 @@
             <h4><b>Sites:</b> {{selectedSites.join(", ")}}</h4>
             <h4><b>Characteristics:</b> {{charsWithSites.join(", ")}}</h4>
             <div *ngIf="charTypes.length > 1">
-                    <label class="charType">Measurement Type:</label>
-                    <select (change)="createCharts($event.target.value, true)">
-                        <option *ngFor="let char of charTypes" [value]="char">{{char}}</option>
-                    </select>
-                </div>
+                <label class="charType">Measurement Type:</label>
+                <select [(ngModel)]="selectedChar" (change)="createCharts($event.target.value, true)">
+                    <option *ngFor="let char of charTypes" [value]="char">{{char}}</option>
+                </select>
+            </div>
             <div class="chart" id="modalCharts"></div>
             <div id="modalTable"></div>
             <div class="modal-actions hidden-print">
-                <button (click)="printReport()"><i class="fa fa-print"></i>Print</button>
+                <button (click)="window.print()"><i class="fa fa-print"></i>Print</button>
             </div>
         </div>
 

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import * as regression from 'regression';
 
-import { TabsComponent } from '../../shared/components/tabs/tabs.component';
 import { MapService } from 'src/app/shared/services/map.service';
 import { LoaderService } from '../../shared/services/loader.service';
 import { Http } from '@angular/http';
@@ -16,18 +15,12 @@ import { Config } from 'src/app/shared/interfaces/config';
 })
 export class DataviewComponent implements OnInit {
     // HighCharts
-    public siteChart: any;
     private _siteChartOptions: any;
-    public siteChart2: any;
-    public multSiteChart: any;
     public typeChart: any;
     private _typeChartOptions: any;
     public orgChart: any;
-    public modalChart: any;
-    public modalChart2: any;
     public resultCsv;
     public resultJson;
-    public filterSelections;
     public queryChar = 'Nitrate';
     public charTypes = [];
     private siteFilterData;
@@ -38,8 +31,7 @@ export class DataviewComponent implements OnInit {
     private noData = false;
     private noGraphData = false;
     private dataLoading = false;
-    private unitCodes = [];
-    private uniqueData = [];
+    private selectedChar;
     private fractionTypes = ['Dissolved', 'Total', ''];
     public showModal = false;
     public urlParams;
@@ -84,8 +76,11 @@ export class DataviewComponent implements OnInit {
             this.getResultData();
         });
         this._mapService.SelectedChar.subscribe((Response) => {
-            this.queryChar = Response;
-            this.noData = false;
+            if (Response.length === 0) {this.noData = true;
+            } else {
+                this.queryChar = Response;
+                this.noData = false;
+            }
         });
 
         this._mapService.SiteChange.subscribe((geojson) => {
@@ -176,12 +171,6 @@ export class DataviewComponent implements OnInit {
                 }]
             }
         };
-        /* this.siteChart = new Highcharts.Chart('siteChart', this._siteChartOptions);
-        this.siteChart2 = new Highcharts.Chart('siteChart2', this._siteChartOptions);
-        this.multSiteChart = new Highcharts.Chart('multSiteChart', this._siteChartOptions);
-        this.siteChart.setTitle({ text: 'Result Measure Value by Depth' });
-        this.siteChart2.setTitle({ text: 'Result Measure Value by Measurement Type' });
-        this.multSiteChart.setTitle({text: 'Result Measure Value by Site'});*/
 
         this._typeChartOptions = {
             credits: {
@@ -258,9 +247,10 @@ export class DataviewComponent implements OnInit {
                 this.noGraphData = false;
                 this.resultCsv = csv['_body'];
                 this.resultJson = this.csvJSON(this.resultCsv);
-                this.showSiteData = true; this.noData = false;
+                this.showSiteData = true; this.noData = false; this.charTypes = [];
                 if (this.resultJson.length > 0 && this.selectedSites.length > 0) {
                     this.getCharTypes();
+                    this.selectedChar = this.charTypes[0];
                     this.createCharts(this.charTypes[0], false);
                     this.addProps();
                 } else { this.noData = true; }
@@ -272,7 +262,6 @@ export class DataviewComponent implements OnInit {
     }
 
     public getCharTypes() {
-        this.charTypes = [];
         for (let i = 0; i < this.resultJson.length; i++) {
             const value = this.resultJson[i]['ResultMeasure/MeasureUnitCode'];
             if (this.charsWithSites.indexOf(this.resultJson[i].CharacteristicName) === -1) {
@@ -302,13 +291,7 @@ export class DataviewComponent implements OnInit {
                             val = Number(result.ResultMeasureValue);
                             let date = result.ActivityStartDate.split('-');
                             date = Date.UTC(date[0], Number(date[1]) - 1, date[2]);
-                            if (result['ResultMeasure/MeasureUnitCode'] === 'ug/l')  {
-                                data.push({ x: date, y: val / 1000, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
-                            } else if (result['ResultMeasure/MeasureUnitCode'] === 'umol') {
-                                data.push({ x: date, y: val / 4.31, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
-                            } else {
-                                data.push({ x: date, y: val, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
-                            }
+                            data.push({ x: date, y: val, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
                             if (JSON.stringify(uniqueData).indexOf(JSON.stringify([date, val])) === -1) {
                                 uniqueData.push([date, val]);
                             }
@@ -342,52 +325,6 @@ export class DataviewComponent implements OnInit {
         if (chartNo === 1) { this.noGraphData = true; }
     }
 
-    /*public createSiteChart(char, chart) {
-        const seriesData = [];
-        while (chart.series && chart.series.length > 0) { chart.series[0].remove(true); }
-        const array = [];
-        for (let i = 0; i < this.resultJson.length; i++) { // creating separate series based on properties
-            const value = this.resultJson[i][char];
-            if (this.charsWithSites.indexOf(this.resultJson[i].CharacteristicName) === -1) {
-                this.charsWithSites.push(this.resultJson[i].CharacteristicName);
-            }
-            if (value !== '' && array.indexOf(value) === -1) {
-                array.push(value);
-            } else if (value === '' && array.indexOf('N/A') === -1 && char !== 'ResultMeasure/MeasureUnitCode') { array.push('N/A'); }
-        }
-
-        if (char === 'ActivityBottomDepthHeightMeasure/MeasureValue') {this.unitCodes = array; }
-        for (let item = 0; item < array.length; item++) {
-            const data = new Array();
-            for (const result of this.resultJson) {
-                let val; const currentValue = result[char];
-                if (currentValue === array[item] || (currentValue === '' && array[item] === 'N/A')) {
-                    if (/\d/.test(result.ResultMeasureValue)) {
-                        val = Number(result.ResultMeasureValue);
-                        let date = result.ActivityStartDate.split('-');
-                        date = Date.UTC(date[0], Number(date[1]) - 1, date[2]);
-                        if (result['ResultMeasure/MeasureUnitCode'] === 'ug/l')  {
-                            data.push({ x: date, y: val / 1000, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
-                        } else if (result['ResultMeasure/MeasureUnitCode'] === 'umol') {
-                            data.push({ x: date, y: val / 4.31, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
-                        } else {
-                            data.push({ x: date, y: val, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
-                        }
-                        if (JSON.stringify(this.uniqueData).indexOf(JSON.stringify([date, val])) === -1) {
-                            this.uniqueData.push([date, val]);
-                        }
-                        seriesData.push([date / 10000000000, val]);
-                    } // skip if no value
-                }
-            }
-            if (chart === this.siteChart) {chart.addSeries({ name: 'Depth: ' + array[item], data: data });
-            } else { chart.addSeries({ name: array[item], data: data }); }
-        }
-
-        // create regression
-        if (seriesData.length > 2) {this.createRegression(chart, seriesData); }
-    }*/
-
     public createRegression(chart, series) {
         for (const data of series.data) {
             data[0] = data.x / 10000000000; delete data.x;
@@ -412,60 +349,15 @@ export class DataviewComponent implements OnInit {
     }
 
     public makeModalChart() {
-        // need to fix this, have modal boolean option in createcharts?
         this.showModal = true;
         const self = this;
         setTimeout(function() {
-            self.createCharts(self.charTypes[0], true);
+            self.createCharts(self.selectedChar, true);
             const table = document.getElementById('dataTable').cloneNode(true);
             const modalTable = document.getElementById('modalTable');
             modalTable.appendChild(table);
         }, 100);
     }
-
-    /*public createMultSiteChart(chart) {
-        const seriesData = [];
-        while (chart.series && chart.series.length > 0) { chart.series[0].remove(true); }
-        this.selectedSites.forEach((site) => {
-            const array = new Array();
-            for (const result of this.resultJson) {
-                if (result.MonitoringLocationIdentifier === site) {
-                    const value = result['ResultMeasure/MeasureUnitCode'];
-                    if (value !== '' && array.indexOf(value) === -1) {
-                        array.push(value);
-                    }
-                }
-                if (this.charsWithSites.indexOf(result.CharacteristicName) === -1) {
-                    this.charsWithSites.push(result.CharacteristicName);
-                }
-            }
-            for (const unit of array) {
-                let val; const data = new Array();
-                for (const result of this.resultJson) {
-                    if (result.MonitoringLocationIdentifier === site && result['ResultMeasure/MeasureUnitCode'] === unit) {
-                        if (/\d/.test(result.ResultMeasureValue)) {
-                            val = Number(result.ResultMeasureValue);
-                            let date = result.ActivityStartDate.split('-');
-                            date = Date.UTC(date[0], Number(date[1]) - 1, date[2]);
-                            if (result['ResultMeasure/MeasureUnitCode'] === 'ug/l')  {
-                                data.push({ x: date, y: val / 1000, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
-                            } else if (result['ResultMeasure/MeasureUnitCode'] === 'umol') {
-                                data.push({ x: date, y: val / 4.31, name: val + ' ' + result['ResultMeasure/MeasureUnitCode']});
-                            } else {
-                                data.push({ x: date, y: val, name: val + ' ' + result['ResultMeasure/MeasureUnitCode'] });
-                            }
-                            if (JSON.stringify(this.uniqueData).indexOf(JSON.stringify([date, val])) === -1) {
-                                this.uniqueData.push([date, val]);
-                            }
-                            seriesData.push([date / 10000000000, val]);
-                        } // skip if no value
-                    }
-                }
-                chart.addSeries({name: site + ', ' + unit, data: data});
-            }
-        });
-        if (seriesData.length > 2) {this.createRegression(chart, seriesData); }
-    }*/
 
     public createStatChart(chart, name, property) {
         while (chart.series && chart.series.length > 0) { chart.series[0].remove(true); }
@@ -562,10 +454,6 @@ export class DataviewComponent implements OnInit {
                 window.open(url);
             }
         }
-    }
-
-    public printReport() {
-        window.print();
     }
 
 }// END class
