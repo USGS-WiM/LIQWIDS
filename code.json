@@ -3,7 +3,7 @@
     "name": "LIQWIDS",
     "organization": "U.S. Geological Survey",
     "description": "LIQWIDS Project",
-    "version": "v0.0.5",
+    "version": "v0.1.0",
     "status": "Development",
 
     "permissions": {
@@ -29,10 +29,7 @@
     ],
 
     "languages": [
-      "HTML",
-      "SCSS",
-      "CSS",
-      "Javascript"
+      "Angular"
     ],
 
     "contact": {
@@ -41,7 +38,7 @@
     },
 
     "date": {
-      "metadataLastUpdated": "2018-11-15"
+      "metadataLastUpdated": "2018-4-24"
     }
   }
 ]
