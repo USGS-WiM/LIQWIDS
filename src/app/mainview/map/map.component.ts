@@ -10,6 +10,7 @@ import * as L from 'leaflet';
 })
 export class MapComponent implements OnInit {
     // public WQP: any;
+    collapsedMap;
 
     constructor(private _mapService: MapService) {}
 
