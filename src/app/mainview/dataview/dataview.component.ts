@@ -160,6 +160,16 @@ export class DataviewComponent implements OnInit {
                         pointFormat: '{point.name}',
                         shared: true
                     }
+                },
+                line: {
+                    marker: {
+                        radius: 5
+                    },
+                    tooltip: {
+                        headerFormat: '<b>{point.x:%Y-%m-%d}<b><br>',
+                        pointFormat: '{point.name}',
+                        shared: true
+                    }
                 }
             },
             responsive: {
@@ -349,6 +359,7 @@ export class DataviewComponent implements OnInit {
                 for (const set of series) {
                     // for each series, add to chart and create a regression line
                     newChart.addSeries(set);
+                    console.log(set);
                     if (set.data.length > 2) { this.createRegression(newChart, set); }
                 }
                 if (uniqueData.length < chartData.length) {
@@ -365,8 +376,8 @@ export class DataviewComponent implements OnInit {
     public createRegression(chart, series) {
         // create regression line
         for (const data of series.data) {
-            data[0] = data.x / 10000000000; delete data.x;
-            data[1] = data.y; delete data.y;
+            data[0] = data.x / 10000000000;
+            data[1] = data.y;
         }
         const ymxb = regression.linear(series.data);
         const m = ymxb.equation[0]; const b = ymxb.equation[1];
@@ -383,7 +394,8 @@ export class DataviewComponent implements OnInit {
         if (y0 < 0) {y0 = 0; }
         if (yf < 0) {yf = 0; }
 
-        chart.addSeries({type: 'line', name: 'Regression, ' + series.name, data: [[x0 * 10000000000, y0], [xf * 10000000000, yf]]});
+        chart.addSeries({type: 'line', name: 'Regression, ' + series.name, data: [{x: x0 * 10000000000, y: y0, name: y0},
+            {x: xf * 10000000000, y: yf, name: y0}]});
     }
 
     public makeModalChart() {
