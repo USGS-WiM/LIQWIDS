@@ -9,6 +9,9 @@ import packageJson from 'package.json';
 export class AppComponent implements OnInit {
     title = 'LIQWIDS';
     pack = packageJson;
+    expandSidebar;
+    aboutModal;
+    showToast;
 
     constructor() {}
 
