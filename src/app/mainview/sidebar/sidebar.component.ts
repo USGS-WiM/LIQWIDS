@@ -21,6 +21,7 @@ export class SidebarComponent implements OnInit {
     showSiteFilters = true;
     showParameterFilters = true;
     expandSidebar = false;
+    chosenBaseLayer;
     public urlParams;
     public urlCharParam;
     public urlSelSites;
@@ -47,7 +48,7 @@ export class SidebarComponent implements OnInit {
         this.parameterDropDownGroup = this.formBuilder.group({
             characteristic: [this.defaultParameterFilter]
         });
-
+        // get selected sites and characteristics if they were sent through the url
         if (this.urlParams.get('site') !== null) {this.urlSelSites = this.urlParams.get('site').split(',');
         } else {this.urlSelSites = []; }
         if (this.urlParams.get('characteristic') !== null) {this.urlCharParam = this.urlParams.get('characteristic').split(',');
@@ -75,15 +76,13 @@ export class SidebarComponent implements OnInit {
 
         // this is the main data request
         this._mapService.getData().subscribe(response => {
-            console.log(response);
-
             this.siteFilterData = response;
             this._mapService.addToSitesLayer(this._mapService.geoJson);
             this.geoJSONsiteCount = this._mapService.geoJson.totalFeatures;
 
-            // get filters from url params
+            // get site filters from url params
             this.setFilters();
-            // highlights selected sites on map, runs data query and updates url
+            // highlights selected sites on map, which triggers data query
             if (this.urlSelSites[0] !== null) {this.highlightURLSites(); }
             this._loaderService.hideFullPageLoad();
             this.firstLoad = false;
@@ -101,7 +100,7 @@ export class SidebarComponent implements OnInit {
     }
 
     public setFilters() {
-        // change dropdown filters to match url on load
+        // change dropdown filters to match filters sent through url on load
         Object.keys(this.siteDropDownGroup.controls).forEach(key => {
             const paramKey = this.urlParams.get(key);
             if (paramKey !== null) { this.siteDropDownGroup.get(key).setValue(paramKey.split(',')); }
@@ -110,7 +109,7 @@ export class SidebarComponent implements OnInit {
 
     public highlightURLSites() {
         // highlight sites and send to dataview
-        if (this.urlSelSites.length === 1) {
+        if (this.urlSelSites.length === 1) { // if only one site sent through URL
             const jsonIndex = this._mapService.geoJson.features.findIndex(site => {
                 return site.properties.name === this.urlSelSites[0];
             });
@@ -118,7 +117,7 @@ export class SidebarComponent implements OnInit {
                 this._mapService._selectedSiteSubject.next(this._mapService.geoJson.features[jsonIndex].properties);
                 this._mapService.highlightSelectedSite(this._mapService.geoJson.features[jsonIndex]);
             }
-        } else if (this.urlSelSites.length > 1 ) {
+        } else if (this.urlSelSites.length > 1 ) { // if multiple sites sent through URL
             this.urlSelSites.forEach(selSite => {
                 const jsonIndex = this._mapService.geoJson.features.findIndex(site => {
                     return site.properties.name === selSite;
@@ -136,6 +135,7 @@ export class SidebarComponent implements OnInit {
     }
 
     public setChar(characteristics) {
+        // shortened versions of the characteristic names are used in filter/url, this sends the correct value to the request
         const copyChar = characteristics;
         for (let i = 0; i < copyChar.length; i ++) {
             const char = copyChar[i];
@@ -151,8 +151,8 @@ export class SidebarComponent implements OnInit {
     private onChanges(): void {
         // requery on wfs data on any parameter filter dropdown change
         this.parameterDropDownGroup.valueChanges.subscribe(selections => {
-            // remove all other filters from url if characteristic changed after load
             if (selections.characteristic.length === 0) {
+                // if no characteristics are selected, clear all map sites, update url, and alert the user
                 this._mapService.clearSites();
                 this.urlParams.delete('characteristic');
                 this.updateQueryParams();
@@ -160,8 +160,10 @@ export class SidebarComponent implements OnInit {
                 alert('There are too many sites. A parameter filter must be selected.'); // do this in toast when available?
                 return;
             }
+            // reset url params so only characteristic is listed
             this.urlParams = new URLSearchParams([]);
             this.urlParams.set('characteristic', selections.characteristic.join(','));
+
             this.setChar(selections.characteristic);
             this.updateQueryParams();
             this.reQuery();
@@ -172,6 +174,7 @@ export class SidebarComponent implements OnInit {
             this.filterSelections = selections;
             this.filterGeoJSON(selections);
             if (!this.firstLoad) {
+                // if site filters are changed after load, update the url
                 Object.keys(selections).forEach(key => {
                     this.urlParams.delete(key);
                     if (selections[key].length > 0) {
