@@ -123,6 +123,7 @@ button{
                 justify-content: center;
                 transition: $transition;
                 border-right: 1px solid fade-out($primary, 0.5);
+                padding: 1px 5px;
 
                 &:hover{
                     color: $red;

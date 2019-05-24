@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParameterCodec, HttpParams } from '@angular/common/http';
 import { Map } from 'leaflet';
 import { Observable, throwError, BehaviorSubject, Subject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -12,6 +12,7 @@ import 'leaflet.markercluster';
 import 'leaflet.markercluster.freezable';
 import { ConfigService } from './config.service';
 import { Config } from '../interfaces/config';
+import { CustomQueryEncoderHelper } from './customEncoder';
 
 @Injectable({
     providedIn: 'root'
@@ -42,6 +43,7 @@ export class MapService {
     public sitesLayer: L.FeatureGroup<any>;
     public nwisLayer: L.FeatureGroup<any>;
     public selectedSiteLayer: any;
+    // send selected sites/characteristics to dataview
     public _selectedSiteSubject = new Subject();
     public get SelectedSite(): Observable<any> {
         return this._selectedSiteSubject.asObservable();
@@ -56,7 +58,7 @@ export class MapService {
     public get SelectedChar(): Observable<any> {
         return this._characteristicFilterSubject.asObservable();
     }
-
+    // trigger charts in dataview
     public _siteStatsSubject = new Subject();
     public get SiteStats(): Observable<any> {
         return this._siteStatsSubject.asObservable();
@@ -65,6 +67,11 @@ export class MapService {
     public _siteChangeSubject = new Subject();
     public get SiteChange(): Observable<any> {
         return this._siteChangeSubject.asObservable();
+    }
+    // send event year to dataview
+    public _eventYearSubject = new Subject();
+    public get EventYear(): Observable<any> {
+        return this._eventYearSubject.asObservable();
     }
 
     constructor(private _http: HttpClient, private _loaderService: LoaderService, private _configService: ConfigService) {
@@ -140,7 +147,11 @@ export class MapService {
 
     public getData(): Observable<any> {
         this._loaderService.showFullPageLoad();
-        return this._http.get<any>(this.geoJsonURL, { params: this.URLparams }).pipe(
+        const preparedParams = new HttpParams({
+            encoder: new CustomQueryEncoderHelper(),
+            fromObject: this.URLparams
+        });
+        return this._http.get<any>(this.geoJsonURL, { params: preparedParams }).pipe(
             map(response => {
                 this.geoJson = response;
                 this.filterJson = this.geoJson; // set filtered object to all on init.
@@ -159,18 +170,20 @@ export class MapService {
                 });
                 return this.filterOptions;
             }),
-            catchError(this.handleError)
+            catchError((error) => {
+                this._loaderService.hideFullPageLoad();
+                return this.handleError(error);
+            })
         );
     }
 
     private handleError(err: HttpErrorResponse) {
-        this._loaderService.hideFullPageLoad();
         if (err.error instanceof ErrorEvent) {
             // client side
             console.error('An error occurred:', err.error.message);
         } else {
             // server error message
-            console.error('Server returned code ${err.status, body ${err.error}');
+            console.error('Server returned code' + err.status + ', ' + err.error.error.message);
         }
         return throwError('HTTPClient error.');
     }
@@ -283,7 +296,12 @@ export class MapService {
         this.markerClusters.disableClustering();
 
         // zoom
-        this.map.fitBounds(this.sitesLayer.getBounds(), { padding: [20, 20] });
+        // If sites layer has only one site, add extra padding
+        if (this.geoJson.features.length > 1) {this.map.fitBounds(this.sitesLayer.getBounds(), { padding: [20, 20] });
+        } else if (this.geoJson.features.length === 1) {
+            this.map.fitBounds(this.sitesLayer.getBounds(), { padding: [0, 0] });
+            this.map.setZoom(12);
+        }
         this._siteChangeSubject.next(geoJson);
     }
 

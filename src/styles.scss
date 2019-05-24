@@ -42,3 +42,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .highcharts-contextbutton text {
     fill: #fff!important;
 }
+
+.ng-option-label {
+    white-space: pre-wrap;
+}

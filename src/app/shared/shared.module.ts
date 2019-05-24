@@ -17,11 +17,12 @@ import { MatSortModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CustomQueryEncoderHelper } from './services/customEncoder';
 
 @NgModule({
     declarations: [TabsComponent, TabComponent, LoaderComponent, SummaryComponent, DataLoaderComponent],
     imports: [CommonModule, MatInputModule, MatTableModule, MatSortModule, MatFormFieldModule, MatExpansionModule, BrowserAnimationsModule],
     exports: [TabsComponent, TabComponent, LoaderComponent, SummaryComponent, DataLoaderComponent],
-    providers: [MapService, LoaderService, SummariesService]
+    providers: [MapService, LoaderService, SummariesService, CustomQueryEncoderHelper]
 })
 export class SharedModule {}
