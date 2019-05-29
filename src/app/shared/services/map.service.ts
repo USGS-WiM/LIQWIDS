@@ -54,7 +54,7 @@ export class MapService {
         return this._selectMultSubject.asObservable();
     }
 
-    public _characteristicFilterSubject = new BehaviorSubject('Nitrate');
+    public _characteristicFilterSubject = new BehaviorSubject(['Nitrate']);
     public get SelectedChar(): Observable<any> {
         return this._characteristicFilterSubject.asObservable();
     }
