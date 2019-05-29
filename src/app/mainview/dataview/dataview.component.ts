@@ -26,7 +26,8 @@ export class DataviewComponent implements OnInit {
     public orgChart: any;
     public resultCsv;
     public resultJson;
-    public queryChar = 'Nitrate';
+    public queryChar = ['Nitrate'];
+    public ancillaryChar = ['pH', 'Temperature, water'];
     public charTypes = [];
     private siteFilterData;
     private geoJSONsiteCount;
@@ -65,7 +66,7 @@ export class DataviewComponent implements OnInit {
             if (this.urlSites[0] !== Response.name) {
                 // add selected site to url if not already in it
                 this.urlSites = [Response.name];
-                this.urlParams.set('site', encodeURIComponent(this.urlSites.join(',')));
+                this.urlParams.set('site', this.urlSites.join(','));
                 this.updateQueryParams();
             }
             this.selectedSites = [Response.name];
@@ -78,7 +79,7 @@ export class DataviewComponent implements OnInit {
             if (this.urlSites.indexOf(Response.name) === -1) {
                 // add selected site to url if not already in it
                 this.urlSites.push(Response.name);
-                this.urlParams.set('site', encodeURIComponent(this.urlSites.join(',')));
+                this.urlParams.set('site', this.urlSites.join(','));
                 this.updateQueryParams();
             }
             if (this.selectedSites.indexOf(Response.name) === -1) {
@@ -90,7 +91,7 @@ export class DataviewComponent implements OnInit {
             // subscriber for parameter filter/characteristic selection
             if (Response.length === 0) {this.noData = true;
             } else {
-                this.queryChar = Response;
+                this.queryChar = Response.concat(this.ancillaryChar);
                 this.noData = false;
             }
         });
@@ -329,15 +330,17 @@ export class DataviewComponent implements OnInit {
         this.fractionTypes = [];
         for (let i = 0; i < this.resultJson.length; i++) {
             const value = this.resultJson[i]['ResultMeasure/MeasureUnitCode'];
-            if (this.charsWithSites.indexOf(this.resultJson[i].CharacteristicName) === -1) {
-                this.charsWithSites.push(this.resultJson[i].CharacteristicName);
-            }
+            const char = this.resultJson[i].CharacteristicName;
+            if (this.ancillaryChar.indexOf(char) > -1) {continue; } // if pH or water temp, don't add characteristic or type to lists
+            // get list of characteristics in result json
+            if (this.charsWithSites.indexOf(char) === -1) { this.charsWithSites.push(char); }
+            // get list of characteristic types/measure unit codes in result json
             if (value === '' && this.resultJson[i].ResultMeasureValue !== '' && this.charTypes.indexOf('N/A') === -1) {
                 this.charTypes.push('N/A');
             } else if (value !== '' && this.charTypes.indexOf(value) === -1) {this.charTypes.push(value); }
-
+            // get list of fraction types in result json
             const frac = this.resultJson[i].ResultSampleFractionText;
-            if (this.fractionTypes.indexOf(frac) === -1 && frac !== 'None') {
+            if (this.fractionTypes.indexOf(frac) === -1 && frac !== 'None' && frac !== '') {
                 this.fractionTypes.push(frac);
             }
         }
@@ -354,7 +357,7 @@ export class DataviewComponent implements OnInit {
         modal ? charts2 = document.getElementById('modalCharts2') : charts2 = document.getElementById('charts2');
         if (charts2) {charts2.parentNode.removeChild(charts2); }
         let chartNo = 1; const chartData = []; const uniqueData = [];
-        // creates charts based on characteristic (or MeasureUnitCode, e.g. "mg/l as N") as well as result fraction (dissolved v. total)
+        // creates charts based on characteristic (or MeasureUnitCode, e.g. "mg/l as N") as well as result fraction (dissolved, total, etc.)
         for (const frac of this.fractionTypes) {
             const series = [];
             for (const site of this.selectedSites) {
@@ -363,7 +366,7 @@ export class DataviewComponent implements OnInit {
                 for (const result of this.resultJson) {
                     const resultVal = result['ResultMeasure/MeasureUnitCode']; let val;
                     if (result.MonitoringLocationIdentifier === site && (resultVal === char || (resultVal === '' && char === 'N/A'))
-                        && result.ResultSampleFractionText === frac || (result.ResultSampleFractionText === '' && frac === 'None')) {
+                        && (result.ResultSampleFractionText === frac || (result.ResultSampleFractionText === '' && frac === 'None'))) {
                         if (/\d/.test(result.ResultMeasureValue)) {
                             val = Number(result.ResultMeasureValue);
                             let date = result.ActivityStartDate.split('-');
@@ -403,7 +406,6 @@ export class DataviewComponent implements OnInit {
                 for (const set of series) {
                     // for each series, add to chart and create a regression line
                     newChart.addSeries(set);
-                    console.log(set);
                     if (set.data.length > 2) { this.createRegression(newChart, set); }
                 }
                 if (uniqueData.length < chartData.length) {

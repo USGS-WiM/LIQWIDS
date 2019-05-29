@@ -374,6 +374,7 @@ export class MapService {
         if (this.selectedSiteLayer) {
             this.highlightMarkers.forEach(marker => this.selectedSiteLayer.remove(marker));
         }
+        this.selectedSiteLayer = L.featureGroup([]);
         this.sitesLayer.clearLayers();
     }
 

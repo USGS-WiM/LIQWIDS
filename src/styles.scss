@@ -43,6 +43,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     fill: #fff!important;
 }
 
-.ng-option-label {
+.ng-option-label, .ng-value-label {
     white-space: pre-wrap;
 }

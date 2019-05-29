@@ -241,6 +241,7 @@ export class SidebarComponent implements OnInit {
 
     public reQuery(): void {
         // issue new request with updated URL params
+        this._mapService.clearSites();
         this._mapService.getData().subscribe(response => {
             // repopulate site filter dropdowns
             this.siteFilterData = response;
