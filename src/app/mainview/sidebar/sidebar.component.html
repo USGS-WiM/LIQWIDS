@@ -56,6 +56,16 @@
           placeholder="Select">
         </ng-select>
 
+        <!-- event year -->
+        <label for="eventYear" class="multiselect-label">Event Year</label>
+        <ng-select 
+          class="single-select"
+          formControlName="eventYear"
+          [items]="parameterFilterData.eventYears"
+          bindLabel="name"
+          placeholder="Select">
+        </ng-select>
+
       </form>
 
     </div>

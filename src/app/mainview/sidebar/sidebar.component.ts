@@ -25,6 +25,7 @@ export class SidebarComponent implements OnInit {
     public urlParams;
     public urlCharParam;
     public urlSelSites;
+    public urlEventYear;
     public firstLoad = true;
     public filterSelections;
     private lookups;
@@ -40,28 +41,41 @@ export class SidebarComponent implements OnInit {
         // for now we can keep this a static list but ultimately could pull from here in a service
         // https://www.waterqualitydata.us/Codes/Characteristicname?mimeType=xml
         this.parameterFilterData = {
-            characteristics: ['Nitrate', 'Nitrogen', 'Nitrate and Nitrite', 'Nitrogen (mixed forms)']
+            characteristics: ['Ammonia', 'Ammonia and ammonium', 'Ammonia-nitrogen as N', 'Inorganic nitrogen (nitrate and nitrite)',
+                'Inorganic nitrogen (nitrate and nitrite) as N', 'Kjeldahl nitrogen' , 'Nitrate', 'Nitrate + Nitrite', 'Nitrate as N',
+                'Nitrogen', 'Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)', 'Total Kjeldahl nitrogen'],
+            eventYears: this.getEventYears()
         };
 
         this.defaultParameterFilter = 'Nitrate';
 
         this.parameterDropDownGroup = this.formBuilder.group({
-            characteristic: [this.defaultParameterFilter]
+            characteristic: [this.defaultParameterFilter],
+            eventYear: []
         });
-        // get selected sites and characteristics if they were sent through the url
+        // get selected sites, characteristics and event years if they were sent through the url
         if (this.urlParams.get('site') !== null) {this.urlSelSites = this.urlParams.get('site').split(',');
         } else {this.urlSelSites = []; }
         if (this.urlParams.get('characteristic') !== null) {this.urlCharParam = this.urlParams.get('characteristic').split(',');
         } else {this.urlCharParam = []; }
+        if (this.urlParams.get('eventYear') !== null) {this.urlEventYear = this.urlParams.get('eventYear');
+        } else {this.urlEventYear = undefined; }
 
         // use characteristic sent through in url, otherwise 'Nitrate'
         if (this.urlCharParam.length > 0 && this.urlCharParam[0] !== null) {
-            this.parameterDropDownGroup.get('characteristic').setValue(this.urlCharParam);
-            this.setChar(this.urlCharParam);
+            this.setURLChar(this.urlCharParam);
         } else {
             this.urlParams.set('characteristic', this.defaultParameterFilter);
             this.updateQueryParams();
             this.parameterDropDownGroup.get('characteristic').setValue([this.defaultParameterFilter]);
+        }
+
+        // use event years sent through in url, otherwise 'Nitrate'
+        if (this.urlEventYear) {
+            this.parameterDropDownGroup.get('eventYear').setValue(this.urlEventYear);
+            this._mapService._eventYearSubject.next(this.urlEventYear);
+            this._mapService.URLparams.SEARCHPARAMS += ';startDateLo:01-01-' + this.urlEventYear +
+                    ';startDateHi:12-31-' + this.urlEventYear;
         }
 
         this.siteDropDownGroup = this.formBuilder.group({
@@ -99,6 +113,17 @@ export class SidebarComponent implements OnInit {
         console.log(items);
     }
 
+    getEventYears() {
+        const years = [];
+        let startDate = new Date(1932, 0, 1);
+        const endDate = new Date();
+        while (startDate < endDate) {
+            years.push(startDate.getFullYear());
+            startDate = new Date(startDate.getFullYear() + 1, 0, 1);
+        }
+        return years;
+    }
+
     public setFilters() {
         // change dropdown filters to match filters sent through url on load
         Object.keys(this.siteDropDownGroup.controls).forEach(key => {
@@ -134,16 +159,32 @@ export class SidebarComponent implements OnInit {
         window.history.replaceState({}, '', decodeURIComponent(`${location.pathname}?${this.urlParams}`));
     }
 
-    public setChar(characteristics) {
+    public setURLChar(characteristics) {
         // shortened versions of the characteristic names are used in filter/url, this sends the correct value to the request
-        const copyChar = characteristics;
+        const copyChar = JSON.parse(JSON.stringify(characteristics));
         for (let i = 0; i < copyChar.length; i ++) {
             const char = copyChar[i];
             if (this.lookups[char]) {copyChar[i] = this.lookups[char]; }
         }
+        this.parameterDropDownGroup.get('characteristic').setValue(copyChar);
         this._mapService._characteristicFilterSubject.next(copyChar);
         const characteristic = copyChar.join('|');
-        // update URL params
+        // update search params
+        this._mapService.URLparams.SEARCHPARAMS =
+            this._mapService.URLparams.SEARCHPARAMS.split('characteristicName:')[0] + 'characteristicName:' + characteristic;
+    }
+
+    public setChar(characteristics) {
+        // shortened versions of the characteristic names are used in filter/url, this sends the correct value to the request
+        const copyChar = JSON.parse(JSON.stringify(characteristics));
+        for (let i = 0; i < copyChar.length; i ++) {
+            const char = copyChar[i];
+            if (this.lookups[char]) {copyChar[i] = this.lookups[char]; }
+        }
+        this.urlParams.set('characteristic', copyChar);
+        this._mapService._characteristicFilterSubject.next(characteristics);
+        const characteristic = characteristics.join('|');
+        // update search params
         this._mapService.URLparams.SEARCHPARAMS =
             this._mapService.URLparams.SEARCHPARAMS.split('characteristicName:')[0] + 'characteristicName:' + characteristic;
     }
@@ -163,8 +204,16 @@ export class SidebarComponent implements OnInit {
             // reset url params so only characteristic is listed
             this.urlParams = new URLSearchParams([]);
             this.urlParams.set('characteristic', selections.characteristic.join(','));
-
             this.setChar(selections.characteristic);
+            if (!selections.eventYear || selections.eventYear == null) {
+                this.urlParams.delete('eventYear');
+                this._mapService._eventYearSubject.next();
+            } else {
+                this.urlParams.set('eventYear', selections.eventYear);
+                this._mapService._eventYearSubject.next(selections.eventYear);
+                this._mapService.URLparams.SEARCHPARAMS += ';startDateLo:01-01-' + selections.eventYear +
+                    ';startDateHi:12-31-' + selections.eventYear;
+            }
             this.updateQueryParams();
             this.reQuery();
         });
@@ -192,6 +241,7 @@ export class SidebarComponent implements OnInit {
 
     public reQuery(): void {
         // issue new request with updated URL params
+        this._mapService.clearSites();
         this._mapService.getData().subscribe(response => {
             // repopulate site filter dropdowns
             this.siteFilterData = response;

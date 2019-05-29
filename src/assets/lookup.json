@@ -1,4 +1,6 @@
 {
-    "Nitrogen (mixed forms)": "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)",
-    "Nitrate and Nitrite": "Inorganic nitrogen (nitrate and nitrite)"
+    "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)": "Nitrogen (mixed forms)",
+    "Nitrate + Nitrite": "Nitrate plus Nitrite",
+    "Nitrate plus Nitrite": "Nitrate + Nitrite",
+    "Nitrogen (mixed forms)": "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)"
 }
