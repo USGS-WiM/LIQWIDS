@@ -6,9 +6,12 @@ import * as regression from 'regression';
 
 import { MapService } from 'src/app/shared/services/map.service';
 import { LoaderService } from '../../shared/services/loader.service';
-import { Http } from '@angular/http';
+import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { ConfigService } from 'src/app/shared/services/config.service';
 import { Config } from 'src/app/shared/interfaces/config';
+import { CustomQueryEncoderHelper } from 'src/app/shared/services/customEncoder';
+import { map, catchError } from 'rxjs/operators';
+import { throwError, Observable } from 'rxjs';
 
 @Component({
     selector: 'app-dataview',
@@ -23,7 +26,8 @@ export class DataviewComponent implements OnInit {
     public orgChart: any;
     public resultCsv;
     public resultJson;
-    public queryChar = 'Nitrate';
+    public queryChar = ['Nitrate'];
+    public ancillaryChar = ['pH', 'Temperature, water'];
     public charTypes = [];
     private siteFilterData;
     private geoJSONsiteCount;
@@ -34,7 +38,7 @@ export class DataviewComponent implements OnInit {
     public noGraphData = false;
     public dataLoading = false;
     private selectedChar;
-    private fractionTypes = ['Dissolved', 'Total', ''];
+    private fractionTypes;
     public showModal = false;
     public urlParams;
     public urlSites;
@@ -44,15 +48,17 @@ export class DataviewComponent implements OnInit {
     public resultParams = {
         mimeType: 'csv',
         zip: 'no',
-        minactivities: 1
+        minactivities: '1'
     };
+    public eventYear;
 
-    constructor(private _mapService: MapService, private _http: Http, private _loaderService: LoaderService,
+    constructor(private _mapService: MapService, private _http: HttpClient, private _loaderService: LoaderService,
         private _configService: ConfigService) {
             this.configSettings = this._configService.getConfiguration();
      }
 
     ngOnInit() {
+        this.getUrlEventYear();
         this._mapService.SelectedSite.subscribe((Response) => {
             // subscriber for map click, updates url params and queries site's result data
             this.charsWithSites = [];
@@ -85,9 +91,13 @@ export class DataviewComponent implements OnInit {
             // subscriber for parameter filter/characteristic selection
             if (Response.length === 0) {this.noData = true;
             } else {
-                this.queryChar = Response;
+                this.queryChar = Response.concat(this.ancillaryChar);
                 this.noData = false;
             }
+        });
+        this._mapService.EventYear.subscribe((Response) => {
+            // subscriber for parameter filter/characteristic selection
+            this.eventYear = Response;
         });
 
         this._mapService.SiteChange.subscribe((geojson) => {
@@ -100,8 +110,10 @@ export class DataviewComponent implements OnInit {
                 this.selectedSites = [];
                 this.showSiteData = false; this.noData = false;
                 // create pie charts based on type and organization of all sites on the map
-                this.createStatChart(this.typeChart, 'Site Type Stats', 'searchType');
-                this.createStatChart(this.orgChart, 'Site Organization Stats', 'orgName');
+                if (this.geoJSONsiteCount > 0) {
+                    this.createStatChart(this.typeChart, 'Site Type Stats', 'searchType');
+                    this.createStatChart(this.orgChart, 'Site Organization Stats', 'orgName');
+                } else {this.noData = true; }
             }
         });
         // custom chart export button
@@ -268,6 +280,12 @@ export class DataviewComponent implements OnInit {
         if (this.urlParams.get('site') !== null) {this.urlSites = this.urlParams.get('site').split(',');
         } else {this.urlSites = []; }
     }
+    public getUrlEventYear() {
+        // get list of sites listed in the url
+        this.urlParams = new URLSearchParams(window.location.search);
+        if (this.urlParams.get('eventYear') !== null) {this.eventYear = this.urlParams.get('eventYear');
+        } else {this.eventYear = null; }
+    }
 
     public getResultData() {
         // get result query, gets back a csv
@@ -276,10 +294,18 @@ export class DataviewComponent implements OnInit {
         this.dataLoading = true;
         this.resultParams['siteid'] = this.selectedSites;
         this.resultParams['characteristicName'] = this.queryChar;
-        this.subscription = this._http.get(this.configSettings.resultUrl, {search: this.resultParams})
+        if (this.eventYear != null) {this.resultParams['startDateLo'] = '01-01-' + this.eventYear; }
+        if (this.eventYear != null) {this.resultParams['startDateHi'] = '12-31-' + this.eventYear; }
+
+        const preparedParams = new HttpParams({
+            encoder: new CustomQueryEncoderHelper(),
+            fromObject: this.resultParams
+        });
+        this.subscription = this._http.get(this.configSettings.resultUrl, {headers: new HttpHeaders({Accept: 'text/plain'}),
+            params: preparedParams, responseType: 'text'})
             .subscribe(csv => {
                 this.noGraphData = false;
-                this.resultCsv = csv['_body'];
+                this.resultCsv = csv;
                 this.resultJson = this.csvJSON(this.resultCsv);
                 this.showSiteData = true; this.noData = false; this.charTypes = [];
                 if (this.resultJson.length > 0 && this.selectedSites.length > 0) {
@@ -291,34 +317,48 @@ export class DataviewComponent implements OnInit {
                 } else { this.noData = true; } // if response csv has no actual data, show no data message
                 this._loaderService.hideDataLoad();
                 this.dataLoading = false;
-            }, error => {
+                return;
+            }, (error) => {
+                this._loaderService.hideDataLoad();
                 this.handleError(error);
-            });
+            }
+        );
     }
 
     public getCharTypes() {
         // gets list of characteristics/measure unit codes that will become the options in the "Measurement Type" select
+        this.fractionTypes = [];
         for (let i = 0; i < this.resultJson.length; i++) {
             const value = this.resultJson[i]['ResultMeasure/MeasureUnitCode'];
-            if (this.charsWithSites.indexOf(this.resultJson[i].CharacteristicName) === -1) {
-                this.charsWithSites.push(this.resultJson[i].CharacteristicName);
-            }
+            const char = this.resultJson[i].CharacteristicName;
+            if (this.ancillaryChar.indexOf(char) > -1) {continue; } // if pH or water temp, don't add characteristic or type to lists
+            // get list of characteristics in result json
+            if (this.charsWithSites.indexOf(char) === -1) { this.charsWithSites.push(char); }
+            // get list of characteristic types/measure unit codes in result json
             if (value === '' && this.resultJson[i].ResultMeasureValue !== '' && this.charTypes.indexOf('N/A') === -1) {
                 this.charTypes.push('N/A');
             } else if (value !== '' && this.charTypes.indexOf(value) === -1) {this.charTypes.push(value); }
+            // get list of fraction types in result json
+            const frac = this.resultJson[i].ResultSampleFractionText;
+            if (this.fractionTypes.indexOf(frac) === -1 && frac !== 'None' && frac !== '') {
+                this.fractionTypes.push(frac);
+            }
         }
+        this.fractionTypes.push('None');
     }
 
     public createCharts(char, modal) {
         let chartDiv;
         // determine whether these are the regular charts or the charts for the print modal
-        if (!modal) {chartDiv = document.getElementById('charts');
-        } else {chartDiv = document.getElementById('modalCharts'); }
+        modal ? chartDiv = document.getElementById('modalCharts') : chartDiv = document.getElementById('charts');
         // remove all existing charts from the div
         while (chartDiv.firstChild) {chartDiv.removeChild(chartDiv.firstChild); }
+        let charts2;
+        modal ? charts2 = document.getElementById('modalCharts2') : charts2 = document.getElementById('charts2');
+        if (charts2) {charts2.parentNode.removeChild(charts2); }
         let chartNo = 1; const chartData = []; const uniqueData = [];
-        // creates charts based on characteristic (or MeasureUnitCode, e.g. "mg/l as N") as well as result fraction (dissolved v. total)
-        for (const fraction of this.fractionTypes) {
+        // creates charts based on characteristic (or MeasureUnitCode, e.g. "mg/l as N") as well as result fraction (dissolved, total, etc.)
+        for (const frac of this.fractionTypes) {
             const series = [];
             for (const site of this.selectedSites) {
                 // creates a series for each site
@@ -326,7 +366,7 @@ export class DataviewComponent implements OnInit {
                 for (const result of this.resultJson) {
                     const resultVal = result['ResultMeasure/MeasureUnitCode']; let val;
                     if (result.MonitoringLocationIdentifier === site && (resultVal === char || (resultVal === '' && char === 'N/A'))
-                        && result.ResultSampleFractionText === fraction) {
+                        && (result.ResultSampleFractionText === frac || (result.ResultSampleFractionText === '' && frac === 'None'))) {
                         if (/\d/.test(result.ResultMeasureValue)) {
                             val = Number(result.ResultMeasureValue);
                             let date = result.ActivityStartDate.split('-');
@@ -342,6 +382,13 @@ export class DataviewComponent implements OnInit {
                 if (data.length > 0) {series.push({ name: site, data: data }); }
             }
             if (series.length > 0) {
+                if (chartNo > 2 && (chartNo - 1) % 2 === 0) { // this isn't working
+                    const newChartDiv = document.createElement('div');
+                    modal ? newChartDiv.id = 'modalCharts2' : newChartDiv.id = 'charts2';
+                    modal ? newChartDiv.classList.add('chart') : newChartDiv.classList.add('chart-wrapper');
+                    chartDiv.parentNode.insertBefore(newChartDiv, chartDiv.nextSibling);
+                    chartDiv = document.getElementById(newChartDiv.id);
+                }
                 // dynamically adds divs for each chart before creating them
                 let chartId;
                 if (!modal) {chartId = 'chart' + chartNo;
@@ -354,12 +401,11 @@ export class DataviewComponent implements OnInit {
                 const newChart = Highcharts.chart(chartId, this._siteChartOptions);
 
                 // add chart title, contains characteristic and fraction
-                if (fraction === '') {newChart.setTitle({text: char}, {}, false);
-                } else {newChart.setTitle({text: char + ', ' + fraction}, {}, false); }
+                if (frac === '') {newChart.setTitle({text: char}, {}, false);
+                } else {newChart.setTitle({text: char + ', ' + frac}, {}, false); }
                 for (const set of series) {
                     // for each series, add to chart and create a regression line
                     newChart.addSeries(set);
-                    console.log(set);
                     if (set.data.length > 2) { this.createRegression(newChart, set); }
                 }
                 if (uniqueData.length < chartData.length) {
@@ -394,8 +440,8 @@ export class DataviewComponent implements OnInit {
         if (y0 < 0) {y0 = 0; }
         if (yf < 0) {yf = 0; }
 
-        chart.addSeries({type: 'line', name: 'Regression, ' + series.name, data: [{x: x0 * 10000000000, y: y0, name: y0},
-            {x: xf * 10000000000, y: yf, name: y0}]});
+        if (x0 !== xf || y0 !== yf) {chart.addSeries({type: 'line', name: 'Regression, ' + series.name, data:
+            [{x: x0 * 10000000000, y: y0, name: y0}, {x: xf * 10000000000, y: yf, name: y0}]}); }
     }
 
     public makeModalChart() {
@@ -414,22 +460,29 @@ export class DataviewComponent implements OnInit {
         // creates pie charts based on type and organization of each site on the map
         while (chart.series && chart.series.length > 0) { chart.series[0].remove(true); }
         const propData = [];
-        this.siteFilterData[property].forEach(prop => {
-            const count = this.geojson.features.filter(function (feat) {
-                return feat.properties[property] === prop;
-            }).length;
-            if (count > 0) {
-                const perc = count / this.geoJSONsiteCount * 100;
-                propData.push({ name: prop, y: perc, sliced: true, selected: true });
-            }
-        });
-        chart.addSeries({ name: name, colorByPoint: true, data: propData });
+        if (this.siteFilterData[property]) {
+            this.siteFilterData[property].forEach(prop => {
+                const count = this.geojson.features.filter(function (feat) {
+                    return feat.properties[property] === prop;
+                }).length;
+                if (count > 0) {
+                    const perc = count / this.geoJSONsiteCount * 100;
+                    propData.push({ name: prop, y: perc, sliced: true, selected: true });
+                }
+            });
+            chart.addSeries({ name: name, colorByPoint: true, data: propData });
+        }
     }
 
-    private handleError (error: Response | any) {
-        this._loaderService.hideDataLoad();
-        this.dataLoading = false; this.noData = true;
-        console.log(error);
+    private handleError(err: HttpErrorResponse) {
+        if (err.message) {
+            // client side
+            console.error('An error occurred:', err.message);
+        } else if (err.error.error) {
+            // server error message
+            console.error('Server returned code' + err.status + ', ' + err.error.error.message);
+        }
+        return throwError('HTTPClient error.');
     }
 
     public addProps() {
