@@ -50,7 +50,9 @@
                     <td *ngIf="selectedSites.length > 1">{{sample.MonitoringLocationIdentifier}}</td>
                     <td>{{sample.ActivityStartDate}}</td>
                     <td>{{sample.CharacteristicName}}</td>
-                    <td>{{sample['ActivityBottomDepthHeightMeasure/MeasureValue']}}
+                    <td *ngIf="sample['ActivityDepthHeightMeasure/MeasureValue']">{{sample['ActivityDepthHeightMeasure/MeasureValue']}}
+                        {{sample['ActivityDepthHeightMeasure/MeasureUnitCode']}}</td>
+                    <td *ngIf="!sample['ActivityDepthHeightMeasure/MeasureValue']">{{sample['ActivityBottomDepthHeightMeasure/MeasureValue']}}
                         {{sample['ActivityBottomDepthHeightMeasure/MeasureUnitCode']}}</td>
                     <td>{{sample.ResultMeasureValue}} {{sample['ResultMeasure/MeasureUnitCode']}}</td>
                     <td>{{sample.ResultSampleFractionText}}</td>
