@@ -210,6 +210,8 @@ export class MapService {
                         feature.properties.locName +
                         '<br/><b>Organization Name: </b>' +
                         feature.properties.orgName +
+                        '<br/><b>Site Type: </b>' +
+                        feature.properties.type +
                         '<br/><b>Result Count: </b>' +
                         feature.properties.resultCnt
                 );
@@ -233,6 +235,8 @@ export class MapService {
                                     feature.properties.locName +
                                     '<br/><b>Organization Name: </b>' +
                                     feature.properties.orgName +
+                                    '<br/><b>Site Type: </b>' +
+                                    feature.properties.type +
                                     '<br/><b>Result Count: </b>' +
                                     feature.properties.resultCnt +
                                     '<br><b style="color: red;">WARNING: overlapping sites here. Zoom in to access individual sites</b>'

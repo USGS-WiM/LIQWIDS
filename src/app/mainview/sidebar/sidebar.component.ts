@@ -75,7 +75,7 @@ export class SidebarComponent implements OnInit {
             this.parameterDropDownGroup.get('eventYear').setValue(this.urlEventYear);
             this._mapService._eventYearSubject.next(this.urlEventYear);
             this._mapService.URLparams.SEARCHPARAMS += ';startDateLo:01-01-' + this.urlEventYear +
-                    ';startDateHi:12-31-' + this.urlEventYear;
+                ';startDateHi:12-31-' + this.urlEventYear;
         }
 
         this.siteDropDownGroup = this.formBuilder.group({
@@ -91,6 +91,13 @@ export class SidebarComponent implements OnInit {
         // this is the main data request
         this._mapService.getData().subscribe(response => {
             this.siteFilterData = response;
+            const self = this;
+            // add huc8 names to the sidebar select
+            this.siteFilterData.huc8.forEach(function(item, index) {
+                let label;
+                self.lookups.huc8[item] ? label = self.lookups.huc8[item] : label = item;
+                self.siteFilterData.huc8[index] = {val: item, lab: label};
+            });
             this._mapService.addToSitesLayer(this._mapService.geoJson);
             this.geoJSONsiteCount = this._mapService.geoJson.totalFeatures;
 
@@ -164,7 +171,7 @@ export class SidebarComponent implements OnInit {
         const copyChar = JSON.parse(JSON.stringify(characteristics));
         for (let i = 0; i < copyChar.length; i ++) {
             const char = copyChar[i];
-            if (this.lookups[char]) {copyChar[i] = this.lookups[char]; }
+            if (this.lookups.characteristic[char]) {copyChar[i] = this.lookups.characteristic[char]; }
         }
         this.parameterDropDownGroup.get('characteristic').setValue(copyChar);
         this._mapService._characteristicFilterSubject.next(copyChar);
@@ -179,7 +186,7 @@ export class SidebarComponent implements OnInit {
         const copyChar = JSON.parse(JSON.stringify(characteristics));
         for (let i = 0; i < copyChar.length; i ++) {
             const char = copyChar[i];
-            if (this.lookups[char]) {copyChar[i] = this.lookups[char]; }
+            if (this.lookups.characteristic[char]) {copyChar[i] = this.lookups.characteristic[char]; }
         }
         this.urlParams.set('characteristic', copyChar);
         this._mapService._characteristicFilterSubject.next(characteristics);
@@ -245,6 +252,13 @@ export class SidebarComponent implements OnInit {
         this._mapService.getData().subscribe(response => {
             // repopulate site filter dropdowns
             this.siteFilterData = response;
+            const self = this;
+            // add huc8 names to the sidebar select
+            this.siteFilterData.huc8.forEach(function(item, index) {
+                let label;
+                self.lookups.huc8[item] ? label = self.lookups.huc8[item] : label = item;
+                self.siteFilterData.huc8[index] = {val: item, lab: label};
+            });
 
             // clearForm function clears layer and readds geojson
             this.clearForm();

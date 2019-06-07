@@ -45,6 +45,7 @@ export class DataviewComponent implements OnInit {
     public subscription;
     public charsWithSites = [];
     private configSettings: Config;
+    public datesWithResults = [];
     public resultParams = {
         mimeType: 'csv',
         zip: 'no',
@@ -311,6 +312,7 @@ export class DataviewComponent implements OnInit {
                 if (this.resultJson.length > 0 && this.selectedSites.length > 0) {
                     // if data returned, find list of characteristics/measure unit codes and select and create charts for the first one
                     this.getCharTypes();
+                    this.removeExtraData();
                     this.selectedChar = this.charTypes[0];
                     this.createCharts(this.charTypes[0], false);
                     this.addProps();
@@ -327,13 +329,18 @@ export class DataviewComponent implements OnInit {
 
     public getCharTypes() {
         // gets list of characteristics/measure unit codes that will become the options in the "Measurement Type" select
-        this.fractionTypes = [];
+        this.fractionTypes = []; this.datesWithResults = [];
         for (let i = 0; i < this.resultJson.length; i++) {
             const value = this.resultJson[i]['ResultMeasure/MeasureUnitCode'];
             const char = this.resultJson[i].CharacteristicName;
             if (this.ancillaryChar.indexOf(char) > -1) {continue; } // if pH or water temp, don't add characteristic or type to lists
             // get list of characteristics in result json
             if (this.charsWithSites.indexOf(char) === -1) { this.charsWithSites.push(char); }
+            // add to list of dates to cross-check ph/water temp with
+            const dateTime = this.resultJson[i].ActivityStartDate + this.resultJson[i]['ActivityStartTime/Time'];
+            if (this.datesWithResults.indexOf(dateTime) === -1) {
+                this.datesWithResults.push(dateTime);
+            }
             // get list of characteristic types/measure unit codes in result json
             if (value === '' && this.resultJson[i].ResultMeasureValue !== '' && this.charTypes.indexOf('N/A') === -1) {
                 this.charTypes.push('N/A');
@@ -345,6 +352,19 @@ export class DataviewComponent implements OnInit {
             }
         }
         this.fractionTypes.push('None');
+    }
+
+    public removeExtraData() {
+        let index = this.resultJson.length - 1;
+        // removes ancilarry data (pH and water temp) when they don't correspond with actual result data
+        while (index >= 0) {
+            const item = this.resultJson[index];
+            const dateTime = item.ActivityStartDate + item['ActivityStartTime/Time'];
+            if (this.ancillaryChar.indexOf(item.CharacteristicName) > -1 && this.datesWithResults.indexOf(dateTime) === -1) {
+                this.resultJson.splice(index, 1);
+            }
+            index -= 1;
+        }
     }
 
     public createCharts(char, modal) {
@@ -514,7 +534,8 @@ export class DataviewComponent implements OnInit {
             for (let j = 0; j < headers.length; j++) {
                 obj[headers[j]] = currentline[j].replace(/['"]+/g, '');
             }
-            result.push(obj);
+            // only add pH field values (code 00400) to dataset
+            if (obj['CharacteristicName'] !== 'pH' || obj['USGSPCode'] === '00400') { result.push(obj); }
         }
         return result;
     }
