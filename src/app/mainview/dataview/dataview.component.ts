@@ -145,17 +145,19 @@ export class DataviewComponent implements OnInit {
                         return date.getFullYear();
                     }
                 },
-                type: 'datetime'
+                type: 'datetime',
+                height: '200px' // setting height so it doesn't adjust when there are multiple series
             },
             yAxis: {
                 title: {
                     text: null
-                }
+                },
+                height: '200px'
             },
             legend: {
                 floating: false,
                 borderWidth: 1,
-                margin: 5
+                maxHeight: '80'
             },
             plotOptions: {
                 scatter: {
@@ -268,7 +270,6 @@ export class DataviewComponent implements OnInit {
         this.orgChart = new Highcharts.Chart('orgChart', this._typeChartOptions);
         this.typeChart.setTitle({ text: 'Sites By Type' });
         this.orgChart.setTitle({ text: 'Sites By Organization' });
-
     } // End NgOnInit
 
     public updateQueryParams() {
@@ -385,8 +386,10 @@ export class DataviewComponent implements OnInit {
                 const data = [];
                 for (const result of this.resultJson) {
                     const resultVal = result['ResultMeasure/MeasureUnitCode']; let val;
+                    let fracType = result.ResultSampleFractionText;
+                    if (fracType === '') {fracType = 'None'; }
                     if (result.MonitoringLocationIdentifier === site && (resultVal === char || (resultVal === '' && char === 'N/A'))
-                        && (result.ResultSampleFractionText === frac || (result.ResultSampleFractionText === '' && frac === 'None'))) {
+                        && fracType === frac) {
                         if (/\d/.test(result.ResultMeasureValue)) {
                             val = Number(result.ResultMeasureValue);
                             let date = result.ActivityStartDate.split('-');
@@ -402,7 +405,7 @@ export class DataviewComponent implements OnInit {
                 if (data.length > 0) {series.push({ name: site, data: data }); }
             }
             if (series.length > 0) {
-                if (chartNo > 2 && (chartNo - 1) % 2 === 0) { // this isn't working
+                if (chartNo > 2 && (chartNo - 1) % 2 === 0) {
                     const newChartDiv = document.createElement('div');
                     modal ? newChartDiv.id = 'modalCharts2' : newChartDiv.id = 'charts2';
                     modal ? newChartDiv.classList.add('chart') : newChartDiv.classList.add('chart-wrapper');
@@ -436,7 +439,16 @@ export class DataviewComponent implements OnInit {
                 chartNo ++;
             }
         }
-        if (chartNo === 1) { this.noGraphData = true; } // adds no graph warning if no result values were available
+        if (chartNo === 1) { this.noGraphData = true; // adds no graph warning if no result values were available
+        } else if (!modal) {
+            const charts = document.getElementsByClassName('new-charts') as HTMLCollectionOf<HTMLElement>;
+            charts[0].style.display = 'inline-block';
+            for (let i = 0; i < charts.length; i++) {
+                if ((i + 1) !== charts.length || i % 2 === 1) {
+                    charts[i].style.display = 'inline-block';
+                }
+            }
+        }
     }
 
     public createRegression(chart, series) {
