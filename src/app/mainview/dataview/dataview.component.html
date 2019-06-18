@@ -54,7 +54,8 @@
                         {{sample['ActivityDepthHeightMeasure/MeasureUnitCode']}}</td>
                     <td *ngIf="!sample['ActivityDepthHeightMeasure/MeasureValue']">{{sample['ActivityBottomDepthHeightMeasure/MeasureValue']}}
                         {{sample['ActivityBottomDepthHeightMeasure/MeasureUnitCode']}}</td>
-                    <td>{{sample.ResultMeasureValue}} {{sample['ResultMeasure/MeasureUnitCode']}}</td>
+                    <td *ngIf="sample.ResultDetectionConditionText !== 'Not Detected'">{{sample.ResultMeasureValue}} {{sample['ResultMeasure/MeasureUnitCode']}}</td>
+                    <td *ngIf="sample.ResultDetectionConditionText === 'Not Detected'">{{sample.ResultDetectionConditionText}}</td>
                     <td>{{sample.ResultSampleFractionText}}</td>
                     <td>{{sample.ProviderName}}</td>
                 </tr>
