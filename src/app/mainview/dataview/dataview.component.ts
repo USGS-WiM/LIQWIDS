@@ -90,10 +90,8 @@ export class DataviewComponent implements OnInit {
         });
         this._mapService.SelectedChar.subscribe((Response) => {
             // subscriber for parameter filter/characteristic selection
-            if (Response.length === 0) {this.noData = true;
-            } else {
+            if (Response.length > 0) {
                 this.queryChar = Response.concat(this.ancillaryChar);
-                this.noData = false;
             }
         });
         this._mapService.EventYear.subscribe((Response) => {
@@ -109,9 +107,10 @@ export class DataviewComponent implements OnInit {
             // if a site was sent through url on load, will skip making statistic charts
             if (this.urlSites.length === 0) {
                 this.selectedSites = [];
-                this.showSiteData = false; this.noData = false;
+                this.showSiteData = false;
                 // create pie charts based on type and organization of all sites on the map
                 if (this.geoJSONsiteCount > 0) {
+                    this.noData = false;
                     this.createStatChart(this.typeChart, 'Site Type Stats', 'searchType');
                     this.createStatChart(this.orgChart, 'Site Organization Stats', 'orgName');
                 } else {this.noData = true; }
@@ -296,8 +295,13 @@ export class DataviewComponent implements OnInit {
         this.dataLoading = true;
         this.resultParams['siteid'] = this.selectedSites;
         this.resultParams['characteristicName'] = this.queryChar;
-        if (this.eventYear != null) {this.resultParams['startDateLo'] = '01-01-' + this.eventYear; }
-        if (this.eventYear != null) {this.resultParams['startDateHi'] = '12-31-' + this.eventYear; }
+        if (this.eventYear != null) {
+            this.resultParams['startDateLo'] = '01-01-' + this.eventYear;
+            this.resultParams['startDateHi'] = '12-31-' + this.eventYear;
+        } else {
+            if (this.resultParams['startDateLo']) {delete this.resultParams['startDateLo']; }
+            if (this.resultParams['startDateHi']) {delete this.resultParams['startDateHi']; }
+        }
 
         const preparedParams = new HttpParams({
             encoder: new CustomQueryEncoderHelper(),

@@ -75,6 +75,9 @@
             <div class="modal-close" (click)="showModal = false">&times;</div>
         </div>
         <div class="modal-content" id="printArea">
+            <div class="modal-actions hidden-print">
+                <button (click)="printReport()"><i class="fa fa-print"></i>Print</button>
+            </div>
             <h4><b>Sites:</b> {{selectedSites.join(", ")}}</h4>
             <h4><b>Characteristics:</b> {{charsWithSites.join(", ")}}</h4>
             <h4 *ngIf="eventYear"><b>Event Year: </b>{{eventYear}}</h4>

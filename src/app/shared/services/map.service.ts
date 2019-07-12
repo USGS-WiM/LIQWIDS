@@ -36,7 +36,7 @@ export class MapService {
         service: 'wfs',
         version: '2.0.0',
         typeNames: 'wqp_sites',
-        SEARCHPARAMS: 'countrycode:US;statecode:US:36;countycode:US:36:059|US:36:103;minresults:1;sampleMedia:Water;characteristicName:Nitrate;',
+        SEARCHPARAMS: 'countrycode:US;statecode:US:36;countycode:US:36:059|US:36:103;sampleMedia:Water;characteristicName:Nitrate;',
         outputFormat: 'application/json'
     };
 
@@ -72,6 +72,11 @@ export class MapService {
     public _eventYearSubject = new Subject();
     public get EventYear(): Observable<any> {
         return this._eventYearSubject.asObservable();
+    }
+    // send min results to dataview
+    public _minResultsSubject = new Subject();
+    public get MinResults(): Observable<any> {
+        return this._minResultsSubject.asObservable();
     }
 
     constructor(private _http: HttpClient, private _loaderService: LoaderService, private _configService: ConfigService) {
@@ -158,6 +163,10 @@ export class MapService {
 
                 // get unique values for filterOptions
                 this.filterOptions = {};
+                // remove Dissolved oxygen (DO) site in the middle of the Atlantic
+                const toRemove = this.geoJson.features.findIndex(feat => feat.properties.name === 'NALMS-5172');
+                this.geoJson.features.splice(toRemove, 1);
+
                 this.geoJson.features.forEach(feature => {
                     for (const property in feature.properties) {
                         if (!this.filterOptions.hasOwnProperty(property)) {

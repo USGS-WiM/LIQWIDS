@@ -193,3 +193,8 @@
     top: 5px;
     color: $black;
 }
+
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
