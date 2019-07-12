@@ -33,9 +33,9 @@ Basic server with
 npm run start
 ```
 
-To build:
+To build a production version of the app:
 ```
-ng build
+ng build --prod --base-href
 ```
 If you want to update the version numbers in the package.json and code.json AND build:
 

@@ -66,6 +66,14 @@
           placeholder="Select">
         </ng-select>
 
+        <!-- minimum results -->
+        <label for="minResults" class="multiselect-label">Minimum Result Count</label>
+        <div class="minResults">
+            <input type="number" formControlName="minResults">
+        </div>
+
+        <button (click)="reQuery()" [disabled]="parameterDropDownGroup.get('characteristic').value.length === 0">Apply Changes</button>
+
       </form>
 
     </div>
