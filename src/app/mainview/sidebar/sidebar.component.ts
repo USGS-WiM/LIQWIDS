@@ -47,7 +47,7 @@ export class SidebarComponent implements OnInit {
             characteristics: ['Ammonia', 'Ammonia and ammonium', 'Ammonia-nitrogen as N', 'Chlorophyll a', 'Dissolved oxygen (DO)',
                 'Inorganic nitrogen (nitrate and nitrite)', 'Inorganic nitrogen (nitrate and nitrite) as N', 'Kjeldahl nitrogen' ,
                 'Nitrate', 'Nitrate + Nitrite', 'Nitrate as N', 'Nitrogen', 'Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)',
-                'Total Kjeldahl nitrogen'],
+                'Total Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)', 'Total Kjeldahl nitrogen'],
             eventYears: this.getEventYears()
         };
 

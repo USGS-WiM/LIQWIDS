@@ -3,7 +3,8 @@
         "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)": "Nitrogen (mixed forms)",
         "Nitrate + Nitrite": "Nitrate plus Nitrite",
         "Nitrate plus Nitrite": "Nitrate + Nitrite",
-        "Nitrogen (mixed forms)": "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)"
+        "Nitrogen (mixed forms)": "Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)",
+        "Totoal Nitrogen (mixed forms)": "Total Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)"
     },
     "huc8": {
         "02030201": "02030201 (Northern Long Island)",
