@@ -45,6 +45,7 @@ export class DataviewComponent implements OnInit {
     public subscription;
     public charsWithSites = [];
     private configSettings: Config;
+    public datesWithResults = [];
     public resultParams = {
         mimeType: 'csv',
         zip: 'no',
@@ -89,10 +90,8 @@ export class DataviewComponent implements OnInit {
         });
         this._mapService.SelectedChar.subscribe((Response) => {
             // subscriber for parameter filter/characteristic selection
-            if (Response.length === 0) {this.noData = true;
-            } else {
+            if (Response.length > 0) {
                 this.queryChar = Response.concat(this.ancillaryChar);
-                this.noData = false;
             }
         });
         this._mapService.EventYear.subscribe((Response) => {
@@ -108,9 +107,10 @@ export class DataviewComponent implements OnInit {
             // if a site was sent through url on load, will skip making statistic charts
             if (this.urlSites.length === 0) {
                 this.selectedSites = [];
-                this.showSiteData = false; this.noData = false;
+                this.showSiteData = false;
                 // create pie charts based on type and organization of all sites on the map
                 if (this.geoJSONsiteCount > 0) {
+                    this.noData = false;
                     this.createStatChart(this.typeChart, 'Site Type Stats', 'searchType');
                     this.createStatChart(this.orgChart, 'Site Organization Stats', 'orgName');
                 } else {this.noData = true; }
@@ -144,17 +144,19 @@ export class DataviewComponent implements OnInit {
                         return date.getFullYear();
                     }
                 },
-                type: 'datetime'
+                type: 'datetime',
+                height: '200px' // setting height so it doesn't adjust when there are multiple series
             },
             yAxis: {
                 title: {
                     text: null
-                }
+                },
+                height: '200px'
             },
             legend: {
                 floating: false,
                 borderWidth: 1,
-                margin: 5
+                maxHeight: '80'
             },
             plotOptions: {
                 scatter: {
@@ -267,7 +269,6 @@ export class DataviewComponent implements OnInit {
         this.orgChart = new Highcharts.Chart('orgChart', this._typeChartOptions);
         this.typeChart.setTitle({ text: 'Sites By Type' });
         this.orgChart.setTitle({ text: 'Sites By Organization' });
-
     } // End NgOnInit
 
     public updateQueryParams() {
@@ -294,8 +295,13 @@ export class DataviewComponent implements OnInit {
         this.dataLoading = true;
         this.resultParams['siteid'] = this.selectedSites;
         this.resultParams['characteristicName'] = this.queryChar;
-        if (this.eventYear != null) {this.resultParams['startDateLo'] = '01-01-' + this.eventYear; }
-        if (this.eventYear != null) {this.resultParams['startDateHi'] = '12-31-' + this.eventYear; }
+        if (this.eventYear != null) {
+            this.resultParams['startDateLo'] = '01-01-' + this.eventYear;
+            this.resultParams['startDateHi'] = '12-31-' + this.eventYear;
+        } else {
+            if (this.resultParams['startDateLo']) {delete this.resultParams['startDateLo']; }
+            if (this.resultParams['startDateHi']) {delete this.resultParams['startDateHi']; }
+        }
 
         const preparedParams = new HttpParams({
             encoder: new CustomQueryEncoderHelper(),
@@ -311,6 +317,7 @@ export class DataviewComponent implements OnInit {
                 if (this.resultJson.length > 0 && this.selectedSites.length > 0) {
                     // if data returned, find list of characteristics/measure unit codes and select and create charts for the first one
                     this.getCharTypes();
+                    this.removeExtraData();
                     this.selectedChar = this.charTypes[0];
                     this.createCharts(this.charTypes[0], false);
                     this.addProps();
@@ -327,13 +334,18 @@ export class DataviewComponent implements OnInit {
 
     public getCharTypes() {
         // gets list of characteristics/measure unit codes that will become the options in the "Measurement Type" select
-        this.fractionTypes = [];
+        this.fractionTypes = []; this.datesWithResults = [];
         for (let i = 0; i < this.resultJson.length; i++) {
             const value = this.resultJson[i]['ResultMeasure/MeasureUnitCode'];
             const char = this.resultJson[i].CharacteristicName;
             if (this.ancillaryChar.indexOf(char) > -1) {continue; } // if pH or water temp, don't add characteristic or type to lists
             // get list of characteristics in result json
             if (this.charsWithSites.indexOf(char) === -1) { this.charsWithSites.push(char); }
+            // add to list of dates to cross-check ph/water temp with
+            const dateTime = this.resultJson[i].ActivityStartDate + this.resultJson[i]['ActivityStartTime/Time'];
+            if (this.datesWithResults.indexOf(dateTime) === -1) {
+                this.datesWithResults.push(dateTime);
+            }
             // get list of characteristic types/measure unit codes in result json
             if (value === '' && this.resultJson[i].ResultMeasureValue !== '' && this.charTypes.indexOf('N/A') === -1) {
                 this.charTypes.push('N/A');
@@ -345,6 +357,19 @@ export class DataviewComponent implements OnInit {
             }
         }
         this.fractionTypes.push('None');
+    }
+
+    public removeExtraData() {
+        let index = this.resultJson.length - 1;
+        // removes ancilarry data (pH and water temp) when they don't correspond with actual result data
+        while (index >= 0) {
+            const item = this.resultJson[index];
+            const dateTime = item.ActivityStartDate + item['ActivityStartTime/Time'];
+            if (this.ancillaryChar.indexOf(item.CharacteristicName) > -1 && this.datesWithResults.indexOf(dateTime) === -1) {
+                this.resultJson.splice(index, 1);
+            }
+            index -= 1;
+        }
     }
 
     public createCharts(char, modal) {
@@ -365,8 +390,10 @@ export class DataviewComponent implements OnInit {
                 const data = [];
                 for (const result of this.resultJson) {
                     const resultVal = result['ResultMeasure/MeasureUnitCode']; let val;
+                    let fracType = result.ResultSampleFractionText;
+                    if (fracType === '') {fracType = 'None'; }
                     if (result.MonitoringLocationIdentifier === site && (resultVal === char || (resultVal === '' && char === 'N/A'))
-                        && (result.ResultSampleFractionText === frac || (result.ResultSampleFractionText === '' && frac === 'None'))) {
+                        && fracType === frac) {
                         if (/\d/.test(result.ResultMeasureValue)) {
                             val = Number(result.ResultMeasureValue);
                             let date = result.ActivityStartDate.split('-');
@@ -382,7 +409,7 @@ export class DataviewComponent implements OnInit {
                 if (data.length > 0) {series.push({ name: site, data: data }); }
             }
             if (series.length > 0) {
-                if (chartNo > 2 && (chartNo - 1) % 2 === 0) { // this isn't working
+                if (chartNo > 2 && (chartNo - 1) % 2 === 0) {
                     const newChartDiv = document.createElement('div');
                     modal ? newChartDiv.id = 'modalCharts2' : newChartDiv.id = 'charts2';
                     modal ? newChartDiv.classList.add('chart') : newChartDiv.classList.add('chart-wrapper');
@@ -416,7 +443,16 @@ export class DataviewComponent implements OnInit {
                 chartNo ++;
             }
         }
-        if (chartNo === 1) { this.noGraphData = true; } // adds no graph warning if no result values were available
+        if (chartNo === 1) { this.noGraphData = true; // adds no graph warning if no result values were available
+        } else if (!modal) {
+            const charts = document.getElementsByClassName('new-charts') as HTMLCollectionOf<HTMLElement>;
+            charts[0].style.display = 'inline-block';
+            for (let i = 0; i < charts.length; i++) {
+                if ((i + 1) !== charts.length || i % 2 === 1) {
+                    charts[i].style.display = 'inline-block';
+                }
+            }
+        }
     }
 
     public createRegression(chart, series) {
@@ -514,7 +550,8 @@ export class DataviewComponent implements OnInit {
             for (let j = 0; j < headers.length; j++) {
                 obj[headers[j]] = currentline[j].replace(/['"]+/g, '');
             }
-            result.push(obj);
+            // only add pH field values (code 00400) to dataset
+            if (obj['CharacteristicName'] !== 'pH' || obj['USGSPCode'] === '00400') { result.push(obj); }
         }
         return result;
     }
