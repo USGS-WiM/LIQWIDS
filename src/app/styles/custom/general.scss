@@ -56,8 +56,7 @@ header#main{
 // Single select Dropdown
 // Removes (X) next to items
 .single-select{
-    .ng-value-icon,
-    .ng-clear-wrapper{
+    .ng-value-icon{
         display: none !important;
     }
 
