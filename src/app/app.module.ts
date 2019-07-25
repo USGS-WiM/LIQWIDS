@@ -11,6 +11,7 @@ import { MainviewModule } from './mainview/mainview.module';
 import { SharedModule } from './shared/shared.module';
 import { ConfigService } from './shared/services/config.service';
 import { environment } from '../environments/environment';
+import { DatePipe } from '@angular/common';
 
 export function ConfigLoader(configService: ConfigService) {
     // Note: this factory needs to return a function (that returns a promise)
@@ -35,7 +36,7 @@ export function LookupLoader(configService: ConfigService) {
         SharedModule
     ],
     providers: [ConfigService, { provide: APP_INITIALIZER, useFactory: ConfigLoader, deps: [ConfigService], multi: true },
-        { provide: APP_INITIALIZER, useFactory: LookupLoader, deps: [ConfigService], multi: true } ],
+        { provide: APP_INITIALIZER, useFactory: LookupLoader, deps: [ConfigService], multi: true }, DatePipe ],
     bootstrap: [AppComponent]
 })
 export class AppModule {}

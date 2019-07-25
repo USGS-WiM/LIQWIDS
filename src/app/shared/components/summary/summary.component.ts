@@ -19,7 +19,7 @@ export class SummaryComponent implements OnInit {
     constructor(private _summariesService: SummariesService) {}
 
     ngOnInit() {
-        this._summariesService.readSumFile();
+        this._summariesService.getData();
 
         this._summariesService.SummaryData.subscribe(sum_data => {
             this.dataSource = new MatTableDataSource(sum_data);
