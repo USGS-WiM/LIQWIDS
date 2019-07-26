@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MapService } from 'src/app/shared/services/map.service';
 
 import * as L from 'leaflet';
+import { SummariesService } from 'src/app/shared/services/summaries.service';
 
 @Component({
     selector: 'app-map',
@@ -12,9 +13,10 @@ export class MapComponent implements OnInit {
     // public WQP: any;
     collapsedMap;
 
-    constructor(private _mapService: MapService) {}
+    constructor(private _mapService: MapService, private _summariesService: SummariesService) {}
 
     ngOnInit() {
+        this._summariesService.getData();
         // init map
         this._mapService.map = L.map('map', {
             center: L.latLng(40.9, -73.0),
