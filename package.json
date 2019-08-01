@@ -2,7 +2,6 @@
   "name": "liqwids",
   "version": "0.1.2",
   "scripts": {
-    "ng": "ng",
     "start": "ng serve",
     "build": "npm install && ng build --prod --base-href",
     "patch": "bump patch package.json code.json && ng build --prod --base-href",
