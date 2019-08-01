@@ -8,9 +8,15 @@ action "Filters for GitHub Actions" {
   args = "branch staging"
 }
 
+action "GitHub Action for npm" {
+  uses = "actions/npm@59b64a598378f31e49cb76f27d6f3312b582f680"
+  needs = ["Filters for GitHub Actions"]
+  args = "run-script build"
+}
+
 action "GitHub Action for AWS" {
   uses = "actions/aws/cli@efb074ae4510f2d12c7801e4461b65bf5e8317e6"
-  needs = ["Filters for GitHub Actions"]
+  needs = ["GitHub Action for npm"]
   args = "s3 cp $GITHUB_WORKSPACE/dist/ s3://test.wim.usgs.gov/liqwids-test/  --recursive"
   secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
 }
@@ -32,9 +38,15 @@ action "Filters for GitHub Actions-1" {
   args = "branch master"
 }
 
+action "GitHub Action for npm-1" {
+  uses = "actions/npm@59b64a598378f31e49cb76f27d6f3312b582f680"
+  needs = ["Filters for GitHub Actions-1"]
+  args = "run-script build"
+}
+
 action "GitHub Action for AWS-1" {
   uses = "actions/aws/cli@efb074ae4510f2d12c7801e4461b65bf5e8317e6"
-  needs = ["Filters for GitHub Actions-1"]
+  needs = ["GitHub Action for npm-1"]
   args = "s3 cp $GITHUB_WORKSPACE/dist/ s3://test.wim.usgs.gov/liqwids/  --recursive"
   secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
 }
