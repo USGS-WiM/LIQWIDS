@@ -43,33 +43,6 @@
         height: 8px;
         margin-top: 5px;
     }
-    .facility {
-        background: rgba(85, 94, 123, 1); //beb556
-    }
-    .atmosphere {
-        background: rgba(183, 217, 104, 1); //ba9947
-    }
-    .lake {
-        background: rgba(181, 118, 173, 1); //b67939
-    }
-    .stream {
-        background: rgba(67, 118, 211, 1); //b2562b
-    }
-    .well {
-        background: rgba(224, 70, 68, 1); //224, 70, 68, 1
-    }
-    .land {
-        background: rgba(31, 119, 127, 1); //AE276d
-    }
-    .estuary {
-        background: rgba(214, 8, 169, 1); //9B30Af
-    }
-    .wetland {
-        background: rgba(60, 180, 75, 1); //#5239af
-    }
-    .ocean {
-        background: rgba(198, 76, 65, 1); //4272b0
-    }
     .multiple-types {
         background-color: rgba(128,128,128, 1) !important;
     }
@@ -80,33 +53,6 @@
     float: left; 
     margin-right: 8px;}
 
-.facility{
-    background-color: rgba(85, 94, 123, 0.7) !important;
-}
-.atmosphere{
-    background-color: rgba(183, 217, 104, 0.7) !important;
-}
-.lake{
-    background-color: rgba(181, 118, 173, 0.7) !important;
-}
-.stream{
-    background-color: rgba(67, 118, 211, 0.7) !important;
-}
-.well{
-    background-color: rgba(224, 70, 68, 0.7) !important;
-}
-.land{
-    background-color: rgba(31, 119, 127, 0.7) !important;
-}
-.estuary{
-    background-color: rgba(214, 8, 169, 0.7) !important;
-}
-.wetland {
-    background-color: rgba(60, 180, 75, 0.7) !important; //#5239af
-}
-.ocean {
-    background-color: rgba(198, 76, 65, 0.7) !important; //4272b0
-}
 .multiple-types {
     background-color: rgba(128,128,128, 0.7) !important;
 }
@@ -126,32 +72,46 @@
     width: 30px !important;
     height: 30px !important;
 }
-.border-facility{
-    background-color: rgba(85, 94, 123, 0.3) !important;
+
+/*needed for the marker cluster border*/
+.marker-border-1F777F {
+    background-color: rgba(31,119,127, 0.3) !important;
 }
-.border-atmosphere{
-    background-color: rgba(183, 217, 104, 0.3) !important;
+.marker-border-E04644 {
+    background-color: rgba(224,70,68,0.3) !important;
 }
-.border-lake{
-    background-color: rgba(181, 118, 173, 0.3) !important;
+.marker-border-3C69B4 {
+    background-color: rgba(60,105,180,0.3) !important;
 }
-.border-stream{
-    background-color: rgba(67, 118, 211, 0.3) !important;
+.marker-border-D608A9 {
+    background-color: rgba(214,8,169,0.3) !important;
 }
-.border-well{
-    background-color: rgba(224, 70, 68, 0.3) !important;
+.marker-border-9444E0 {
+    background-color: rgba(148,68,224,0.3) !important;
 }
-.border-land{
-    background-color: rgba(31, 119, 127, 0.3) !important;
+.marker-border-3CB44B {
+    background-color: rgba(60,180,75,0.3) !important;
 }
-.border-estuary{
-    background-color: rgba(214, 8, 169, 0.3) !important;
+.marker-border-44DEE0 {
+    background-color: rgba(68,222,224,0.3) !important;
 }
-.border-.wetland {
-    background-color: rgba(60, 180, 75, 0.3) !important;
+.marker-border-964b41 {
+    background-color: rgba(150,75,65,0.3) !important;
 }
-.border-ocean {
-    background-color: rgba(198, 76, 65, 0.3) !important;
+.marker-border-B4873C {
+    background-color: rgba(180,135,60,0.3) !important;
+}
+.marker-border-4376D3 {
+    background-color: rgba(67,118,211,0.3) !important;
+}
+.marker-border-68D9C3 {
+    background-color: rgba(104,217,195,0.3) !important;
+}
+.marker-border-B7D968 {
+    background-color: rgba(183,217,104,0.3) !important;
+}
+.marker-border-555E7B {
+    background-color: rgba(85,94,123,0.3) !important;
 }
 .border-multiple-types {
     background-color: rgba(128,128,128, 0.3) !important;
@@ -205,4 +165,17 @@
 
 .mat-sort-header-button:hover {
     background-color: unset;
+}
+
+.multiselect-label {
+    display: inline-block;
+}
+
+.legend label {
+    display: inline-block;
+}
+
+.legend input {
+    vertical-align: middle;
+    margin-top: -1px;
 }
