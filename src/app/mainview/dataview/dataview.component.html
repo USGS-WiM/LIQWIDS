@@ -22,6 +22,17 @@
                 <option *ngFor="let char of charTypes" [value]="char">{{char}}</option>
             </select>
         </div>
+        <div class="chartButtons" [class.hidden]="noGraphData">
+            <label class="charType">Chart Type (Y-Axis):</label>
+            <div style="display: inline-block;">
+                <span style="padding-right:10px">
+                    <input type="radio" (click)="setYaxisType('linear')" value="linear" [checked]="chartType === 'linear' ? true : false"/>Linear
+                </span>
+                <span>
+                    <input type="radio" (click)="setYaxisType('logarithmic')" value="logarithmic" [checked]="chartType === 'logarithmic' ? true : false"/>Logarithmic
+                </span>
+            </div>
+        </div>
         <div class="chart-wrapper" id="charts"></div>
 
         <div *ngIf="noGraphData" id="noGraphData">
@@ -86,6 +97,17 @@
                 <select [(ngModel)]="selectedChar" (change)="createCharts($event.target.value, true)">
                     <option *ngFor="let char of charTypes" [value]="char">{{char}}</option>
                 </select>
+            </div>
+            <div class="chartButtons" [class.hidden]="noGraphData">
+                <label class="charType">Chart Type (Y-Axis):</label>
+                <div style="display: inline-block;">
+                    <span style="padding-right:10px">
+                        <input type="radio" (click)="setYaxisType('linear')" value="linear" [checked]="chartType === 'linear' ? true : false"/>Linear
+                    </span>
+                    <span>
+                        <input type="radio" (click)="setYaxisType('logarithmic')" value="logarithmic" [checked]="chartType === 'logarithmic' ? true : false"/>Logarithmic
+                    </span>
+                </div>
             </div>
             <div class="chart" id="modalCharts"></div>
             <div id="modalTable"></div>

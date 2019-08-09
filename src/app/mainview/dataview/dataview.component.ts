@@ -52,6 +52,10 @@ export class DataviewComponent implements OnInit {
         minactivities: '1'
     };
     public eventYear;
+    public chartNo = 0;
+    public axis = 'BottomX';
+    public charts = [];
+    public chartType = 'linear';
 
     constructor(private _mapService: MapService, private _http: HttpClient, private _loaderService: LoaderService,
         private _configService: ConfigService) {
@@ -441,6 +445,7 @@ export class DataviewComponent implements OnInit {
                 }
                 newChart.redraw();
                 chartNo ++;
+                this.charts.push(newChart);
             }
         }
         if (chartNo === 1) { this.noGraphData = true; // adds no graph warning if no result values were available
@@ -453,6 +458,8 @@ export class DataviewComponent implements OnInit {
                 }
             }
         }
+        // sets chart scale to linear on start
+        this.chartType = 'linear';
     }
 
     public createRegression(chart, series) {
@@ -604,6 +611,35 @@ export class DataviewComponent implements OnInit {
 
     public printReport() {
         window.print();
+    }
+
+    public setYaxisType(newType: string) {
+        // add ability to switch from linear to logarithimic scale
+        if (this.chartType === newType) { return; }
+        this.dataLoading = true;
+        this.chartType = newType;
+        for (let i = 0; i < this.charts.length; i++) {
+            if (newType === 'logarithmic') {
+                // this makes minor ticks and grid lines disappear..turn them off and uncheck boxes
+                this.charts[i].yAxis[0].update({minorGridLineWidth: 0, minorTickWidth: 0 });
+                this.charts[i].yAxis[0].update({ type: newType });
+            } else {
+                this.charts[i].yAxis[0].update({ tickInterval: null });
+                this.charts[i].yAxis[0].update({ type: newType });
+                // changing to logarithmic sometimes messes with regressions, so this re-adds them if changing back to linear
+                for (const set of this.charts[i].series) {
+                    if (set.name.indexOf('Regression') > -1) {
+                        const data = [{x: set.data[0].x, y: set.data[0].y, name: set.data[0].name},
+                            {x: set.data[1].x, y: set.data[1].y, name: set.data[1].name}];
+                        const name = set.name;
+                        set.remove();
+                        this.charts[i].addSeries({data: data, type: 'line', name: name});
+                        this.charts[i].redraw();
+                    }
+                }
+            }
+        }
+        this.dataLoading = false;
     }
 
 }// END class
