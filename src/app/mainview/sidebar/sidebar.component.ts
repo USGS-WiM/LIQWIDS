@@ -31,7 +31,7 @@ export class SidebarComponent implements OnInit {
     public firstLoad = true;
     public filterSelections;
     private lookups;
-    public parameterSelections;
+    public parameterSelections = {characteristic: [], minResults: 1};
 
     constructor(private _mapService: MapService, private formBuilder: FormBuilder, private _loaderService: LoaderService,
         private _configService: ConfigService) {
@@ -47,7 +47,7 @@ export class SidebarComponent implements OnInit {
             characteristics: ['Ammonia', 'Ammonia and ammonium', 'Ammonia-nitrogen as N', 'Chlorophyll a', 'Dissolved oxygen (DO)',
                 'Inorganic nitrogen (nitrate and nitrite)', 'Inorganic nitrogen (nitrate and nitrite) as N', 'Kjeldahl nitrogen' ,
                 'Nitrate', 'Nitrate + Nitrite', 'Nitrate as N', 'Nitrogen', 'Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)',
-                'Total Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)', 'Total Kjeldahl nitrogen'],
+                'Temperature, water', 'Total Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)', 'Total Kjeldahl nitrogen'],
             eventYears: this.getEventYears()
         };
 
@@ -75,6 +75,7 @@ export class SidebarComponent implements OnInit {
             this.urlParams.set('characteristic', this.defaultParameterFilter);
             this.updateQueryParams();
             this.parameterDropDownGroup.get('characteristic').setValue([this.defaultParameterFilter]);
+            this.parameterSelections.characteristic = [this.defaultParameterFilter];
         }
 
         // use event years sent through in url
@@ -90,6 +91,7 @@ export class SidebarComponent implements OnInit {
             this.parameterDropDownGroup.get('minResults').setValue(this.urlMinResults);
             this._mapService._minResultsSubject.next(this.urlMinResults);
             this._mapService.URLparams.SEARCHPARAMS += ';minresults:' + this.urlMinResults;
+            this.parameterSelections.minResults = this.urlMinResults;
         } else {
             this.parameterDropDownGroup.get('minResults').setValue(this.defaultMinResults);
             this._mapService._minResultsSubject.next(this.defaultMinResults);
@@ -173,6 +175,7 @@ export class SidebarComponent implements OnInit {
             if (this.lookups.characteristic[char]) {copyChar[i] = this.lookups.characteristic[char]; }
         }
         this.parameterDropDownGroup.get('characteristic').setValue(copyChar);
+        this.parameterSelections.characteristic = copyChar;
         this._mapService._characteristicFilterSubject.next(copyChar);
         const characteristic = copyChar.join('|');
         // update search params
