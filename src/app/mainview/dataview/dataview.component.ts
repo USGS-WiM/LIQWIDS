@@ -95,7 +95,7 @@ export class DataviewComponent implements OnInit {
         this._mapService.SelectedChar.subscribe((Response) => {
             // subscriber for parameter filter/characteristic selection
             if (Response.length > 0) {
-                this.queryChar = Response.concat(this.ancillaryChar);
+                this.queryChar = Response;
             }
         });
         this._mapService.EventYear.subscribe((Response) => {
@@ -141,26 +141,36 @@ export class DataviewComponent implements OnInit {
                 },
                 startOnTick: true,
                 endOnTick: true,
+                // add ticks for months
+                minorTickInterval: 31540000000 / 12,
+                minorTickLength: 10,
+                minorGridLineWidth: 0,
+                gridLineWidth: 0,
+                minorTickWidth: 1,
+                tickLength: 15,
+                tickInterval: 31540000000,
+                tickmarkPlacement: 'on',
+                tickColor: '#000000',
                 showLastLabel: true,
                 labels: {
+                    y: 25,
                     formatter: function () {
-                        const date = new Date(this.value);
-                        return date.getFullYear();
+                        return Highcharts.dateFormat('%Y', (this.value));
                     }
                 },
                 type: 'datetime',
-                height: '200px' // setting height so it doesn't adjust when there are multiple series
+                height: '160px' // setting height so it doesn't adjust when there are multiple series
             },
             yAxis: {
                 title: {
                     text: null
                 },
-                height: '200px'
+                height: '160px'
             },
             legend: {
                 floating: false,
                 borderWidth: 1,
-                maxHeight: '80'
+                maxHeight: '78'
             },
             plotOptions: {
                 scatter: {
@@ -298,7 +308,7 @@ export class DataviewComponent implements OnInit {
         this._loaderService.showDataLoad();
         this.dataLoading = true;
         this.resultParams['siteid'] = this.selectedSites;
-        this.resultParams['characteristicName'] = this.queryChar;
+        this.resultParams['characteristicName'] = this.queryChar.concat(this.ancillaryChar);
         if (this.eventYear != null) {
             this.resultParams['startDateLo'] = '01-01-' + this.eventYear;
             this.resultParams['startDateHi'] = '12-31-' + this.eventYear;
@@ -342,7 +352,7 @@ export class DataviewComponent implements OnInit {
         for (let i = 0; i < this.resultJson.length; i++) {
             const value = this.resultJson[i]['ResultMeasure/MeasureUnitCode'];
             const char = this.resultJson[i].CharacteristicName;
-            if (this.ancillaryChar.indexOf(char) > -1) {continue; } // if pH or water temp, don't add characteristic or type to lists
+            if (this.queryChar.indexOf(char) === -1 ) { continue; } // if not a selected parameter (just ancillary), don't add to lists
             // get list of characteristics in result json
             if (this.charsWithSites.indexOf(char) === -1) { this.charsWithSites.push(char); }
             // add to list of dates to cross-check ph/water temp with
@@ -369,10 +379,11 @@ export class DataviewComponent implements OnInit {
         while (index >= 0) {
             const item = this.resultJson[index];
             const dateTime = item.ActivityStartDate + item['ActivityStartTime/Time'];
-            if (this.ancillaryChar.indexOf(item.CharacteristicName) > -1 && this.datesWithResults.indexOf(dateTime) === -1) {
-                this.resultJson.splice(index, 1);
-            }
-            index -= 1;
+            if (this.queryChar.indexOf(item.CharacteristicName) === -1  && this.ancillaryChar.indexOf(item.CharacteristicName) > -1
+                && this.datesWithResults.indexOf(dateTime) === -1) {
+                    this.resultJson.splice(index, 1);
+                }
+                index -= 1;
         }
     }
 
@@ -388,7 +399,7 @@ export class DataviewComponent implements OnInit {
         let chartNo = 1; const chartData = []; const uniqueData = [];
         // creates charts based on characteristic (or MeasureUnitCode, e.g. "mg/l as N") as well as result fraction (dissolved, total, etc.)
         for (const frac of this.fractionTypes) {
-            const series = [];
+            const series = []; const titleChar = [];
             for (const site of this.selectedSites) {
                 // creates a series for each site
                 const data = [];
@@ -407,6 +418,7 @@ export class DataviewComponent implements OnInit {
                                 uniqueData.push([date, val]);
                             }
                             chartData.push([date / 10000000000, val]); // need to divide values or it causes problems in regression function
+                            if (titleChar.indexOf(result.CharacteristicName) === -1) { titleChar.push(result.CharacteristicName); }
                         } // skip if no value
                     }
                 }
@@ -432,8 +444,8 @@ export class DataviewComponent implements OnInit {
                 const newChart = Highcharts.chart(chartId, this._siteChartOptions);
 
                 // add chart title, contains characteristic and fraction
-                if (frac === '') {newChart.setTitle({text: char}, {}, false);
-                } else {newChart.setTitle({text: char + ', ' + frac}, {}, false); }
+                if (frac === '' || frac === 'None') {newChart.setTitle({text: titleChar.join(', ') + '<br>' + char}, {}, false);
+                } else {newChart.setTitle({text: titleChar.join(', ') + '<br>' + frac + ' ' + char}, {}, false); }
                 for (const set of series) {
                     // for each series, add to chart and create a regression line
                     newChart.addSeries(set);
@@ -558,6 +570,7 @@ export class DataviewComponent implements OnInit {
                 obj[headers[j]] = currentline[j].replace(/['"]+/g, '');
             }
             // only add pH field values (code 00400) to dataset
+            obj['ResultMeasure/MeasureUnitCode'] = obj['ResultMeasure/MeasureUnitCode'].replace(/\s*$/, '');
             if (obj['CharacteristicName'] !== 'pH' || obj['USGSPCode'] === '00400') { result.push(obj); }
         }
         return result;
