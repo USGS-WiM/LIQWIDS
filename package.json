@@ -3,7 +3,7 @@
   "version": "0.1.2",
   "scripts": {
     "start": "ng serve",
-    "build": "ng build --prod --base-href",
+    "build": "npm install && ng build --prod --base-href",
     "patch": "bump patch package.json code.json && ng build --prod --base-href",
     "minor": "bump minor package.json code.json && ng build --prod --base-href",
     "major": "bump major package.json code.json && ng build --prod --base-href",
