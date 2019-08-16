@@ -1,15 +1,14 @@
-on: push
+on:
+  push:
+    branches:
+    - staging
 name: Deploy to Test Site
 jobs:
-  filtersForGitHubActions:
-    name: Filters for GitHub Actions
+  deployToTest:
+    name: Deploy to Test Site
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Filters for GitHub Actions
-      uses: actions/bin/filter@24a566c2524e05ebedadef0a285f72dc9b631411
-      with:
-        args: branch staging
     - name: GitHub Action for npm
       uses: actions/npm@59b64a598378f31e49cb76f27d6f3312b582f680
       with:
