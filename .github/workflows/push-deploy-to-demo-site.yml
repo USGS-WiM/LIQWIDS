@@ -1,20 +1,19 @@
-on: push
+on:
+  push:
+    branches:
+    - master
 name: Deploy to Demo Site
 jobs:
-  filtersForGitHubActions-1:
-    name: Filters for GitHub Actions-1
+  deployToDemo:
+    name: Deploy to Demo Site
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Filters for GitHub Actions-1
-      uses: actions/bin/filter@24a566c2524e05ebedadef0a285f72dc9b631411
-      with:
-        args: branch master
-    - name: GitHub Action for npm-1
+    - name: GitHub Action for npm
       uses: actions/npm@59b64a598378f31e49cb76f27d6f3312b582f680
       with:
         args: run-script build
-    - name: GitHub Action for AWS-1
+    - name: GitHub Action for AWS
       uses: actions/aws/cli@efb074ae4510f2d12c7801e4461b65bf5e8317e6
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -22,7 +21,7 @@ jobs:
       with:
         args: s3 cp /github/workspace/dist/ s3://test.wim.usgs.gov/liqwids/
           --recursive
-    - name: GitHub Action for Slack-1
+    - name: GitHub Action for Slack
       uses: Ilshidur/action-slack@7a89f92c279a0c0ef7e51514adbe9896cead2e66
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
