@@ -10,7 +10,7 @@ import { Ioutput } from '../../interfaces/output.interface';
     styleUrls: ['./summary.component.scss']
 })
 export class SummaryComponent implements OnInit {
-    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
 
     public displayedColumns = ['org_name', 'last_submit', 'num_samples'];
     // public dataSource = new MatTableDataSource;

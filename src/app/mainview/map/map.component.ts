@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, AfterViewInit } from '@angular/core';
 import { MapService } from 'src/app/shared/services/map.service';
 
 import * as L from 'leaflet';
