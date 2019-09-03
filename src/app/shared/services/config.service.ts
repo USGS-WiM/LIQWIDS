@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Config } from '../interfaces/config';
 import { map } from 'rxjs/operators';
 
@@ -7,13 +7,13 @@ import { map } from 'rxjs/operators';
 export class ConfigService {
     private config: Config;
     private lookup;
-    constructor(private _http: Http) {}
+    constructor(private _http: HttpClient) {}
 
     public load(url: string) {
         return new Promise(resolve => {
             this._http
                 .get(url)
-                .pipe(map(res => res.json()))
+                .pipe(map(res => res))
                 .subscribe((config: any) => {
                     this.config = config;
                     resolve();
@@ -29,7 +29,7 @@ export class ConfigService {
         return new Promise(resolve => {
             this._http
                 .get(url)
-                .pipe(map(res => res.json()))
+                .pipe(map(res => res))
                 .subscribe((lookup: any) => {
                     this.lookup = lookup;
                     resolve();

@@ -4,7 +4,7 @@ import { Iorg } from '../interfaces/org.interface';
 import { Ioutput } from '../interfaces/output.interface';
 import { Subject } from 'rxjs';
 import { Observable } from 'rxjs';
-import { Http, Response, RequestOptions, URLSearchParams, Headers } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Config } from '../interfaces/config';
 import { ConfigService } from './config.service';
 import { saveAs } from 'file-saver';
@@ -31,7 +31,7 @@ export class SummariesService {
 
     private configSettings: Config;
 
-    constructor(private _http: Http, private _configService: ConfigService, private datePipe: DatePipe) {
+    constructor(private _http: HttpClient, private _configService: ConfigService, private datePipe: DatePipe) {
         this.configSettings = this._configService.getConfiguration();
     }
 
@@ -51,7 +51,6 @@ export class SummariesService {
     public readSumFile() {
         this._http.get('./assets/org_summary.json').subscribe(data => {
             this.jsonFile = data;
-            this.jsonFile = JSON.parse(this.jsonFile._body);
             for (let i = 0; i < this.jsonFile.length; i++) {
                 this.sum_output.push(this.jsonFile[i]);
             }

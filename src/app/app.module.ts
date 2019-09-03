@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -28,7 +27,6 @@ export function LookupLoader(configService: ConfigService) {
     imports: [
         BrowserModule,
         FormsModule,
-        HttpModule,
         HttpClientModule,
         AppRoutingModule,
         ReactiveFormsModule,
