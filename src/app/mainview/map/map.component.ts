@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, AfterViewInit } from '@angular/core';
 import { MapService } from 'src/app/shared/services/map.service';
 
 import * as L from 'leaflet';
@@ -12,6 +12,7 @@ import { SummariesService } from 'src/app/shared/services/summaries.service';
 export class MapComponent implements OnInit {
     // public WQP: any;
     collapsedMap;
+    selectedSites;
 
     constructor(private _mapService: MapService, private _summariesService: SummariesService) {}
 
@@ -35,21 +36,19 @@ export class MapComponent implements OnInit {
 
         // add legend
         this._mapService.legend = new L.Control({ position: 'bottomright' });
-
+        const self = this;
         this._mapService.legend.onAdd = function(map) {
-            const div = L.DomUtil.create('div', 'info legend');
-            const item =
-                '<i class="site facility"></i>Facility<br>' +
-                '<i class="site atmosphere"></i>Atmosphere<br>' +
-                '<i class="site lake"></i>Lake, Reservoir, Impoundment<br>' +
-                '<i class="site stream"></i>Stream<br>' +
-                '<i class="site well"></i>Well<br>' +
-                '<i class="site land"></i>Land<br>' +
-                '<i class="site estuary"></i>Estuary<br>' +
-                '<i class="site wetland"></i>Wetland<br>' +
-                '<i class="site ocean"></i>Ocean<br>' +
-                '<i class="site multiple-types"></i>Multiple Types';
+            const div = L.DomUtil.create('div', 'info legend'); let item = '';
+
+            item += '<label>Symbolize sites by:</label><input type="radio" id="siteRadio"><label>Keyword</label> ' +
+                '<input type="radio" id="orgRadio" checked="checked"><label>Organization</label><br>';
+            item += '<i class="site multiple-types"></i>Multiple Types';
             div.innerHTML = item;
+            div.id = 'legend';
+            // sets up click event for radio buttons
+            L.DomEvent.on(div, 'click', (event) => {
+                self.changeSymbology(event['toElement'].id);
+            });
             return div;
         };
 
@@ -91,5 +90,22 @@ export class MapComponent implements OnInit {
                 }
             }
         });
+    }
+
+    changeSymbology(id) {
+        // triggers symbology change on clicking the radio buttons, unchecks opposite radio
+        this._mapService.siteCategories = [];
+        if (id === 'siteRadio') {
+            document.getElementById('orgRadio')['checked'] = false;
+            this._mapService.changeSymbology('searchType');
+        } else if (id === 'orgRadio') {
+            document.getElementById('siteRadio')['checked'] = false;
+            this._mapService.changeSymbology('orgName');
+        }
+        // if sites are selected, highlights them
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('site') !== null) {
+            this._mapService.selectSites(urlParams.get('site').split(','), false);
+        }
     }
 }

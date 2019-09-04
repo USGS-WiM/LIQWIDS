@@ -31,7 +31,7 @@ export class SidebarComponent implements OnInit {
     public firstLoad = true;
     public filterSelections;
     private lookups;
-    public parameterSelections;
+    public parameterSelections = {characteristic: [], minResults: 1};
 
     constructor(private _mapService: MapService, private formBuilder: FormBuilder, private _loaderService: LoaderService,
         private _configService: ConfigService) {
@@ -47,7 +47,7 @@ export class SidebarComponent implements OnInit {
             characteristics: ['Ammonia', 'Ammonia and ammonium', 'Ammonia-nitrogen as N', 'Chlorophyll a', 'Dissolved oxygen (DO)',
                 'Inorganic nitrogen (nitrate and nitrite)', 'Inorganic nitrogen (nitrate and nitrite) as N', 'Kjeldahl nitrogen' ,
                 'Nitrate', 'Nitrate + Nitrite', 'Nitrate as N', 'Nitrogen', 'Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)',
-                'Total Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)', 'Total Kjeldahl nitrogen'],
+                'Temperature, water', 'Total Nitrogen, mixed forms (NH3), (NH4), organic, (NO2) and (NO3)', 'Total Kjeldahl nitrogen'],
             eventYears: this.getEventYears()
         };
 
@@ -75,6 +75,7 @@ export class SidebarComponent implements OnInit {
             this.urlParams.set('characteristic', this.defaultParameterFilter);
             this.updateQueryParams();
             this.parameterDropDownGroup.get('characteristic').setValue([this.defaultParameterFilter]);
+            this.parameterSelections.characteristic = [this.defaultParameterFilter];
         }
 
         // use event years sent through in url
@@ -90,6 +91,7 @@ export class SidebarComponent implements OnInit {
             this.parameterDropDownGroup.get('minResults').setValue(this.urlMinResults);
             this._mapService._minResultsSubject.next(this.urlMinResults);
             this._mapService.URLparams.SEARCHPARAMS += ';minresults:' + this.urlMinResults;
+            this.parameterSelections.minResults = this.urlMinResults;
         } else {
             this.parameterDropDownGroup.get('minResults').setValue(this.defaultMinResults);
             this._mapService._minResultsSubject.next(this.defaultMinResults);
@@ -109,6 +111,7 @@ export class SidebarComponent implements OnInit {
         // this is the main data request
         this._mapService.getData().subscribe(response => {
             this.siteFilterData = response;
+            this._mapService.colorJson = []; this._mapService.siteCategories = [];
             const self = this;
             // add huc8 names to the sidebar select
             if (this.siteFilterData.huc8) {
@@ -124,9 +127,10 @@ export class SidebarComponent implements OnInit {
             // get site filters from url params
             this.setFilters();
             // highlights selected sites on map, which triggers data query
-            if (this.urlSelSites[0] !== null) {this.highlightURLSites(); }
+            if (this.urlSelSites[0] !== null) {this._mapService.selectSites(this.urlSelSites, true); }
             this._loaderService.hideFullPageLoad();
             this.firstLoad = false;
+            this._mapService.updateLegend();
         });
 
         // set up filter listeners
@@ -159,29 +163,6 @@ export class SidebarComponent implements OnInit {
         });
     }
 
-    public highlightURLSites() {
-        // highlight sites and send to dataview
-        if (this.urlSelSites.length === 1) { // if only one site sent through URL
-            const jsonIndex = this._mapService.geoJson.features.findIndex(site => {
-                return site.properties.name === this.urlSelSites[0];
-            });
-            if (jsonIndex > -1) {
-                this._mapService._selectedSiteSubject.next(this._mapService.geoJson.features[jsonIndex].properties);
-                this._mapService.highlightSelectedSite(this._mapService.geoJson.features[jsonIndex]);
-            }
-        } else if (this.urlSelSites.length > 1 ) { // if multiple sites sent through URL
-            this.urlSelSites.forEach(selSite => {
-                const jsonIndex = this._mapService.geoJson.features.findIndex(site => {
-                    return site.properties.name === selSite;
-                });
-                if (jsonIndex > -1) {
-                    this._mapService._selectMultSubject.next(this._mapService.geoJson.features[jsonIndex].properties);
-                    this._mapService.highlightSelectedSite(this._mapService.geoJson.features[jsonIndex]);
-                }
-            });
-        }
-    }
-
     public updateQueryParams() {
         window.history.replaceState({}, '', decodeURIComponent(`${location.pathname}?${this.urlParams}`));
     }
@@ -194,6 +175,7 @@ export class SidebarComponent implements OnInit {
             if (this.lookups.characteristic[char]) {copyChar[i] = this.lookups.characteristic[char]; }
         }
         this.parameterDropDownGroup.get('characteristic').setValue(copyChar);
+        this.parameterSelections.characteristic = copyChar;
         this._mapService._characteristicFilterSubject.next(copyChar);
         const characteristic = copyChar.join('|');
         // update search params
@@ -275,6 +257,7 @@ export class SidebarComponent implements OnInit {
     }
 
     public reQuery(): void {
+        this._mapService.colorJson = []; this._mapService.siteCategories = []; // empties categories to update symbology
         // send updated parameter filters to dataview when submitted
         this.updateParamFilters(this.parameterSelections);
         // issue new request with updated URL params
@@ -296,10 +279,12 @@ export class SidebarComponent implements OnInit {
             this.clearForm();
             this._loaderService.hideFullPageLoad();
             if (response.length === 0) { this._mapService._siteChangeSubject.next([]); }
+            this._mapService.updateLegend();
         });
     }
 
     public filterGeoJSON(selections: any): void {
+        this._mapService.siteCategories = [];
         let filterJson;
 
         // console.log("dropdown changed: ", selections);
@@ -333,8 +318,11 @@ export class SidebarComponent implements OnInit {
 
         filterJson.totalFeatures = filterJson.features.length;
         this.geoJSONsiteCount = filterJson.totalFeatures;
+        this._mapService.colorJson = filterJson; // if symbolization is changed, it uses the colorJson if not empty
         // console.log('new json length',filterJson.totalFeatures);
         this._mapService.addToSitesLayer(filterJson);
+        this._mapService._siteChangeSubject.next(filterJson);
+        this._mapService.updateLegend();
     }
 
     public clearForm(): void {

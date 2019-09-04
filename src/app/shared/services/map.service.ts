@@ -29,6 +29,13 @@ export class MapService {
     public highlightMarkers = [];
     public markerClusters;
     public geoJsonURL;
+    public colorJson = []; // for symbolizing sites if site filters applied
+    // for symbolizing by keyword or organization
+    public siteColors = ['#3cb44b', '#9444E0', '#4376D3', '#E04644', '#555E7B', '#1F777F', '#D608A9', '#B7D968', '#964b41', '#3C69B4',
+        '#44DEE0', '#B4873C', '#68D9C3'];
+    public siteCategories = ['Facility', 'Atmosphere', 'Lake, Reservoir, Impoundment', 'Stream', 'Well', 'Land', 'Estuary',
+        'Wetland', 'Ocean'];
+    public colorBy = 'searchType';
     private configSettings: Config;
 
     public URLparams = {
@@ -208,7 +215,7 @@ export class MapService {
         this.highlightMarkers = [];
         const layer = L.geoJSON(geoJson, {
             pointToLayer: function(feature, latLng) {
-                const marker = self.setMarker(feature);
+                const marker = self.setMarker(feature, self);
                 return L.circleMarker(latLng, marker);
             },
             onEachFeature: (feature, lay) => {
@@ -227,7 +234,7 @@ export class MapService {
                 lay.on('click', function(e) {
                     // check for overlapping sites
                     let locSites = 0;
-                    self.geoJson.features.forEach(ft => {
+                    geoJson.features.forEach(ft => {
                         const coord = ft.geometry.coordinates;
                         const featCoord = this._latlng;
                         if (coord[0].toFixed(3) === featCoord.lng.toFixed(3) && coord[1].toFixed(3) === featCoord.lat.toFixed(3)) {
@@ -287,16 +294,29 @@ export class MapService {
             spiderfyDistanceMultiplier: 2,
             iconCreateFunction: function(cluster) {
                 const children = cluster.getAllChildMarkers();
-                const props = new Array();
+                // sets which property to use for symbolization
+                const props = new Array(); let idx; let color;
+                const colors = self.siteColors; const cat = self.siteCategories;
                 for (const child of children) {
-                    const prop = child.feature.properties.searchType;
+                    let prop;
+                    prop = child.feature.properties[self.colorBy];
                     if (props.indexOf(prop) === -1) {props.push(prop); }
                 }
                 if (props.length === 1) {
-                    return new L.DivIcon({html: '<div class="' + props[0].toLowerCase() + '"><span>' + cluster.getChildCount() +
-                    '</span></div>', className: 'marker-cluster marker-cluster-small border-' + props[0].toLowerCase(),
+                    // if all sites have the same property value (searchType or orgName), use the color for that property
+                    idx = cat.indexOf(props[0]);
+                    if (idx > -1) {
+                        color = colors[idx];
+                    } else {
+                        cat.push(props[0]);
+                        color = colors[cat.length - 1];
+                    }
+                    return new L.DivIcon({html: '<div class="' + props[0].toLowerCase() + '"style="background-color:' + color +
+                        ';"><span>' + cluster.getChildCount() + '</span></div>', className:
+                        'marker-cluster marker-cluster-small marker-border-' + color.slice(1),
                     iconSize: new L.Point(4, 4) });
                 } else {
+                    // if the sites in the cluster have more than one property value, color the cluster grey
                     return new L.DivIcon({html: '<div class="multiple-types"><span>' + cluster.getChildCount() +
                     '</span></div>', className: 'marker-cluster marker-cluster-small border-multiple-types',
                     iconSize: new L.Point(4, 4) });
@@ -310,8 +330,8 @@ export class MapService {
 
         // zoom
         // If sites layer has only one site, add extra padding
-        if (this.geoJson.features.length > 1) {this.map.fitBounds(this.sitesLayer.getBounds(), { padding: [20, 20] });
-        } else if (this.geoJson.features.length === 1) {
+        if (geoJson.features.length > 1) {this.map.fitBounds(this.sitesLayer.getBounds(), { padding: [20, 20] });
+        } else if (geoJson.features.length === 1) {
             this.map.fitBounds(this.sitesLayer.getBounds(), { padding: [0, 0] });
             this.map.setZoom(12);
         }
@@ -340,36 +360,20 @@ export class MapService {
         this.selectedSiteLayer.bringToBack();
     }
 
-    public setMarker(feature) {
-        let fillColor = '';
-        switch (feature.properties.searchType) {
-            case 'Facility':
-                fillColor = '#555E7B';
-                break;
-            case 'Atmosphere':
-                fillColor = '#B7D968';
-                break;
-            case 'Lake, Reservoir, Impoundment':
-                fillColor = '#B576AD';
-                break;
-            case 'Stream':
-                fillColor = '#4376D3';
-                break;
-            case 'Well':
-                fillColor = '#E04644';
-                break;
-            case 'Land':
-                fillColor = '#1F777F';
-                break;
-            case 'Estuary':
-                fillColor = '#D608A9';
-                break;
-            case 'Wetland':
-                fillColor = '#3cb44b';
-                break;
-            case 'Ocean':
-                fillColor = '#C64C41';
-                break;
+    public setMarker(feature, self) {
+        // colors the site based on what symbology is selected (orgName or searchType/keyword)
+        let fillColor = ''; const prop = feature.properties[this.colorBy]; const cat = self.siteCategories; const col = self.siteColors;
+        if (cat.length > 0) {
+            const idx = cat.indexOf(prop);
+            if (idx > -1) {
+                fillColor = col[idx];
+            } else {
+                cat.push(prop);
+                fillColor = col[cat.length - 1];
+            }
+        } else {
+            cat.push(prop);
+            fillColor = col[cat.length - 1];
         }
         return {
             radius: 4,
@@ -389,6 +393,62 @@ export class MapService {
         }
         this.selectedSiteLayer = L.featureGroup([]);
         this.sitesLayer.clearLayers();
+    }
+
+    public selectSites(sites, runDataQuery?) {
+        // highlight sites and send to dataview
+        // runDataQuery tells whether to update the sites in data view, not necessary when only switching symbolization
+        if (sites.length === 1) { // if only one site selected
+            const jsonIndex = this.geoJson.features.findIndex(site => {
+                return site.properties.name === sites[0];
+            });
+            if (jsonIndex > -1) {
+                if (runDataQuery) {this._selectedSiteSubject.next(this.geoJson.features[jsonIndex].properties); }
+                this.highlightSelectedSite(this.geoJson.features[jsonIndex]);
+            }
+        } else if (sites.length > 1 ) { // if multiple sites selected
+            sites.forEach(selSite => {
+                const jsonIndex = this.geoJson.features.findIndex(site => {
+                    return site.properties.name === selSite;
+                });
+                if (jsonIndex > -1) {
+                    if (runDataQuery) {this._selectMultSubject.next(this.geoJson.features[jsonIndex].properties); }
+                    this.highlightSelectedSite(this.geoJson.features[jsonIndex]);
+                }
+            });
+        }
+    }
+
+    public changeSymbology(colorBy) {
+        // if symbology method is switched (site v. organization), clear sites and re-add them with new symbology
+        this.clearSites();
+        this.colorBy = colorBy;
+        // if site filters exist, put only filtered sites on map
+        if (this.colorJson['features'] && this.colorJson['features'].length !== 0) {
+            this.addToSitesLayer(this.colorJson);
+        } else {
+            this.addToSitesLayer(this.geoJson);
+        }
+        this.updateLegend();
+    }
+
+    public updateLegend() {
+        // rewrites legend div with updated colors
+        const div = L.DomUtil.get('legend'); let item = '<label>Symbolize sites by:</label>';
+        if (this.colorBy === 'orgName') {
+            item += '<input type="radio" id="siteRadio"><label>Keyword</label> <input type="radio" id="orgRadio" checked="checked">' +
+                '<label>Organization</label><br>';
+        } else {
+            item += '<input type="radio" id="siteRadio" checked="checked"><label>Keyword</label> <input type="radio" id="orgRadio">' +
+                '<label>Organization</label><br>';
+        }
+        for (let i = 0; i < this.siteCategories.length; i++) {
+            const color = this.siteColors[i];
+            item += '<i style="background: ' + color + ';" class="site legend' + color.slice(1) +
+            '"></i>' + this.siteCategories[i] + '<br>';
+        }
+        item += '<i class="site multiple-types"></i>Multiple Types';
+        div.innerHTML = item;
     }
 
     // use extent to get NWIS rt gages based on bounding box, display on map
