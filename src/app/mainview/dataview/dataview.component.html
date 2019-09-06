@@ -5,12 +5,18 @@
 
     <div class="site-meta">
         <h1>Data</h1>
-        <h3 *ngIf="showSiteData && !noData"><b>Sites:</b> {{selectedSites.join(", ")}}</h3>
+        <button class="selectionButton" *ngIf="!_mapService.selectMultSites" type="button" id="clickPolyButton" (click)="_mapService.selectMultSites = true">
+            <i class="fa fa-plus"></i>&nbsp;&nbsp;Select Multiple Sites
+        </button>
+        <button class="selectionButton" *ngIf="_mapService.selectMultSites"type="button" id="clickPolyButton" (click)="_mapService.selectMultSites = false; getResultData()">
+            <i class="fa fa-stop"></i>&nbsp;&nbsp;Finish selecting
+        </button>
+        <h3 *ngIf="showSiteData && !noData && !_mapService.selectMultSites"><b>Sites:</b> {{selectedSites.join(", ")}}</h3>
         <h3 *ngIf="showSiteData && !noData"><b>Characteristics:</b> {{charsWithSites.join(", ")}}</h3>
         <h3 *ngIf="showSiteData && eventYear"><b>Event Year: </b>{{eventYear}}</h3>
     </div>
 
-    <div [class.hidden]="showSiteData || noData" class="chart-wrapper">
+    <div [class.hidden]="showSiteData || noData" class="chart-wrapper multSiteCharts">
         <div class="chart" id="typeChart"></div>
         <div class="chart" id="orgChart"></div>
     </div>

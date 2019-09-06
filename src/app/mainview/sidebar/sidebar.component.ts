@@ -206,8 +206,8 @@ export class SidebarComponent implements OnInit {
 
         // on site dropdown change just re-filter geojson
         this.siteDropDownGroup.valueChanges.subscribe(selections => {
-            this.filterSelections = selections;
-            this.filterGeoJSON(selections);
+            // remove selected sites from url
+            this.urlParams.delete('site');
             if (!this.firstLoad) {
                 // if site filters are changed after load, update the url
                 Object.keys(selections).forEach(key => {
@@ -219,9 +219,9 @@ export class SidebarComponent implements OnInit {
                     }
                 });
             }
-            // remove selected sites from url
-            this.urlParams.delete('site');
             this.updateQueryParams();
+            this.filterSelections = selections;
+            this.filterGeoJSON(selections);
         });
     }
 

@@ -13,6 +13,7 @@ export class MapComponent implements OnInit {
     // public WQP: any;
     collapsedMap;
     selectedSites;
+    legendExpanded = true;
 
     constructor(private _mapService: MapService, private _summariesService: SummariesService) {}
 
@@ -38,16 +39,28 @@ export class MapComponent implements OnInit {
         this._mapService.legend = new L.Control({ position: 'bottomright' });
         const self = this;
         this._mapService.legend.onAdd = function(map) {
+            // TODO: can combine this somewhat with the map service updateLegend() function
             const div = L.DomUtil.create('div', 'info legend'); let item = '';
 
-            item += '<label>Symbolize sites by:</label><input type="radio" id="siteRadio"><label>Keyword</label> ' +
-                '<input type="radio" id="orgRadio" checked="checked"><label>Organization</label><br>';
-            item += '<i class="site multiple-types"></i>Multiple Types';
+            item += '<div class="legend-header"><div id="legendTitle"><i class="fa fa-list"></i>Explanation</div></div>' +
+                '<div id="legendDiv"><label>Symbolize sites by:</label><input type="radio" id="siteRadio">' +
+                '<label>Keyword</label><input type="radio" id="orgRadio" checked="checked"><label>Organization</label><br>';
+            item += '<i class="site multiple-types"></i>Multiple Types</div>';
             div.innerHTML = item;
             div.id = 'legend';
             // sets up click event for radio buttons
             L.DomEvent.on(div, 'click', (event) => {
-                self.changeSymbology(event['toElement'].id);
+                // if click is in Explanation title, collapse/expand it.
+                if (event['toElement'].id === 'legendTitle') {
+                    const classes = document.getElementById('legendDiv').classList;
+                    if (classes.contains('legendDiv-collapsed')) {
+                        classes.remove('legendDiv-collapsed');
+                    } else {
+                        classes.add('legendDiv-collapsed');
+                    }
+                } else if (event['toElement'].id === 'siteRadio' || event['toElement'].id === 'orgRadio') {
+                    self.changeSymbology(event['toElement'].id);
+                }
             });
             return div;
         };

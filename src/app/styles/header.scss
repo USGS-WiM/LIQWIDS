@@ -44,7 +44,7 @@ header#main{
         padding: 0 10px 0 0;
 
         a{
-            display: flex;
+            display: inline-block;
             flex-direction: column;
             justify-content: center;
             box-sizing: border-box;
@@ -60,6 +60,7 @@ header#main{
             background-color: $white;
             border-radius: 4px;
             margin-left: 10px;
+            padding-top: 5px;
 
             &:hover{
                 text-decoration: underline;
