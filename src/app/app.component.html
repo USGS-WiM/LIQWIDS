@@ -238,7 +238,7 @@ $scope.toast("red", "fa-exclamation", "Toast Title", "Toast Body"); -->
       
 
       <tabs>
-        <tab [tabTitle]="'Zoom, Selection'">
+        <tab [tabTitle]="'Zoom, Selection'" [tabIcon]="'fa fa-search'">
             <div class="user-guide-header">Zoom and Selection Capabilities</div>
             <div class="user-guide-item">
                 <div>
@@ -264,7 +264,7 @@ $scope.toast("red", "fa-exclamation", "Toast Title", "Toast Body"); -->
                 <p>
                     <b>Selecting a Site</b>To open up a site information box, hover over a site until the mouse hand is pointing at it, then 
                     click/tap on the circle at its location on the map. This will highlight the site and open a pop-up window containing information 
-                    about the site. If the "Select Multiple Sites" button isn't selected, it will also populate the "Data" view.
+                    about the site. If the "Select Multiple Sites" button is not selected, it will also populate the "Data" view.
                 </p>
             </div>
             <div class="user-guide-item">
@@ -308,7 +308,7 @@ $scope.toast("red", "fa-exclamation", "Toast Title", "Toast Body"); -->
                     site to view their information.</p>
             </div>
         </tab>
-        <tab [tabTitle]="'Explanation, Basemaps'">
+        <tab [tabTitle]="'Explanation, Basemaps'" [tabIcon]="'fa fa-list'">
             <br/>
             <div class="user-guide-header">Explanation and Basemaps</div>
             <div class="user-guide-item">
@@ -316,7 +316,14 @@ $scope.toast("red", "fa-exclamation", "Toast Title", "Toast Body"); -->
                     <img src="assets/userguide/explanation.png" />
                 </div>
                 <p>
-                    <b>Explanation</b>The explanation box contains a legend for the available sites.</p>
+                    <b>Using the Explanation</b>The explanation box contains a legend for the available sites.</p>
+            </div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/explanation-collapsed.png" />
+                </div>
+                <p>
+                    <b>Explanation Display</b>The explanation box can be collapsed or expanded by clicking/tapping on the header.</p>
             </div>
             <div class="user-guide-item">
                 <div>
@@ -324,7 +331,7 @@ $scope.toast("red", "fa-exclamation", "Toast Title", "Toast Body"); -->
                 </div>
                 <p>
                     <b>Changing Symbolization</b>In the explanation, the user can switch between symbolizing sites by either Keyword 
-                    (e.g. "Well") or by the Organization Name. To do so, click/tap on the radio buttons next to the symbolization type.</p>
+                    or by the Organization Name. To do so, click/tap on the radio buttons next to the symbolization type.</p>
             </div>
             <div class="user-guide-item">
                 <div>
@@ -335,7 +342,7 @@ $scope.toast("red", "fa-exclamation", "Toast Title", "Toast Body"); -->
                     or landscape imagery as a background layer.</p>
             </div>
         </tab>
-        <tab [tabTitle]="'Exploring Site Data'">
+        <tab [tabTitle]="'Exploring Site Data'" [tabIcon]="'fa fa-map-marker-alt'">
             <br/>
             <div class="user-guide-header">Exploring Site Data</div>
             <div class="user-guide-item">
@@ -360,7 +367,7 @@ $scope.toast("red", "fa-exclamation", "Toast Title", "Toast Body"); -->
                     <img src="assets/userguide/scatterplot.png" />
                 </div>
                 <p>
-                    <b>Scatterplot</b>If one or more sites are selected, the data view contains scatterplots displaying measurement 
+                    <b>Scatterplots</b>If one or more sites are selected, the data view contains scatterplots displaying measurement 
                     values for those sites. </p>
             </div>
             <div class="user-guide-item">
@@ -398,16 +405,16 @@ $scope.toast("red", "fa-exclamation", "Toast Title", "Toast Body"); -->
                     The user can download the complete results .csv or print a "report" view of the data view.</p>
             </div>
         </tab>
-        <tab [tabTitle]="'Filtering Sites'">
+        <tab [tabTitle]="'Filtering Sites'" [tabIcon]="'fa fa-filter'">
             <br/>
-            <div class="user-guide-header">Filtering SiGL Projects and Sites</div>
+            <div class="user-guide-header">Filtering Sites</div>
             <div class="user-guide-item">
                 <div>
                     <img src="assets/userguide/parameterfilters.png" />
                 </div>
                 <p>
-                    <b>Parameter Filters</b>The parameter filters in the sidebar allow the user to filter by Characteristic, Event Year, 
-                    and Minimum Result Count. After selecting the filters, the user must click/tap the "Apply Changes" button to update 
+                    <b>Parameter Filters</b>The parameter filters in the sidebar allow the user to filter the sites on the map by Characteristic, 
+                    Event Year, and Minimum Result Count. After selecting the filters, the user must click/tap the "Apply Changes" button to update 
                     the sites.</p>
             </div>
             <div class="user-guide-item">

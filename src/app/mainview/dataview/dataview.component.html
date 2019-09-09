@@ -3,7 +3,7 @@
     <app-dataloader-div id="dataLoader"></app-dataloader-div>
 
 
-    <div class="site-meta">
+    <div class="site-meta dataview-padding">
         <h1>Data</h1>
         <button class="selectionButton" *ngIf="!_mapService.selectMultSites" type="button" id="clickPolyButton" (click)="_mapService.selectMultSites = true">
             <i class="fa fa-plus"></i>&nbsp;&nbsp;Select Multiple Sites
@@ -11,9 +11,11 @@
         <button class="selectionButton" *ngIf="_mapService.selectMultSites"type="button" id="clickPolyButton" (click)="_mapService.selectMultSites = false; getResultData()">
             <i class="fa fa-stop"></i>&nbsp;&nbsp;Finish selecting
         </button>
-        <h3 *ngIf="showSiteData && !noData && !_mapService.selectMultSites"><b>Sites:</b> {{selectedSites.join(", ")}}</h3>
-        <h3 *ngIf="showSiteData && !noData"><b>Characteristics:</b> {{charsWithSites.join(", ")}}</h3>
-        <h3 *ngIf="showSiteData && eventYear"><b>Event Year: </b>{{eventYear}}</h3>
+        <div *ngIf="showSiteData && !noData">
+            <h3><b>Sites:</b> {{selectedSites.join(", ")}}</h3>
+            <h3 *ngIf="!_mapService.selectMultSites"><b>Characteristics:</b> {{charsWithSites.join(", ")}}</h3>
+            <h3 *ngIf="eventYear"><b>Event Year: </b>{{eventYear}}</h3>
+        </div>
     </div>
 
     <div [class.hidden]="showSiteData || noData" class="chart-wrapper multSiteCharts">
@@ -21,63 +23,67 @@
         <div class="chart" id="orgChart"></div>
     </div>
 
-    <div [class.hidden]="!showSiteData || noData">
-        <div *ngIf="charTypes.length > 1">
-            <label class="charType">Measurement Type:</label>
-            <select [(ngModel)]="selectedChar" (change)="createCharts($event.target.value, false)">
-                <option *ngFor="let char of charTypes" [value]="char">{{char}}</option>
-            </select>
-        </div>
-        <div class="chartButtons" [class.hidden]="noGraphData">
-            <label class="charType">Chart Type (Y-Axis):</label>
-            <div style="display: inline-block;">
-                <span style="padding-right:10px">
-                    <input type="radio" (click)="setYaxisType('linear')" value="linear" [checked]="chartType === 'linear' ? true : false"/>Linear
-                </span>
-                <span>
-                    <input type="radio" (click)="setYaxisType('logarithmic')" value="logarithmic" [checked]="chartType === 'logarithmic' ? true : false"/>Logarithmic
-                </span>
+    <div [class.hidden]="!showSiteData || noData || _mapService.selectMultSites">
+        <div class="dataview-padding">
+            <div *ngIf="charTypes.length > 1">
+                <label class="charType">Measurement Type:</label>
+                <select [(ngModel)]="selectedChar" (change)="createCharts($event.target.value, false)">
+                    <option *ngFor="let char of charTypes" [value]="char">{{char}}</option>
+                </select>
+            </div>
+            <div class="chartButtons" [class.hidden]="noGraphData">
+                <label class="charType">Chart Type (Y-Axis):</label>
+                <div style="display: inline-block;">
+                    <span style="padding-right:10px">
+                        <input type="radio" (click)="setYaxisType('linear')" value="linear" [checked]="chartType === 'linear' ? true : false"/>Linear
+                    </span>
+                    <span>
+                        <input type="radio" (click)="setYaxisType('logarithmic')" value="logarithmic" [checked]="chartType === 'logarithmic' ? true : false"/>Logarithmic
+                    </span>
+                </div>
             </div>
         </div>
+        
         <div class="chart-wrapper" id="charts"></div>
 
-        <div *ngIf="noGraphData" id="noGraphData">
+        <div class="dataview-padding" *ngIf="noGraphData" id="noGraphData">
                 <h5>No data points to graph.</h5>
             </div>
 
         <div style="text-align: center;" [class.hidden]="noGraphData"><i class="fa fa-mouse-pointer"></i>Drag a box around points on the graph to
             zoom in</div>
-
-        <button (click)="downloadFile()"><i class="fa fa-file-download"></i>Download Results CSV</button>
-        <button (click)="makeModalChart()"><i class="fa fa-book-open"></i>Report</button>
-        <table id="dataTable">
-            <thead>
-                <tr class="row header">
-                    <th *ngIf="selectedSites.length > 1">Site Name</th>
-                    <th>Activity Start Date</th>
-                    <th>Characteristic</th>
-                    <th>Depth</th>
-                    <th>Value</th>
-                    <th>Fraction</th>
-                    <th>Provider</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let sample of resultJson" class="row">
-                    <td *ngIf="selectedSites.length > 1">{{sample.MonitoringLocationIdentifier}}</td>
-                    <td>{{sample.ActivityStartDate}}</td>
-                    <td>{{sample.CharacteristicName}}</td>
-                    <td *ngIf="sample['ActivityDepthHeightMeasure/MeasureValue']">{{sample['ActivityDepthHeightMeasure/MeasureValue']}}
-                        {{sample['ActivityDepthHeightMeasure/MeasureUnitCode']}}</td>
-                    <td *ngIf="!sample['ActivityDepthHeightMeasure/MeasureValue']">{{sample['ActivityBottomDepthHeightMeasure/MeasureValue']}}
-                        {{sample['ActivityBottomDepthHeightMeasure/MeasureUnitCode']}}</td>
-                    <td *ngIf="sample.ResultDetectionConditionText !== 'Not Detected'">{{sample.ResultMeasureValue}} {{sample['ResultMeasure/MeasureUnitCode']}}</td>
-                    <td *ngIf="sample.ResultDetectionConditionText === 'Not Detected'">{{sample.ResultDetectionConditionText}}</td>
-                    <td>{{sample.ResultSampleFractionText}}</td>
-                    <td>{{sample.ProviderName}}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="dataview-padding">
+            <button (click)="downloadFile()"><i class="fa fa-file-download"></i>Download Results CSV</button>
+            <button (click)="makeModalChart()"><i class="fa fa-book-open"></i>Report</button>
+            <table id="dataTable">
+                <thead>
+                    <tr class="row header">
+                        <th *ngIf="selectedSites.length > 1">Site Name</th>
+                        <th>Activity Start Date</th>
+                        <th>Characteristic</th>
+                        <th>Depth</th>
+                        <th>Value</th>
+                        <th>Fraction</th>
+                        <th>Provider</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let sample of resultJson" class="row">
+                        <td *ngIf="selectedSites.length > 1">{{sample.MonitoringLocationIdentifier}}</td>
+                        <td>{{sample.ActivityStartDate}}</td>
+                        <td>{{sample.CharacteristicName}}</td>
+                        <td *ngIf="sample['ActivityDepthHeightMeasure/MeasureValue']">{{sample['ActivityDepthHeightMeasure/MeasureValue']}}
+                            {{sample['ActivityDepthHeightMeasure/MeasureUnitCode']}}</td>
+                        <td *ngIf="!sample['ActivityDepthHeightMeasure/MeasureValue']">{{sample['ActivityBottomDepthHeightMeasure/MeasureValue']}}
+                            {{sample['ActivityBottomDepthHeightMeasure/MeasureUnitCode']}}</td>
+                        <td *ngIf="sample.ResultDetectionConditionText !== 'Not Detected'">{{sample.ResultMeasureValue}} {{sample['ResultMeasure/MeasureUnitCode']}}</td>
+                        <td *ngIf="sample.ResultDetectionConditionText === 'Not Detected'">{{sample.ResultDetectionConditionText}}</td>
+                        <td>{{sample.ResultSampleFractionText}}</td>
+                        <td>{{sample.ProviderName}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
     </div>
     <div *ngIf="noData" id="noData">

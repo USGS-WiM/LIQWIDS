@@ -39,7 +39,6 @@ export class MapComponent implements OnInit {
         this._mapService.legend = new L.Control({ position: 'bottomright' });
         const self = this;
         this._mapService.legend.onAdd = function(map) {
-            // TODO: can combine this somewhat with the map service updateLegend() function
             const div = L.DomUtil.create('div', 'info legend'); let item = '';
 
             item += '<div class="legend-header"><div id="legendTitle"><i class="fa fa-list"></i>Explanation</div></div>' +
