@@ -1,0 +1,33 @@
+:host ::ng-deep{
+    #legendTitle{
+        font-style: normal;
+        text-transform: none !important;
+        font-weight: 500;
+        font-size: 14px !important;
+        letter-spacing: 0.3px;
+        text-align: center;
+        color: rgb(111, 117, 142);
+    }
+
+    .legend-header{
+        padding: 8px;
+        cursor: pointer;
+        background-color: white;
+    }
+    
+    .legendDiv-collapsed{
+        display: none;
+    }
+
+    #legendDiv{
+        padding: 6px 8px;
+    }
+
+    .fa-list{
+        margin-top: 3px;
+    }
+    
+    #legend{
+        min-width: 200px;
+    }
+}

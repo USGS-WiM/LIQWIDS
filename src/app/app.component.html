@@ -45,7 +45,8 @@
     </div>
     <!-- Links on right -->
     <nav id="headerLinks">
-      <a (click)="aboutModal = true">About</a>
+      <a (click)="aboutModal = true"><i class="fa fa-info-circle"></i>&nbsp;About</a>
+      <a (click)="userGuideModal = true"><i class="fa fa-book"></i>&nbsp;User Guide</a>
     </nav>
   </header>
 
@@ -221,6 +222,226 @@ $scope.toast("red", "fa-exclamation", "Toast Title", "Toast Body"); -->
 
     <div class="modal-actions right">
       <button (click)="aboutModal = false">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- User Guide Modal -->
+<div class="modal-wrapper" *ngIf="userGuideModal" (click)="userGuideModal = false">
+  <div class="modal" id="userGuideModal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="title">User Guide</div>
+      <div class="modal-close" (click)="userGuideModal = false">&times;</div>
+    </div>
+
+    <div class="modal-content">
+      
+
+      <tabs>
+        <tab [tabTitle]="'Zoom, Selection'" [tabIcon]="'fa fa-search'">
+            <div class="user-guide-header">Zoom and Selection Capabilities</div>
+            <div class="user-guide-item">
+                <div>
+                    <img src='assets/userguide/zoom_plusminus.PNG' />
+                </div>
+                <p>
+                    <b>Navigating the Map</b>The scroll wheel on the mouse can be used to zoom, and in the upper left area of the tool 
+                    are "+" and "-" icons to zoom in and out, respectively.</p>
+            </div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/zoom_shift.png" />
+                </div>
+                <p>
+                    <b>Define an Area to Zoom to</b>In most web browsers, the user can hold down the shift key, then click
+                    and drag the map to define the area to zoom in.
+                </p>
+            </div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/site_popup.png" />
+                </div>
+                <p>
+                    <b>Selecting a Site</b>To open up a site information box, hover over a site until the mouse hand is pointing at it, then 
+                    click/tap on the circle at its location on the map. This will highlight the site and open a pop-up window containing information 
+                    about the site. If the "Select Multiple Sites" button is not selected, it will also populate the "Data" view.
+                </p>
+            </div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/select_mult.png" />
+                    <img src="assets/userguide/stop_mult.png" />
+                </div>
+                <p>
+                    <b>Selecting Multiple Sites</b>To select multiple sites, the user can either hold down the "ctrl" key and click on 
+                    a site, or use the "Select Multiple Sites" button in the data view. When the "Select Multiple Sites" button 
+                    is selected, the user can click/tap on multiple sites and they will be highlighted. If one or more sites are 
+                    already selected before the button is clicked, they will be included in the selection. Once the user is 
+                    finished selecting sites, they can click/tap "Finish selecting" and the result data will be queried.</p>
+            </div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/mult_sites.png" />
+                </div>
+                <p>
+                    <b>Viewing Overlapping Sites</b>When two or more sites are overlapping, their circles on the map
+                    appear darker. Clicking/tapping on overlapping sites will display a warning in the site information pop-up
+                    box.
+                </p>
+            </div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/mult_sites_zoom.png" />
+                </div>
+                <p>
+                    <b>Zoom into Overlapping Sites</b>In order to select overlapping sites, first zoom into them. When
+                    it's close enough to select them, a circle with a number inside will appear, representing
+                    the number of sites at that location.</p>
+            </div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/mult_sites_spiderfy.png" />
+                </div>
+                <p>
+                    <b>Selecting Overlapping Sites</b>Once the circle containing the number of sites in the location
+                    is in view, click/tap on that circle. The sites will separate, and the user can then select each
+                    site to view their information.</p>
+            </div>
+        </tab>
+        <tab [tabTitle]="'Explanation, Basemaps'" [tabIcon]="'fa fa-list'">
+            <br/>
+            <div class="user-guide-header">Explanation and Basemaps</div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/explanation.png" />
+                </div>
+                <p>
+                    <b>Using the Explanation</b>The explanation box contains a legend for the available sites.</p>
+            </div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/explanation-collapsed.png" />
+                </div>
+                <p>
+                    <b>Explanation Display</b>The explanation box can be collapsed or expanded by clicking/tapping on the header.</p>
+            </div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/site_symbolization.png" />
+                </div>
+                <p>
+                    <b>Changing Symbolization</b>In the explanation, the user can switch between symbolizing sites by either Keyword 
+                    or by the Organization Name. To do so, click/tap on the radio buttons next to the symbolization type.</p>
+            </div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/basemap_layers.PNG" />
+                </div>
+                <p>
+                    <b>Changing the Basemap Style</b>The "Basemaps" panel allows a user to select various geographic information 
+                    or landscape imagery as a background layer.</p>
+            </div>
+        </tab>
+        <tab [tabTitle]="'Exploring Site Data'" [tabIcon]="'fa fa-map-marker-alt'">
+            <br/>
+            <div class="user-guide-header">Exploring Site Data</div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/dataview.png" />
+                </div>
+                <p>
+                    <b>The Data View</b>The "Data" view of the mapper contains result data in the form of charts and tables 
+                   for the sites on the map. </p>
+            </div>
+            <div class="user-guide-item">
+                    <div>
+                        <img src="assets/userguide/piecharts.png" />
+                    </div>
+                    <p>
+                        <b>Pie Charts</b>If no sites are selected on the map, the data view contains pie charts indicating the 
+                        various site types and organizations of the sites on the map, and what portion of the sites include those 
+                        types and organizations.</p>
+                </div>
+            <div class="user-guide-item">
+                <div style="display: inline">
+                    <img src="assets/userguide/scatterplot.png" />
+                </div>
+                <p>
+                    <b>Scatterplots</b>If one or more sites are selected, the data view contains scatterplots displaying measurement 
+                    values for those sites. </p>
+            </div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/chartoptions.png" />
+                </div>
+                <p>
+                    <b>Chart Options</b>The scatterplots can be exported  to a "PNG", "JPEG", "PDF" or "SVG" vector image using the 
+                    "Chart Options" button.
+                </p>
+            </div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/serieson.png" />
+                    <img src="assets/userguide/seriesoff.png" />
+                </div>
+                <p>
+                    <b>Toggle on/off Scatterplot Series</b>The series on the scatterplot can be toggled on/off by clicking/tapping on 
+                    the series name in the legend below the chart.</p>
+            </div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/charttype.png" />
+                </div>
+                <p>
+                    <b>Changing the Chart Type</b>The y-axis of the scatterplots can be toggled between a "Linear" or "Logarithmic" 
+                    scale by selecting the radio button next to each chart type.</p>
+            </div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/datatable.png" />
+                </div>
+                <p>
+                    <b>Data Table</b>Below the scatterplots, a table contains selected fields from the result data for the selected sites. 
+                    The user can download the complete results .csv or print a "report" view of the data view.</p>
+            </div>
+        </tab>
+        <tab [tabTitle]="'Filtering Sites'" [tabIcon]="'fa fa-filter'">
+            <br/>
+            <div class="user-guide-header">Filtering Sites</div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/parameterfilters.png" />
+                </div>
+                <p>
+                    <b>Parameter Filters</b>The parameter filters in the sidebar allow the user to filter the sites on the map by Characteristic, 
+                    Event Year, and Minimum Result Count. After selecting the filters, the user must click/tap the "Apply Changes" button to update 
+                    the sites.</p>
+            </div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/sitefilters.png" />
+                </div>
+                <p>
+                    <b>Site Filters</b>The site filters in the sidebar allow the user to filter by huc8, organization, data provider, 
+                    keyword and site type. The site filters update on selection. </p>
+            </div>
+            <div class="user-guide-item">
+                <div>
+                    <img src="assets/userguide/clearfilt.png" />
+                </div>
+                <p>
+                    <b>Clear Selected Filters</b>
+                    To clear the selected site filters, the user can click/tap the "Clear Selections" button in the sidebar.
+                </p>
+            </div>
+        </tab>
+      </tabs>
+      
+      
+    </div>
+
+    <div class="modal-actions right">
+      <button (click)="userGuideModal = false">Close</button>
     </div>
   </div>
 </div>

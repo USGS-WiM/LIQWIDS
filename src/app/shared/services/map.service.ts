@@ -30,6 +30,7 @@ export class MapService {
     public markerClusters;
     public geoJsonURL;
     public colorJson = []; // for symbolizing sites if site filters applied
+    public selectMultSites = false;
     // for symbolizing by keyword or organization
     public siteColors = ['#3cb44b', '#9444E0', '#4376D3', '#E04644', '#555E7B', '#1F777F', '#D608A9', '#B7D968', '#964b41', '#3C69B4',
         '#44DEE0', '#B4873C', '#68D9C3'];
@@ -211,6 +212,9 @@ export class MapService {
         }
         if (this.selectedSiteLayer) {
             this.highlightMarkers.forEach(marker => this.selectedSiteLayer.remove(marker));
+            this.selectedSiteLayer.eachLayer(lay => {
+                this.selectedSiteLayer.removeLayer(lay);
+            });
         }
         this.highlightMarkers = [];
         const layer = L.geoJSON(geoJson, {
@@ -270,7 +274,7 @@ export class MapService {
                     }
                     if (run) {
                         // control key used to select multiple sites
-                        if (!e.originalEvent.ctrlKey) {
+                        if (!e.originalEvent.ctrlKey && !self.selectMultSites) {
                             if (self.selectedSiteLayer) {
                                 self.highlightMarkers.forEach(marker => self.selectedSiteLayer.remove(marker));
                             }
@@ -434,7 +438,9 @@ export class MapService {
 
     public updateLegend() {
         // rewrites legend div with updated colors
-        const div = L.DomUtil.get('legend'); let item = '<label>Symbolize sites by:</label>';
+        const div = L.DomUtil.get('legend');
+        let item = '<div class="legend-header"><div id="legendTitle"><i class="fa fa-list"></i>Explanation</div></div><div ' +
+            'id="legendDiv"> <label>Symbolize sites by:</label>';
         if (this.colorBy === 'orgName') {
             item += '<input type="radio" id="siteRadio"><label>Keyword</label> <input type="radio" id="orgRadio" checked="checked">' +
                 '<label>Organization</label><br>';
@@ -447,8 +453,12 @@ export class MapService {
             item += '<i style="background: ' + color + ';" class="site legend' + color.slice(1) +
             '"></i>' + this.siteCategories[i] + '<br>';
         }
-        item += '<i class="site multiple-types"></i>Multiple Types';
+        item += '<i class="site multiple-types"></i>Multiple Types</div>';
         div.innerHTML = item;
+
+        if (window.outerWidth < 1200) {
+            document.getElementById('legendDiv').classList.add('legendDiv-collapsed');
+        }
     }
 
     // use extent to get NWIS rt gages based on bounding box, display on map

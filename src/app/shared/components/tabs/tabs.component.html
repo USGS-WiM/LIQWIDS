@@ -1,6 +1,6 @@
 <ul class="tab-ul">
     <li *ngFor="let tab of tabs" (click)="selectTab(tab)" [class.active]="tab.active">
-      <a>{{tab.title}}</a>
+      <a><i *ngIf="tab.icon" [class]="tab.icon"></i>&nbsp;{{tab.title}}</a>
     </li>
   </ul>
   <ng-content></ng-content>

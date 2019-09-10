@@ -20,8 +20,12 @@
     max-width: 100%;
     margin: 0;
 
-    &.data-blur{
+    @media only screen and (max-width: 1200px) {
+        padding: 5px;
+    }
 
+    &.data-blur{
+        padding: 0px;
         // Blur everything except the loader
         *:not(#dataLoader){
             filter: blur(3px);
@@ -33,7 +37,6 @@
     .site-meta{
         display: block;
         box-sizing: border-box;
-        padding: 15px 25px;
 
         h1{
             font-size: 26px;
@@ -45,6 +48,9 @@
             font-weight: 500;
         }
     }
+    .dataview-padding{
+        padding: 15px 25px;
+    }
 }
 
 .chart-wrapper{
@@ -52,12 +58,28 @@
     justify-content: space-between;
     box-sizing: border-box;
     padding: 20px 25px 10px 25px;
+    margin: 10px;
+
+    @media only screen and (max-width: 700px) {
+        display: block !important;
+        margin-bottom: 50px;
+    }
+}
+
+.multSiteCharts{
+    @media only screen and (max-width: 1200px) {
+        display: block !important;
+        margin-bottom: 50px;
+    }
 }
 
 :host ::ng-deep .new-charts{
     display: block;
     margin: 0 auto;
     width: 50%;
+    @media only screen and (max-width: 700px) {
+        width: 100%;
+    }
 }
 
 #dataTable{
@@ -91,6 +113,13 @@
             box-sizing: border-box;
             padding: 0 10px;
             text-align: left;
+            word-break: break-word;
+
+            @media only screen and (max-width: 1200px) {
+                height: unset;
+                min-height: 40px;
+                padding: 1px;
+            }
 
             &:nth-child(1){
                 font-weight: bolder;
@@ -109,7 +138,7 @@
 .charType {
     color: black;
     display: inline-block;
-    padding: 15px 25px;
+    padding: 15px 0px;
     font-size: 14px;
 }
 
@@ -221,6 +250,29 @@ i{
         .identifier {
             padding-bottom: 2em;
         }
+        #invalid-point-msg{
+            text-align: left !important;
+            margin-left: 5px;
+        }
+    }
+    #invalid-point-msg{
+        display: inline-block;
+        padding: .2em .6em .3em;
+        //margin: 0px 20%;
+        font-size: 85%;
+        font-weight: 500;
+        background-color: #e1ad01;
+        color: #fff;
+        text-align: center;
+        border-radius: .4em;
+    }
+    #invalid-msg-div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .fa-list{
+        margin-top: 3px;
     }
 }
 
@@ -230,4 +282,11 @@ i{
         /**Needs to be relative for printing in IE11**/
         position: relative;
     }
+}
+
+.selectionButton{
+    margin: 15px 0px !important;
+}
+#single{
+    opacity: .80;
 }

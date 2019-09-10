@@ -56,6 +56,7 @@ export class DataviewComponent implements OnInit {
     public axis = 'BottomX';
     public charts = [];
     public chartType = 'linear';
+    public selectMultSites = false;
 
     constructor(private _mapService: MapService, private _http: HttpClient, private _loaderService: LoaderService,
         private _configService: ConfigService) {
@@ -90,7 +91,8 @@ export class DataviewComponent implements OnInit {
             if (this.selectedSites.indexOf(Response.name) === -1) {
                 this.selectedSites.push(Response.name);
             }
-            this.getResultData(); // query result data
+            // if user doesn't have the "Select Multiple Sites" button selected
+            if (this._mapService.selectMultSites === false) { this.getResultData(); } // query result data
         });
         this._mapService.SelectedChar.subscribe((Response) => {
             // subscriber for parameter filter/characteristic selection
@@ -125,6 +127,9 @@ export class DataviewComponent implements OnInit {
         customButton.text = 'Chart Options';
         customButton.theme = {fill: '#3E3BFB' };
         customButton.symbol = null;
+        if (window.outerWidth < 1200) {
+            customButton.y = -10;
+        }
         customButton.menuItems = customButton.menuItems.slice(2);
 
         this._siteChartOptions = { // options for site data scatter plots
@@ -449,7 +454,7 @@ export class DataviewComponent implements OnInit {
                 for (const set of series) {
                     // for each series, add to chart and create a regression line
                     newChart.addSeries(set);
-                    if (set.data.length > 2) { this.createRegression(newChart, set); }
+                    if (set.data.length > 2) { this.createRegression(newChart, set, newDiv); }
                 }
                 if (uniqueData.length < chartData.length) {
                     // fix for duplicate data, slightly jitters to allow differentiation
@@ -474,11 +479,35 @@ export class DataviewComponent implements OnInit {
         this.chartType = 'linear';
     }
 
-    public createRegression(chart, series) {
+    public createRegression(chart, series, chartDiv) {
         // create regression line
-        for (const data of series.data) {
+        const toRemove = [];
+        for (let i = 0; i < series.data.length; i++) {
+            const data = series.data[i];
             data[0] = data.x / 10000000000;
             data[1] = data.y;
+            if (Number.isNaN(data[0]) || Number.isNaN(data[1])) {
+                toRemove.push(i);
+            }
+        }
+        if (toRemove.length > 0) {
+            // if there are any invalid points, remove them from regression and add message
+            for (let i = toRemove.length - 1; i > -1; i--) {
+                series.data.splice(toRemove[i], 1);
+            }
+
+            let divExists = false;
+            chartDiv.childNodes.forEach((div) => {
+                if (div.id === 'invalid-msg-div') {
+                    divExists = true;
+                }
+            });
+            if (!divExists) {
+                const msg = document.createElement('div');
+                msg.id = 'invalid-msg-div';
+                msg.innerHTML = '<div id="invalid-point-msg">Graph excludes measurement(s) with non-numerical values.</div>';
+                chartDiv.appendChild(msg);
+            }
         }
         const ymxb = regression.linear(series.data);
         const m = ymxb.equation[0]; const b = ymxb.equation[1];
