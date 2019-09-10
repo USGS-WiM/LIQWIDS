@@ -5,15 +5,15 @@
 
     <div class="site-meta dataview-padding">
         <h1>Data</h1>
-        <button class="selectionButton" *ngIf="!_mapService.selectMultSites" type="button" id="clickPolyButton" (click)="_mapService.selectMultSites = true">
+        <button class="selectionButton" *ngIf="!selectMultSites" type="button" id="clickPolyButton" (click)="toggleSelectMultSites(true)">
             <i class="fa fa-plus"></i>&nbsp;&nbsp;Select Multiple Sites
         </button>
-        <button class="selectionButton" *ngIf="_mapService.selectMultSites"type="button" id="clickPolyButton" (click)="_mapService.selectMultSites = false; getResultData()">
+        <button class="selectionButton" *ngIf="selectMultSites"type="button" id="clickPolyButton" (click)="toggleSelectMultSites(false)">
             <i class="fa fa-stop"></i>&nbsp;&nbsp;Finish selecting
         </button>
         <div *ngIf="showSiteData && !noData">
             <h3><b>Sites:</b> {{selectedSites.join(", ")}}</h3>
-            <h3 *ngIf="!_mapService.selectMultSites"><b>Characteristics:</b> {{charsWithSites.join(", ")}}</h3>
+            <h3 *ngIf="!selectMultSites"><b>Characteristics:</b> {{charsWithSites.join(", ")}}</h3>
             <h3 *ngIf="eventYear"><b>Event Year: </b>{{eventYear}}</h3>
         </div>
     </div>
@@ -23,7 +23,7 @@
         <div class="chart" id="orgChart"></div>
     </div>
 
-    <div [class.hidden]="!showSiteData || noData || _mapService.selectMultSites">
+    <div [class.hidden]="!showSiteData || noData || selectMultSites">
         <div class="dataview-padding">
             <div *ngIf="charTypes.length > 1">
                 <label class="charType">Measurement Type:</label>
