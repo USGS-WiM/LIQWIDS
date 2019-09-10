@@ -92,7 +92,7 @@ export class DataviewComponent implements OnInit {
                 this.selectedSites.push(Response.name);
             }
             // if user doesn't have the "Select Multiple Sites" button selected
-            if (this._mapService.selectMultSites === false) { this.getResultData(); } // query result data
+            if (this.selectMultSites === false) { this.getResultData(); } // query result data
         });
         this._mapService.SelectedChar.subscribe((Response) => {
             // subscriber for parameter filter/characteristic selection
@@ -292,6 +292,12 @@ export class DataviewComponent implements OnInit {
 
     public updateQueryParams() {
         window.history.replaceState({}, '', decodeURIComponent(`${location.pathname}?${this.urlParams}`));
+    }
+
+    public toggleSelectMultSites(bool) {
+        this._mapService.selectMultSites = bool;
+        this.selectMultSites = bool;
+        if (!bool) { this.getResultData(); }
     }
 
     public getUrlSites() {
