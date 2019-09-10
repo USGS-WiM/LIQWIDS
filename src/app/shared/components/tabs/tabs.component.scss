@@ -7,47 +7,64 @@
   }
 
   .tab-ul {
-        list-style: none;
+        background-color: white !important;
+        border-radius: 4px !important;
+        padding: 0 !important;
+        margin-bottom: 5px;
         width: 100%;
-        padding: 0 20px 10px 20px;
-        box-sizing: border-box;
-        margin: 0;
         display: flex;
-        min-height: fit-content;
+        flex-grow: 3;
 
 
         li{
-            margin: 0 10px 0 0;
+            padding: 0!important;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 0!important;
+            margin-bottom: -1px;
+            position: relative;
+            display: block;
+            background-color: transparent;
+            text-align: left;
+            letter-spacing: .25px;
+            line-height: 16px;
 
             a{
-                transition: $transition;
-                font-size: 14px;
+                color: #6F758E;
+                font-weight: 500!important;
+                font-size: 12px!important;
+                letter-spacing: 0!important;
+                border-radius: 0!important;
+                margin: 0!important;
+                border: none!important;
                 box-sizing: border-box;
-                padding: 6px 0;
-                font-family: $sans;
-                font-weight: 600;
-                letter-spacing: -0.3px;
-                text-decoration: none;
-                color: fade-out($black, 0.5);
-                transition: $transition;
+                border-bottom: 3px solid transparent;
+                border-top: 3px solid transparent;
+                padding-top: 11px!important;
+                line-height: 1.42857143;
+                padding: 10px 15px;
 
                 &:hover{
-                    text-decoration: underline;
-                    color: $black;
-                    transition: $transition;
+                    cursor: pointer;
+                    color: #10152C !important;
+                    border: none;
+                    background-color: rgba(111,117,142,.15);
+                }
+
+                i{
+                    text-align: center;
+                    border-bottom: none;
                 }
             }
 
             &.active{
 
                 a{
-                    color: $blue;
-                    transition: $transition;
-                    text-decoration: underline;
-
-                    &:hover{
-                        color: $blue;
-                    }
+                    background-color: transparent !important;
+                    color: black !important;
+                    font-weight: 500 !important;
+                    cursor: pointer;
+                    border-bottom: 3px solid #0F8AFF !important;
                 }
             }
         }
