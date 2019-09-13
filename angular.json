@@ -63,6 +63,9 @@
                 }
               ]
             },
+            "es5": {
+                "tsConfig": "./src/tsconfig-es5.app.json"
+            },
             "hmr": {
               "fileReplacements": [
                 {
@@ -81,6 +84,9 @@
           "configurations": {
             "production": {
               "browserTarget": "LIQWIDS:build:production"
+            },
+            "es5": {
+                "browserTarget": "LIQWIDS:build:es5"
             },
             "hmr": {
               "hmr": true,

@@ -1,0 +1,12 @@
+{ 
+    "extends": "./tsconfig.app.json",
+    "compilerOptions": { 
+      "target": "es5",
+      "outDir": "../out-tsc/app",
+      "types": ["node", "highcharts"]
+    },
+    "exclude": [
+      "test.ts",
+      "**/*.spec.ts"
+    ]
+}

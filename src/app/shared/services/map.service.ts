@@ -453,7 +453,7 @@ export class MapService {
             item += '<i style="background: ' + color + ';" class="site legend' + color.slice(1) +
             '"></i>' + this.siteCategories[i] + '<br>';
         }
-        item += '<i class="site multiple-types"></i>Multiple Types</div>';
+        item += '<i class="site multiple-types"></i>Multiple</div>';
         div.innerHTML = item;
 
         if (window.outerWidth < 1200) {

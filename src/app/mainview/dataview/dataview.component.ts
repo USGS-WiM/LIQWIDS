@@ -40,7 +40,7 @@ export class DataviewComponent implements OnInit {
     private selectedChar;
     private fractionTypes;
     public showModal = false;
-    public urlParams;
+    public urlParams = {};
     public urlSites;
     public subscription;
     public charsWithSites = [];
@@ -57,6 +57,7 @@ export class DataviewComponent implements OnInit {
     public charts = [];
     public chartType = 'linear';
     public selectMultSites = false;
+    public paramOptions = ['characteristic', 'site', 'eventYear', 'minResults', 'huc8', 'orgName', 'provider', 'searchType'];
 
     constructor(private _mapService: MapService, private _http: HttpClient, private _loaderService: LoaderService,
         private _configService: ConfigService) {
@@ -72,7 +73,7 @@ export class DataviewComponent implements OnInit {
             if (this.urlSites[0] !== Response.name) {
                 // add selected site to url if not already in it
                 this.urlSites = [Response.name];
-                this.urlParams.set('site', this.urlSites.join(','));
+                this.urlParams['site'] = this.urlSites.join(',');
                 this.updateQueryParams();
             }
             this.selectedSites = [Response.name];
@@ -85,7 +86,7 @@ export class DataviewComponent implements OnInit {
             if (this.urlSites.indexOf(Response.name) === -1) {
                 // add selected site to url if not already in it
                 this.urlSites.push(Response.name);
-                this.urlParams.set('site', this.urlSites.join(','));
+                this.urlParams['site'] = this.urlSites.join(',');
                 this.updateQueryParams();
             }
             if (this.selectedSites.indexOf(Response.name) === -1) {
@@ -291,7 +292,18 @@ export class DataviewComponent implements OnInit {
     } // End NgOnInit
 
     public updateQueryParams() {
-        window.history.replaceState({}, '', decodeURIComponent(`${location.pathname}?${this.urlParams}`));
+        // cycle through each param to create query string
+        let params = ''; let i = 0;
+        Object.keys(this.urlParams).forEach(key => {
+            if (i === 0 && this.urlParams[key] !== null) {
+                params += key + '=' + this.urlParams[key];
+                i ++;
+            } else if (this.urlParams[key] !== null) {
+                params += '&' + key + '=' + this.urlParams[key];
+                i ++;
+            }
+        });
+        window.history.replaceState('', '', '?' + decodeURIComponent(params));
     }
 
     public toggleSelectMultSites(bool) {
@@ -302,15 +314,31 @@ export class DataviewComponent implements OnInit {
 
     public getUrlSites() {
         // get list of sites listed in the url
-        this.urlParams = new URLSearchParams(window.location.search);
-        if (this.urlParams.get('site') !== null) {this.urlSites = this.urlParams.get('site').split(',');
+        this.urlParams = {};
+        for (const param of this.paramOptions) {
+            this.urlParams[param] = this.getUrlParam(param);
+        }
+        if (this.urlParams['site'] !== null) {this.urlSites = this.urlParams['site'].split(',');
         } else {this.urlSites = []; }
     }
     public getUrlEventYear() {
         // get list of sites listed in the url
-        this.urlParams = new URLSearchParams(window.location.search);
-        if (this.urlParams.get('eventYear') !== null) {this.eventYear = this.urlParams.get('eventYear');
+        this.urlParams = {};
+        for (const param of this.paramOptions) {
+            this.urlParams[param] = this.getUrlParam(param);
+        }
+        if (this.urlParams['eventYear'] !== null) {this.eventYear = this.urlParams['eventYear'];
         } else {this.eventYear = null; }
+    }
+
+    public getUrlParam(name) {
+        // because IE doesn't support URLSearchParams, this function reads the param value from the url
+        const results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results == null) {
+            return null;
+        } else {
+            return decodeURI(results[1]) || 0;
+        }
     }
 
     public getResultData() {
