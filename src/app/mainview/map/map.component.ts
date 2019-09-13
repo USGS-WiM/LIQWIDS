@@ -51,15 +51,16 @@ export class MapComponent implements OnInit {
             // sets up click event for radio buttons
             L.DomEvent.on(div, 'click', (event) => {
                 // if click is in Explanation title, collapse/expand it.
-                if (event['toElement'].id === 'legendTitle') {
+                const id = event.target['id'];
+                if (id === 'legendTitle') {
                     const classes = document.getElementById('legendDiv').classList;
                     if (classes.contains('legendDiv-collapsed')) {
                         classes.remove('legendDiv-collapsed');
                     } else {
                         classes.add('legendDiv-collapsed');
                     }
-                } else if (event['toElement'].id === 'siteRadio' || event['toElement'].id === 'orgRadio') {
-                    self.changeSymbology(event['toElement'].id);
+                } else if (id === 'siteRadio' || id === 'orgRadio') {
+                    self.changeSymbology(id);
                 }
             });
             return div;
