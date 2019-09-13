@@ -14,6 +14,7 @@ export class MapComponent implements OnInit {
     collapsedMap;
     selectedSites;
     legendExpanded = true;
+    public paramOptions = ['characteristic', 'site', 'eventYear', 'minResults', 'huc8', 'orgName', 'provider', 'searchType'];
 
     constructor(private _mapService: MapService, private _summariesService: SummariesService) {}
 
@@ -44,7 +45,7 @@ export class MapComponent implements OnInit {
             item += '<div class="legend-header"><div id="legendTitle"><i class="fa fa-list"></i>Explanation</div></div>' +
                 '<div id="legendDiv"><label>Symbolize sites by:</label><input type="radio" id="siteRadio">' +
                 '<label>Keyword</label><input type="radio" id="orgRadio" checked="checked"><label>Organization</label><br>';
-            item += '<i class="site multiple-types"></i>Multiple Types</div>';
+            item += '<i class="site multiple-types"></i>Multiple</div>';
             div.innerHTML = item;
             div.id = 'legend';
             // sets up click event for radio buttons
@@ -115,9 +116,21 @@ export class MapComponent implements OnInit {
             this._mapService.changeSymbology('orgName');
         }
         // if sites are selected, highlights them
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('site') !== null) {
-            this._mapService.selectSites(urlParams.get('site').split(','), false);
+        const urlParams = {};
+        for (const param of this.paramOptions) {
+            urlParams[param] = this.getUrlParam(param);
+        }
+        if (urlParams['site'] !== null) {
+            this._mapService.selectSites(urlParams['site'].split(','), false);
+        }
+    }
+
+    public getUrlParam(name) {
+        const results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results == null) {
+            return null;
+        } else {
+            return decodeURI(results[1]) || 0;
         }
     }
 }
