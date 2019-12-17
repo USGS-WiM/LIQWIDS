@@ -86,6 +86,12 @@ export class MapService {
     public get MinResults(): Observable<any> {
         return this._minResultsSubject.asObservable();
     }
+    // send type of toast to show
+    // TODO: if toasts get used more, improve this, maybe make toaster service to update message, etc.
+    public _toasterSubject = new Subject();
+    public get ToasterSubject(): Observable<any> {
+        return this._toasterSubject.asObservable();
+    }
 
     constructor(private _http: HttpClient, private _loaderService: LoaderService, private _configService: ConfigService) {
         this.configSettings = this._configService.getConfiguration();

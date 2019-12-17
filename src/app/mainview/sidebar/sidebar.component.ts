@@ -138,6 +138,7 @@ export class SidebarComponent implements OnInit {
             this._loaderService.hideFullPageLoad();
             this.firstLoad = false;
             this._mapService.updateLegend();
+            this._mapService._toasterSubject.next('none');
         });
 
         // set up filter listeners

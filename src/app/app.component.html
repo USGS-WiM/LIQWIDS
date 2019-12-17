@@ -93,12 +93,20 @@
   Toast - 1,001 z-index base
   ================================================================
  -->
-<div id="toast" class="blue" [ngClass]="{ visible: showToast }">
-  <i class="far fa-surprise" id="toastIcon"></i>
-  <div id="toastText">
-    <div id="toastTitle">Oops!</div>
-    <div id="toastBody"> Something went wrong - try again later.</div>
-  </div>
+<div id="toast" class="blue" [ngClass]="{ visible: toastType === 'error' }">
+    <i class="far fa-surprise" id="toastIcon"></i>
+    <div id="toastText">
+        <div id="toastTitle">Oops!</div>
+        <div id="toastBody"> Something went wrong - try again later.</div>
+    </div>
+</div>
+
+<div id="toast" class="blue" [ngClass]="{ visible: toastType === 'firstLoadWarning'}">
+    <i class="far fa-exclamation-circle" id="toastIcon"></i>
+    <div id="toastText">
+        <div id="toastTitle">Warning!</div>
+        <div id="toastBody">You may experience long delays when first loading sites.</div>
+    </div>
 </div>
 
 <!-- $scope.showToast = false;
