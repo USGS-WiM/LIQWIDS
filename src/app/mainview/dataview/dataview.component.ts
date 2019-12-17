@@ -10,8 +10,8 @@ import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular
 import { ConfigService } from 'src/app/shared/services/config.service';
 import { Config } from 'src/app/shared/interfaces/config';
 import { CustomQueryEncoderHelper } from 'src/app/shared/services/customEncoder';
-import { map, catchError } from 'rxjs/operators';
-import { throwError, Observable } from 'rxjs';
+import { throwError } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-dataview',
@@ -43,7 +43,7 @@ export class DataviewComponent implements OnInit {
     public urlParams = {};
     public urlSites;
     public subscription;
-    public charsWithSites = [];
+    public charsWithData = [];
     private configSettings: Config;
     public datesWithResults = [];
     public resultParams = {
@@ -57,19 +57,21 @@ export class DataviewComponent implements OnInit {
     public charts = [];
     public chartType = 'linear';
     public selectMultSites = false;
-    public paramOptions = ['characteristic', 'site', 'eventYear', 'minResults', 'huc8', 'orgName', 'provider', 'searchType'];
+    public paramOptions = ['characteristic', 'site', 'eventYear', 'minResults', 'huc8', 'orgName', 'provider', 'searchType', 'type'];
 
     constructor(private _mapService: MapService, private _http: HttpClient, private _loaderService: LoaderService,
-        private _configService: ConfigService) {
+        private _configService: ConfigService, private router: Router, private route: ActivatedRoute) {
             this.configSettings = this._configService.getConfiguration();
      }
 
     ngOnInit() {
-        this.getUrlEventYear();
+        this.route.queryParams.subscribe(() => {
+            this.getUrlParams();
+        });
         this._mapService.SelectedSite.subscribe((Response) => {
             // subscriber for map click, updates url params and queries site's result data
-            this.charsWithSites = [];
-            this.getUrlSites();
+            this.charsWithData = [];
+            this.getUrlParams();
             if (this.urlSites[0] !== Response.name) {
                 // add selected site to url if not already in it
                 this.urlSites = [Response.name];
@@ -81,8 +83,8 @@ export class DataviewComponent implements OnInit {
         });
         this._mapService.MultSelect.subscribe((Response) => {
             // subscriber for map ctrl+click (selecting multiple sites)
-            this.charsWithSites = [];
-            this.getUrlSites();
+            this.charsWithData = [];
+            this.getUrlParams();
             if (this.urlSites.indexOf(Response.name) === -1) {
                 // add selected site to url if not already in it
                 this.urlSites.push(Response.name);
@@ -92,8 +94,8 @@ export class DataviewComponent implements OnInit {
             if (this.selectedSites.indexOf(Response.name) === -1) {
                 this.selectedSites.push(Response.name);
             }
-            // if user doesn't have the "Select Multiple Sites" button selected
-            if (this.selectMultSites === false) { this.getResultData(); } // query result data
+            // if user doesn't have the "Select Multiple Sites" button selected, query result data
+            if (this.selectMultSites === false) { this.getResultData(); }
         });
         this._mapService.SelectedChar.subscribe((Response) => {
             // subscriber for parameter filter/characteristic selection
@@ -108,9 +110,9 @@ export class DataviewComponent implements OnInit {
 
         this._mapService.SiteChange.subscribe((geojson) => {
             // subscriber for sites updating on the map (e.g. when a filter is selected)
-            this.getUrlSites();
             this.geojson = geojson; this.geoJSONsiteCount = geojson.features.length;
             this.siteFilterData = this._mapService.filterOptions;
+            this.getUrlParams();
             // if a site was sent through url on load, will skip making statistic charts
             if (this.urlSites.length === 0) {
                 this.selectedSites = [];
@@ -293,42 +295,21 @@ export class DataviewComponent implements OnInit {
 
     public updateQueryParams() {
         // cycle through each param to create query string
-        let params = ''; let i = 0;
-        Object.keys(this.urlParams).forEach(key => {
-            if (i === 0 && this.urlParams[key] !== null) {
-                params += key + '=' + this.urlParams[key];
-                i ++;
-            } else if (this.urlParams[key] !== null) {
-                params += '&' + key + '=' + this.urlParams[key];
-                i ++;
+        const params = this.urlParams;
+        Object.keys(params).forEach(key => {
+            if (params[key] instanceof Array) {
+                params[key] = params[key].join(',');
             }
         });
-        window.history.replaceState('', '', '?' + decodeURIComponent(params));
+        this.router.navigate([], {relativeTo: this.route, queryParams: params});
     }
 
     public toggleSelectMultSites(bool) {
+        // toggle on/off "select multiple sites button"
         this._mapService.selectMultSites = bool;
         this.selectMultSites = bool;
+        // if toggling it off, query result data for selected sites
         if (!bool) { this.getResultData(); }
-    }
-
-    public getUrlSites() {
-        // get list of sites listed in the url
-        this.urlParams = {};
-        for (const param of this.paramOptions) {
-            this.urlParams[param] = this.getUrlParam(param);
-        }
-        if (this.urlParams['site'] !== null) {this.urlSites = this.urlParams['site'].split(',');
-        } else {this.urlSites = []; }
-    }
-    public getUrlEventYear() {
-        // get list of sites listed in the url
-        this.urlParams = {};
-        for (const param of this.paramOptions) {
-            this.urlParams[param] = this.getUrlParam(param);
-        }
-        if (this.urlParams['eventYear'] !== null) {this.eventYear = this.urlParams['eventYear'];
-        } else {this.eventYear = null; }
     }
 
     public getUrlParam(name) {
@@ -341,11 +322,25 @@ export class DataviewComponent implements OnInit {
         }
     }
 
+    public getUrlParams() {
+        for (const param of this.paramOptions) {
+            this.urlParams[param] = this.getUrlParam(param);
+        }
+
+        // update url sites/event year
+        if (this.urlParams['site'] !== null) {this.urlSites = this.urlParams['site'].split(',');
+        } else {this.urlSites = []; }
+        if (this.urlParams['eventYear'] !== null) {this.eventYear = this.urlParams['eventYear'];
+        } else {this.eventYear = null; }
+    }
+
     public getResultData() {
         // get result query, gets back a csv
         if (this.subscription) { this.subscription.unsubscribe(); }
         this._loaderService.showDataLoad();
         this.dataLoading = true;
+
+        // add site, characteristic and event years to request parameters
         this.resultParams['siteid'] = this.selectedSites;
         this.resultParams['characteristicName'] = this.queryChar.concat(this.ancillaryChar);
         if (this.eventYear != null) {
@@ -356,10 +351,12 @@ export class DataviewComponent implements OnInit {
             if (this.resultParams['startDateHi']) {delete this.resultParams['startDateHi']; }
         }
 
+        // encode query parameters (some characters were causing issues)
         const preparedParams = new HttpParams({
             encoder: new CustomQueryEncoderHelper(),
             fromObject: this.resultParams
         });
+        // result data query
         this.subscription = this._http.get(this.configSettings.resultUrl, {headers: new HttpHeaders({Accept: 'text/plain'}),
             params: preparedParams, responseType: 'text'})
             .subscribe(csv => {
@@ -367,14 +364,16 @@ export class DataviewComponent implements OnInit {
                 this.resultCsv = csv;
                 this.resultJson = this.csvJSON(this.resultCsv);
                 this.showSiteData = true; this.noData = false; this.charTypes = [];
+
+                // if data returned
                 if (this.resultJson.length > 0 && this.selectedSites.length > 0) {
-                    // if data returned, find list of characteristics/measure unit codes and select and create charts for the first one
-                    this.getCharTypes();
-                    this.removeExtraData();
+                    this.getCharTypes(); // get list of characteristic types from data
+                    this.removeExtraData(); // remove ancillary data for dates where there's no data for the selected parameters
                     this.selectedChar = this.charTypes[0];
-                    this.createCharts(this.charTypes[0], false);
+                    this.createCharts(this.charTypes[0], false); // make charts for the first characteristic type
                     this.addProps();
                 } else { this.noData = true; } // if response csv has no actual data, show no data message
+                // clear loaders when done
                 this._loaderService.hideDataLoad();
                 this.dataLoading = false;
                 return;
@@ -386,20 +385,21 @@ export class DataviewComponent implements OnInit {
     }
 
     public getCharTypes() {
-        // gets list of characteristics/measure unit codes that will become the options in the "Measurement Type" select
+        // gets list of characteristic types/measure unit codes that will become the options in the "Measurement Type" select
         this.fractionTypes = []; this.datesWithResults = [];
+        // loop through resultJson
         for (let i = 0; i < this.resultJson.length; i++) {
             const value = this.resultJson[i]['ResultMeasure/MeasureUnitCode'];
             const char = this.resultJson[i].CharacteristicName;
-            if (this.queryChar.indexOf(char) === -1 ) { continue; } // if not a selected parameter (just ancillary), don't add to lists
-            // get list of characteristics in result json
-            if (this.charsWithSites.indexOf(char) === -1) { this.charsWithSites.push(char); }
+            // if characteristic is not selected in sidebar go to next item (e.g. pH), otherwise add to list of characteristics with data
+            if (this.queryChar.indexOf(char) === -1 ) { continue; }
+            if (this.charsWithData.indexOf(char) === -1) { this.charsWithData.push(char); }
             // add to list of dates to cross-check ph/water temp with
             const dateTime = this.resultJson[i].ActivityStartDate + this.resultJson[i]['ActivityStartTime/Time'];
             if (this.datesWithResults.indexOf(dateTime) === -1) {
                 this.datesWithResults.push(dateTime);
             }
-            // get list of characteristic types/measure unit codes in result json
+            // get list of characteristic types/measure unit codes (e.g. mg/l as N) in result json
             if (value === '' && this.resultJson[i].ResultMeasureValue !== '' && this.charTypes.indexOf('N/A') === -1) {
                 this.charTypes.push('N/A');
             } else if (value !== '' && this.charTypes.indexOf(value) === -1) {this.charTypes.push(value); }

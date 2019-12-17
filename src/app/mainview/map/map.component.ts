@@ -3,6 +3,7 @@ import { MapService } from 'src/app/shared/services/map.service';
 
 import * as L from 'leaflet';
 import { SummariesService } from 'src/app/shared/services/summaries.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-map',
@@ -14,9 +15,9 @@ export class MapComponent implements OnInit {
     collapsedMap;
     selectedSites;
     legendExpanded = true;
-    public paramOptions = ['characteristic', 'site', 'eventYear', 'minResults', 'huc8', 'orgName', 'provider', 'searchType'];
+    public paramOptions = ['characteristic', 'site', 'eventYear', 'minResults', 'huc8', 'orgName', 'provider', 'searchType', 'type'];
 
-    constructor(private _mapService: MapService, private _summariesService: SummariesService) {}
+    constructor(private _mapService: MapService, private _summariesService: SummariesService, private _route: ActivatedRoute) {}
 
     ngOnInit() {
         this._summariesService.getData();
@@ -43,8 +44,8 @@ export class MapComponent implements OnInit {
             const div = L.DomUtil.create('div', 'info legend'); let item = '';
 
             item += '<div class="legend-header"><div id="legendTitle"><i class="fa fa-list"></i>Explanation</div></div>' +
-                '<div id="legendDiv"><label>Symbolize sites by:</label><input type="radio" id="siteRadio">' +
-                '<label>Keyword</label><input type="radio" id="orgRadio" checked="checked"><label>Organization</label><br>';
+                '<div id="legendDiv"><label>Symbolize sites by:</label><input type="radio" id="siteRadio" checked="checked">' +
+                '<label>Keyword</label><input type="radio" id="orgRadio"><label>Organization</label><br>';
             item += '<i class="site multiple-types"></i>Multiple</div>';
             div.innerHTML = item;
             div.id = 'legend';
@@ -119,19 +120,10 @@ export class MapComponent implements OnInit {
         // if sites are selected, highlights them
         const urlParams = {};
         for (const param of this.paramOptions) {
-            urlParams[param] = this.getUrlParam(param);
+            urlParams[param] = this._route.snapshot.queryParamMap.get(param);
         }
         if (urlParams['site'] !== null) {
             this._mapService.selectSites(urlParams['site'].split(','), false);
-        }
-    }
-
-    public getUrlParam(name) {
-        const results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-        if (results == null) {
-            return null;
-        } else {
-            return decodeURI(results[1]) || 0;
         }
     }
 }
