@@ -1,7 +1,7 @@
 on: 
     push:
       branches:
-        - staging
+        - KJDev
 name: Deploy to Test Site
 jobs:
   deployToTest:
