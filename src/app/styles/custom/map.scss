@@ -3,7 +3,8 @@
 #mapWrapper{
     display: block;
     width: 100%;
-    position: relative;
+	position: relative;
+	background-color: white;
 
     #map{
         display: block;
@@ -19,13 +20,18 @@
         background-color: transparent;
         text-align: right;     
         box-sizing: border-box;
-        padding: 8px;   
+        padding: 14px 8px;   
+		display: flex;
+		justify-content: center;
+		position: relative;
+		z-index: 50;
 
-        div{
+		div{
             display: flex;
             justify-content: center;
-            opacity: 0.75;
-            transition: $transition;
+            opacity: 0.85;
+			transition: $transition;
+			margin: 0 15px;
 
             i,b{
                 display: flex;
@@ -46,7 +52,8 @@
             &:hover{
                 cursor: pointer;
                 opacity: 1;
-                transition: $transition;
+				transition: $transition;
+				text-decoration: underline;
             }
         }
     }
@@ -82,7 +89,11 @@
 
             &:hover{
                 background-color: fade-out($black, 0.525);
-            }
+			}
+			
+			div{
+				height: 100%;
+			}
         }
 
     }
@@ -90,15 +101,30 @@
     // Map expanded/maximized
     // Map expanded/maximized
     &.expanded{
-        height: calc(100% - 50px);
-        transition: 0.175s ease;
-
+		
         #map{
             transition: 0.175s ease;
-            height: 100%;
-            bottom: 50;
-            position: absolute;
+            top: 0;
+			position: absolute;
+			height: 100vh;
+			height: calc(100vh - 100px);
+			transition: 0.175s ease;
+		}
+		
+		#toggleMap{
+			height: 43px;
+			padding: 0;
+
+			div{
+				height: 100%;
+				width: 100%;
+			}
         }
 
     }
+}
+
+
+.leaflet-control-attribution{
+	display: none;
 }
