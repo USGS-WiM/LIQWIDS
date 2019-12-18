@@ -18,7 +18,9 @@
     position: relative;
     width: 100%;
     max-width: 100%;
-    margin: 0;
+	margin: 0;
+	transition: 0.175s ease;
+	height: fit-content;
 
     @media only screen and (max-width: 1200px) {
         padding: 5px;
@@ -28,8 +30,12 @@
         padding: 0px;
         // Blur everything except the loader
         *:not(#dataLoader){
-            filter: blur(3px);
+            filter: blur(2px);
         }
+    }
+
+    &.collapsed {
+		display: none;
     }
 
     // Site meta

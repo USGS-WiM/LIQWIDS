@@ -1,4 +1,4 @@
-<div id="dataView" [ngClass]="{'data-blur': dataLoading == true }">
+<div id="dataView" [ngClass]="{'data-blur': dataLoading == true, 'collapsed': collapsedPanel }">
 
     <app-dataloader-div id="dataLoader"></app-dataloader-div>
 
@@ -13,7 +13,7 @@
         </button>
         <div *ngIf="showSiteData && !noData">
             <h3><b>Sites:</b> {{selectedSites.join(", ")}}</h3>
-            <h3 *ngIf="!selectMultSites"><b>Characteristics:</b> {{charsWithSites.join(", ")}}</h3>
+            <h3 *ngIf="!selectMultSites"><b>Characteristics:</b> {{charsWithData.join(", ")}}</h3>
             <h3 *ngIf="eventYear"><b>Event Year: </b>{{eventYear}}</h3>
         </div>
     </div>
@@ -102,7 +102,7 @@
                 <button (click)="printReport()"><i class="fa fa-print"></i>Print</button>
             </div>
             <h4><b>Sites:</b> {{selectedSites.join(", ")}}</h4>
-            <h4><b>Characteristics:</b> {{charsWithSites.join(", ")}}</h4>
+            <h4><b>Characteristics:</b> {{charsWithData.join(", ")}}</h4>
             <h4 *ngIf="eventYear"><b>Event Year: </b>{{eventYear}}</h4>
             <div *ngIf="charTypes.length > 1">
                 <label class="charType">Measurement Type:</label>

@@ -86,6 +86,18 @@ export class MapService {
     public get MinResults(): Observable<any> {
         return this._minResultsSubject.asObservable();
     }
+    // send type of toast to show
+    // TODO: if toasts get used more, improve this, maybe make toaster service to update message, etc.
+    public _toasterSubject = new Subject();
+    public get ToasterSubject(): Observable<any> {
+        return this._toasterSubject.asObservable();
+    }
+
+    // expand/collapse data panel
+    public _dataPanelCollapseSubject = new Subject();
+    public get DataPanelCollapse(): Observable<any> {
+        return this._dataPanelCollapseSubject.asObservable();
+    }
 
     constructor(private _http: HttpClient, private _loaderService: LoaderService, private _configService: ConfigService) {
         this.configSettings = this._configService.getConfiguration();
@@ -96,13 +108,13 @@ export class MapService {
             // {s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
             OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 20,
-                zIndex: 1,
+				zIndex: 1,
                 attribution:
                     'Imagery from <a href="https://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a>' +
                         '&mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             }),
             Topo: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-                zIndex: 1,
+				zIndex: 1,
                 attribution:
                     'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL,' +
                         'Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
@@ -145,14 +157,14 @@ export class MapService {
                 layers: 'wqp_sites',
                 format: 'image/png',
                 transparent: true,
-                zIndex: 2
+				zIndex: 2
                 // searchParams: "characteristicname?text=nitrogen;countycode:US:36:059|US:36:103|US:36:081|US:36:047"
             }),
             NWIS: L.tileLayer.wms('https://www.waterqualitydata.us/ogcservices/ows?', {
                 layers: 'qw_portal_map:nwis_sites',
                 format: 'image/png',
                 transparent: true,
-                zIndex: 2
+				zIndex: 2
                 // searchParams: "countycode:US:36:059|US:36:103"
             })
         };
