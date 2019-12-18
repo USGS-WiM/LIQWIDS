@@ -133,6 +133,15 @@ export class MapComponent implements OnInit {
     }
 
     expandCollapseDataPanel() {
-        this._mapService._dataPanelCollapseSubject.next(!this.collapsedDataPanel);
-    }
+		this._mapService._dataPanelCollapseSubject.next(!this.collapsedDataPanel);
+	}
+
+
+	// When data or map is collapsed or expanded,
+	// invalidate size to refresh tiles and center map
+	resizeMap(){
+		setTimeout(()=>{
+			this._mapService.map.invalidateSize()
+		}, 200);
+	}
 }

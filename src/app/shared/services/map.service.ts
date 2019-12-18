@@ -108,13 +108,13 @@ export class MapService {
             // {s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
             OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 20,
-                zIndex: 1,
+				zIndex: 1,
                 attribution:
                     'Imagery from <a href="https://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a>' +
                         '&mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             }),
             Topo: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-                zIndex: 1,
+				zIndex: 1,
                 attribution:
                     'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL,' +
                         'Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
@@ -157,14 +157,14 @@ export class MapService {
                 layers: 'wqp_sites',
                 format: 'image/png',
                 transparent: true,
-                zIndex: 2
+				zIndex: 2
                 // searchParams: "characteristicname?text=nitrogen;countycode:US:36:059|US:36:103|US:36:081|US:36:047"
             }),
             NWIS: L.tileLayer.wms('https://www.waterqualitydata.us/ogcservices/ows?', {
                 layers: 'qw_portal_map:nwis_sites',
                 format: 'image/png',
                 transparent: true,
-                zIndex: 2
+				zIndex: 2
                 // searchParams: "countycode:US:36:059|US:36:103"
             })
         };
