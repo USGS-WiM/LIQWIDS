@@ -13,6 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 export class MapComponent implements OnInit {
     // public WQP: any;
     collapsedMap;
+    collapsedDataPanel;
     selectedSites;
     legendExpanded = true;
     public paramOptions = ['characteristic', 'site', 'eventYear', 'minResults', 'huc8', 'orgName', 'provider', 'searchType', 'type'];
@@ -28,6 +29,10 @@ export class MapComponent implements OnInit {
             minZoom: 4,
             maxZoom: 19,
             renderer: L.canvas()
+        });
+
+        this._mapService.DataPanelCollapse.subscribe(collapse => {
+            this.collapsedDataPanel = collapse;
         });
 
         // baseMaps
@@ -125,5 +130,9 @@ export class MapComponent implements OnInit {
         if (urlParams['site'] !== null) {
             this._mapService.selectSites(urlParams['site'].split(','), false);
         }
+    }
+
+    expandCollapseDataPanel() {
+        this._mapService._dataPanelCollapseSubject.next(!this.collapsedDataPanel);
     }
 }

@@ -58,6 +58,7 @@ export class DataviewComponent implements OnInit {
     public chartType = 'linear';
     public selectMultSites = false;
     public paramOptions = ['characteristic', 'site', 'eventYear', 'minResults', 'huc8', 'orgName', 'provider', 'searchType', 'type'];
+    public collapsedPanel;
 
     constructor(private _mapService: MapService, private _http: HttpClient, private _loaderService: LoaderService,
         private _configService: ConfigService, private router: Router, private route: ActivatedRoute) {
@@ -125,6 +126,11 @@ export class DataviewComponent implements OnInit {
                 } else {this.noData = true; }
             }
         });
+
+        this._mapService.DataPanelCollapse.subscribe(collapse => {
+            this.collapsedPanel = collapse;
+        });
+
         // custom chart export button
         const customButton = Highcharts.getOptions().exporting.buttons.contextButton;
         customButton.text = 'Chart Options';

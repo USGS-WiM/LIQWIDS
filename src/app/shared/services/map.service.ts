@@ -93,6 +93,12 @@ export class MapService {
         return this._toasterSubject.asObservable();
     }
 
+    // expand/collapse data panel
+    public _dataPanelCollapseSubject = new Subject();
+    public get DataPanelCollapse(): Observable<any> {
+        return this._dataPanelCollapseSubject.asObservable();
+    }
+
     constructor(private _http: HttpClient, private _loaderService: LoaderService, private _configService: ConfigService) {
         this.configSettings = this._configService.getConfiguration();
         this.geoJsonURL = this.configSettings.geoJsonURL;

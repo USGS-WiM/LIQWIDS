@@ -32,6 +32,11 @@
         }
     }
 
+    &.collapsed {
+        display: none;
+        transition: 0.175s ease;
+    }
+
     // Site meta
     // Name, id, etc
     .site-meta{

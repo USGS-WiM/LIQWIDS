@@ -1,7 +1,7 @@
 <div class="collapsible-header">
 
 </div>
-<div id="mapWrapper" [ngClass]="{ 'collapsed': collapsedMap }">
+<div id="mapWrapper" [ngClass]="{ 'collapsed': collapsedMap, 'expanded': collapsedDataPanel }">
     <div id="map"></div>
     <!-- Collapse Map -->
     <!-- <div id="collapseMap" (click)="collapsedMap = true">
@@ -11,11 +11,16 @@
         </div>
     </div> -->
     <!-- Expand Map -->
-    <div id="toggleMap" (click)="collapsedMap = !collapsedMap">
-        <div>
+    <div id="toggleMap" >
+        <div *ngIf="!collapsedDataPanel" (click)="collapsedMap = !collapsedMap">
             <i class="far" [ngClass]="{ 'fa-expand': collapsedMap, 'fa-minus-square': !collapsedMap }"></i>
             <b *ngIf="collapsedMap">Expand Map</b>
             <b *ngIf="!collapsedMap">Collapse Map</b>
+        </div>
+        <div *ngIf="!collapsedMap" (click)="expandCollapseDataPanel()">
+            <i class="far" [ngClass]="{ 'fa-expand': collapsedDataPanel, 'fa-minus-square': !collapsedDataPanel }"></i>
+            <b *ngIf="!collapsedDataPanel">Collapse Data Panel</b>
+            <b *ngIf="collapsedDataPanel">Expand Data Panel</b>
         </div>
     </div>
 </div>
