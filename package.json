@@ -30,6 +30,7 @@
     "@types/leaflet": "^1.2.14",
     "classlist.js": "^1.1.20150312",
     "core-js": "^2.5.4",
+    "es-abstract": "^1.14.2",
     "esri-leaflet": "^2.2.4",
     "file-saver": "^2.0.2",
     "highcharts": "^7.0.3",
