@@ -38,7 +38,7 @@ export class MapService {
         'Wetland', 'Ocean'];
     public colorBy = 'searchType';
     private configSettings: Config;
-    public timeoutTime = 60000;
+    public timeoutTime = 180000; // 3 min timeouts
 
     public URLparams = {
         request: 'GetFeature',
@@ -211,7 +211,7 @@ export class MapService {
     private handleError(err: HttpErrorResponse) {
         if (err instanceof TimeoutError) {
             console.error('Timeout has occurred after ' + (this.timeoutTime / 60000) + ' minutes.');
-            this._toasterSubject.next('error');
+            this._toasterSubject.next('error'); // show toast error when request times out
         } else if (err.error instanceof ErrorEvent) {
             // client side
             console.error('An error occurred:', err.error.message);
