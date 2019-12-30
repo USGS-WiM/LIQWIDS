@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParameterCodec, HttpParams } from '@angular/common/http';
 import { Map } from 'leaflet';
-import { Observable, throwError, BehaviorSubject, Subject } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable, throwError, BehaviorSubject, Subject, TimeoutError } from 'rxjs';
+import { map, catchError, timeout } from 'rxjs/operators';
 import { LoaderService } from '../../shared/services/loader.service';
 
 declare let L;
@@ -38,6 +38,7 @@ export class MapService {
         'Wetland', 'Ocean'];
     public colorBy = 'searchType';
     private configSettings: Config;
+    public timeoutTime = 180000; // 3 min timeouts
 
     public URLparams = {
         request: 'GetFeature',
@@ -177,6 +178,7 @@ export class MapService {
             fromObject: this.URLparams
         });
         return this._http.get<any>(this.geoJsonURL, { params: preparedParams }).pipe(
+            timeout(this.timeoutTime),
             map(response => {
                 this.geoJson = response;
                 this.filterJson = this.geoJson; // set filtered object to all on init.
@@ -207,7 +209,10 @@ export class MapService {
     }
 
     private handleError(err: HttpErrorResponse) {
-        if (err.error instanceof ErrorEvent) {
+        if (err instanceof TimeoutError) {
+            console.error('Timeout has occurred after ' + (this.timeoutTime / 60000) + ' minutes.');
+            this._toasterSubject.next('error'); // show toast error when request times out
+        } else if (err.error instanceof ErrorEvent) {
             // client side
             console.error('An error occurred:', err.error.message);
         } else {
@@ -451,8 +456,8 @@ export class MapService {
     public updateLegend() {
         // rewrites legend div with updated colors
         const div = L.DomUtil.get('legend');
-        let item = '<div class="legend-header"><div id="legendTitle"><i class="fa fa-list"></i>Explanation</div></div><div ' +
-            'id="legendDiv"> <label>Symbolize sites by:</label>';
+        let item = '<div id="legendHeader"><span><i id="legendIcon" class="fa fa-list"></i>Explanation</span>' +
+            '</div><div id="legendDiv"> <label>Symbolize sites by:</label>';
         if (this.colorBy === 'orgName') {
             item += '<input type="radio" id="siteRadio"><label>Keyword</label> <input type="radio" id="orgRadio" checked="checked">' +
                 '<label>Organization</label><br>';

@@ -48,7 +48,7 @@ export class MapComponent implements OnInit {
         this._mapService.legend.onAdd = function(map) {
             const div = L.DomUtil.create('div', 'info legend'); let item = '';
 
-            item += '<div class="legend-header"><div id="legendTitle"><i class="fa fa-list"></i>Explanation</div></div>' +
+            item += '<div id="legendHeader" ><span><i class="fa fa-list"></i>Explanation</span></div>' +
                 '<div id="legendDiv"><label>Symbolize sites by:</label><input type="radio" id="siteRadio" checked="checked">' +
                 '<label>Keyword</label><input type="radio" id="orgRadio"><label>Organization</label><br>';
             item += '<i class="site multiple-types"></i>Multiple</div>';
@@ -58,7 +58,7 @@ export class MapComponent implements OnInit {
             L.DomEvent.on(div, 'click', (event) => {
                 // if click is in Explanation title, collapse/expand it.
                 const id = event.target['id'];
-                if (id === 'legendTitle') {
+                if ('legendHeader') {
                     const classes = document.getElementById('legendDiv').classList;
                     if (classes.contains('legendDiv-collapsed')) {
                         classes.remove('legendDiv-collapsed');
@@ -133,15 +133,15 @@ export class MapComponent implements OnInit {
     }
 
     expandCollapseDataPanel() {
-		this._mapService._dataPanelCollapseSubject.next(!this.collapsedDataPanel);
-	}
+        this._mapService._dataPanelCollapseSubject.next(!this.collapsedDataPanel);
+    }
 
 
-	// When data or map is collapsed or expanded,
-	// invalidate size to refresh tiles and center map
-	resizeMap(){
-		setTimeout(()=>{
-			this._mapService.map.invalidateSize()
-		}, 200);
-	}
+    // When data or map is collapsed or expanded,
+    // invalidate size to refresh tiles and center map
+    resizeMap() {
+        setTimeout(() => {
+            this._mapService.map.invalidateSize()
+        }, 200);
+    }
 }
