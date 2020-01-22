@@ -1,7 +1,7 @@
 on: 
     push:
       branches:
-        - test
+        - staging
 name: Deploy to Test Site
 jobs:
   deployToTest:
@@ -13,7 +13,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '10.15'
-    - run: npm run-script build-test-failure
+    - run: npm run-script build-test
     - name: Build Failure
       if: failure()
       uses: Ilshidur/action-slack@2a8ddb6db23f71a413f9958ae75bbc32bbaa6385
