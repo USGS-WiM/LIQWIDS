@@ -22,6 +22,7 @@ jobs:
       with:
         args: ":warning: Failed to build project :warning:"
     - name: Configure AWS Credentials
+      if: success()
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
