@@ -20,7 +20,14 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-2
-    - run: aws s3 cp /home/runner/work/LIQWIDS/LIQWIDS/dist/ s3://test.wim.usgs.gov/liqwids-test/ --recursive
+    - run: aws s3 cp /home/runner/work/LIQWIDS/LIQWIDS/test/ s3://test.wim.usgs.gov/liqwids-test/ --recursive
+    - name: AWS Failure
+      if: failure()
+      uses: Ilshidur/action-slack@2a8ddb6db23f71a413f9958ae75bbc32bbaa6385
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      with:
+        args: ":warning: Failed to deploy to AWS :warning:"
     - name: GitHub Action for Slack
       uses: Ilshidur/action-slack@9273a03
       env:
