@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParameterCodec, HttpParams } from '@angular/common/http';
 import { Map } from 'leaflet';
-import { Observable, throwError, BehaviorSubject, Subject } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable, throwError, BehaviorSubject, Subject, TimeoutError } from 'rxjs';
+import { map, catchError, timeout } from 'rxjs/operators';
 import { LoaderService } from '../../shared/services/loader.service';
 
 declare let L;
@@ -38,6 +38,7 @@ export class MapService {
         'Wetland', 'Ocean'];
     public colorBy = 'searchType';
     private configSettings: Config;
+    public timeoutTime = 180000; // 3 min timeouts
 
     public URLparams = {
         request: 'GetFeature',
@@ -86,6 +87,18 @@ export class MapService {
     public get MinResults(): Observable<any> {
         return this._minResultsSubject.asObservable();
     }
+    // send type of toast to show
+    // TODO: if toasts get used more, improve this, maybe make toaster service to update message, etc.
+    public _toasterSubject = new Subject();
+    public get ToasterSubject(): Observable<any> {
+        return this._toasterSubject.asObservable();
+    }
+
+    // expand/collapse data panel
+    public _dataPanelCollapseSubject = new Subject();
+    public get DataPanelCollapse(): Observable<any> {
+        return this._dataPanelCollapseSubject.asObservable();
+    }
 
     constructor(private _http: HttpClient, private _loaderService: LoaderService, private _configService: ConfigService) {
         this.configSettings = this._configService.getConfiguration();
@@ -96,13 +109,13 @@ export class MapService {
             // {s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
             OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 20,
-                zIndex: 1,
+				zIndex: 1,
                 attribution:
                     'Imagery from <a href="https://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a>' +
                         '&mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             }),
             Topo: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-                zIndex: 1,
+				zIndex: 1,
                 attribution:
                     'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL,' +
                         'Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
@@ -145,14 +158,14 @@ export class MapService {
                 layers: 'wqp_sites',
                 format: 'image/png',
                 transparent: true,
-                zIndex: 2
+				zIndex: 2
                 // searchParams: "characteristicname?text=nitrogen;countycode:US:36:059|US:36:103|US:36:081|US:36:047"
             }),
             NWIS: L.tileLayer.wms('https://www.waterqualitydata.us/ogcservices/ows?', {
                 layers: 'qw_portal_map:nwis_sites',
                 format: 'image/png',
                 transparent: true,
-                zIndex: 2
+				zIndex: 2
                 // searchParams: "countycode:US:36:059|US:36:103"
             })
         };
@@ -165,6 +178,7 @@ export class MapService {
             fromObject: this.URLparams
         });
         return this._http.get<any>(this.geoJsonURL, { params: preparedParams }).pipe(
+            timeout(this.timeoutTime),
             map(response => {
                 this.geoJson = response;
                 this.filterJson = this.geoJson; // set filtered object to all on init.
@@ -195,7 +209,10 @@ export class MapService {
     }
 
     private handleError(err: HttpErrorResponse) {
-        if (err.error instanceof ErrorEvent) {
+        if (err instanceof TimeoutError) {
+            console.error('Timeout has occurred after ' + (this.timeoutTime / 60000) + ' minutes.');
+            this._toasterSubject.next('error'); // show toast error when request times out
+        } else if (err.error instanceof ErrorEvent) {
             // client side
             console.error('An error occurred:', err.error.message);
         } else {
@@ -439,8 +456,8 @@ export class MapService {
     public updateLegend() {
         // rewrites legend div with updated colors
         const div = L.DomUtil.get('legend');
-        let item = '<div class="legend-header"><div id="legendTitle"><i class="fa fa-list"></i>Explanation</div></div><div ' +
-            'id="legendDiv"> <label>Symbolize sites by:</label>';
+        let item = '<div id="legendHeader"><span><i id="legendIcon" class="fa fa-list"></i>Explanation</span>' +
+            '</div><div id="legendDiv"> <label>Symbolize sites by:</label>';
         if (this.colorBy === 'orgName') {
             item += '<input type="radio" id="siteRadio"><label>Keyword</label> <input type="radio" id="orgRadio" checked="checked">' +
                 '<label>Organization</label><br>';
@@ -453,7 +470,7 @@ export class MapService {
             item += '<i style="background: ' + color + ';" class="site legend' + color.slice(1) +
             '"></i>' + this.siteCategories[i] + '<br>';
         }
-        item += '<i class="site multiple-types"></i>Multiple Types</div>';
+        item += '<i class="site multiple-types"></i>Multiple</div>';
         div.innerHTML = item;
 
         if (window.outerWidth < 1200) {

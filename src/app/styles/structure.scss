@@ -19,11 +19,11 @@
     }
 
     // Body wrapper
-    //  Includes sidebar and main content
+	//  Includes sidebar and main content
     #body{
         display: flex;
         flex-grow: 3;
-        height: 100%;
+		height: 100%;
 
 
         // 5000 Z-index
@@ -90,6 +90,7 @@
             display: block;
             flex-grow: 3;
             overflow: auto;
+            height: 100%;
         }
     }
 }

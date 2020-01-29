@@ -3,6 +3,7 @@ import { MapService } from 'src/app/shared/services/map.service';
 
 import * as L from 'leaflet';
 import { SummariesService } from 'src/app/shared/services/summaries.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-map',
@@ -12,10 +13,12 @@ import { SummariesService } from 'src/app/shared/services/summaries.service';
 export class MapComponent implements OnInit {
     // public WQP: any;
     collapsedMap;
+    collapsedDataPanel;
     selectedSites;
     legendExpanded = true;
+    public paramOptions = ['characteristic', 'site', 'eventYear', 'minResults', 'huc8', 'orgName', 'provider', 'searchType', 'type'];
 
-    constructor(private _mapService: MapService, private _summariesService: SummariesService) {}
+    constructor(private _mapService: MapService, private _summariesService: SummariesService, private _route: ActivatedRoute) {}
 
     ngOnInit() {
         this._summariesService.getData();
@@ -26,6 +29,10 @@ export class MapComponent implements OnInit {
             minZoom: 4,
             maxZoom: 19,
             renderer: L.canvas()
+        });
+
+        this._mapService.DataPanelCollapse.subscribe(collapse => {
+            this.collapsedDataPanel = collapse;
         });
 
         // baseMaps
@@ -41,24 +48,25 @@ export class MapComponent implements OnInit {
         this._mapService.legend.onAdd = function(map) {
             const div = L.DomUtil.create('div', 'info legend'); let item = '';
 
-            item += '<div class="legend-header"><div id="legendTitle"><i class="fa fa-list"></i>Explanation</div></div>' +
-                '<div id="legendDiv"><label>Symbolize sites by:</label><input type="radio" id="siteRadio">' +
-                '<label>Keyword</label><input type="radio" id="orgRadio" checked="checked"><label>Organization</label><br>';
-            item += '<i class="site multiple-types"></i>Multiple Types</div>';
+            item += '<div id="legendHeader" ><span><i class="fa fa-list"></i>Explanation</span></div>' +
+                '<div id="legendDiv"><label>Symbolize sites by:</label><input type="radio" id="siteRadio" checked="checked">' +
+                '<label>Keyword</label><input type="radio" id="orgRadio"><label>Organization</label><br>';
+            item += '<i class="site multiple-types"></i>Multiple</div>';
             div.innerHTML = item;
             div.id = 'legend';
             // sets up click event for radio buttons
             L.DomEvent.on(div, 'click', (event) => {
                 // if click is in Explanation title, collapse/expand it.
-                if (event['toElement'].id === 'legendTitle') {
+                const id = event.target['id'];
+                if ('legendHeader') {
                     const classes = document.getElementById('legendDiv').classList;
                     if (classes.contains('legendDiv-collapsed')) {
                         classes.remove('legendDiv-collapsed');
                     } else {
                         classes.add('legendDiv-collapsed');
                     }
-                } else if (event['toElement'].id === 'siteRadio' || event['toElement'].id === 'orgRadio') {
-                    self.changeSymbology(event['toElement'].id);
+                } else if (id === 'siteRadio' || id === 'orgRadio') {
+                    self.changeSymbology(id);
                 }
             });
             return div;
@@ -115,9 +123,25 @@ export class MapComponent implements OnInit {
             this._mapService.changeSymbology('orgName');
         }
         // if sites are selected, highlights them
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('site') !== null) {
-            this._mapService.selectSites(urlParams.get('site').split(','), false);
+        const urlParams = {};
+        for (const param of this.paramOptions) {
+            urlParams[param] = this._route.snapshot.queryParamMap.get(param);
         }
+        if (urlParams['site'] !== null) {
+            this._mapService.selectSites(urlParams['site'].split(','), false);
+        }
+    }
+
+    expandCollapseDataPanel() {
+        this._mapService._dataPanelCollapseSubject.next(!this.collapsedDataPanel);
+    }
+
+
+    // When data or map is collapsed or expanded,
+    // invalidate size to refresh tiles and center map
+    resizeMap() {
+        setTimeout(() => {
+            this._mapService.map.invalidateSize()
+        }, 200);
     }
 }

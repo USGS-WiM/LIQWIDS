@@ -1,9 +1,10 @@
-import { Component, OnInit, NgModule } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { MapService } from 'src/app/shared/services/map.service';
 import { LoaderService } from '../../shared/services/loader.service';
 import { ConfigService } from 'src/app/shared/services/config.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-sidebar',
@@ -23,7 +24,7 @@ export class SidebarComponent implements OnInit {
     showParameterFilters = true;
     expandSidebar = false;
     chosenBaseLayer;
-    public urlParams;
+    public urlParams = {};
     public urlCharParam;
     public urlSelSites;
     public urlEventYear;
@@ -32,14 +33,20 @@ export class SidebarComponent implements OnInit {
     public filterSelections;
     private lookups;
     public parameterSelections = {characteristic: [], minResults: 1};
+    public paramOptions = ['characteristic', 'site', 'eventYear', 'minResults', 'huc8', 'orgName', 'provider', 'searchType', 'type'];
 
     constructor(private _mapService: MapService, private formBuilder: FormBuilder, private _loaderService: LoaderService,
-        private _configService: ConfigService) {
+        private _configService: ConfigService, private route: ActivatedRoute, private router: Router) {
             this.lookups = this._configService.getLookup();
     }
 
     ngOnInit() {
-        this.urlParams = new URLSearchParams(window.location.search);
+        // using plain object, IE doesn't work with URLSearchParams
+        this.route.queryParams.subscribe(() => {
+            for (const param of this.paramOptions) {
+                this.urlParams[param] = this.getUrlParam(param);
+            }
+        });
 
         // for now we can keep this a static list but ultimately could pull from here in a service
         // https://www.waterqualitydata.us/Codes/Characteristicname?mimeType=xml
@@ -59,20 +66,20 @@ export class SidebarComponent implements OnInit {
             minResults: 1
         });
         // get selected sites, characteristics and event years if they were sent through the url
-        if (this.urlParams.get('site') !== null) {this.urlSelSites = this.urlParams.get('site').split(',');
+        if (this.urlParams['site'] !== null) {this.urlSelSites = this.urlParams['site'].split(',');
         } else {this.urlSelSites = []; }
-        if (this.urlParams.get('characteristic') !== null) {this.urlCharParam = this.urlParams.get('characteristic').split(',');
+        if (this.urlParams['characteristic'] !== null) {this.urlCharParam = this.urlParams['characteristic'].split(',');
         } else {this.urlCharParam = []; }
-        if (this.urlParams.get('eventYear') !== null) {this.urlEventYear = this.urlParams.get('eventYear');
+        if (this.urlParams['eventYear'] !== null) {this.urlEventYear = this.urlParams['eventYear'];
         } else {this.urlEventYear = undefined; }
-        if (this.urlParams.get('minResults') !== null) {this.urlMinResults = this.urlParams.get('minResults');
+        if (this.urlParams['minResults'] !== null) {this.urlMinResults = this.urlParams['minResults'];
         } else {this.urlMinResults = undefined; }
 
         // use characteristic sent through in url, otherwise 'Nitrate'
         if (this.urlCharParam.length > 0 && this.urlCharParam[0] !== null) {
             this.setURLChar(this.urlCharParam);
         } else {
-            this.urlParams.set('characteristic', this.defaultParameterFilter);
+            this.urlParams['characteristic'] = this.defaultParameterFilter;
             this.updateQueryParams();
             this.parameterDropDownGroup.get('characteristic').setValue([this.defaultParameterFilter]);
             this.parameterSelections.characteristic = [this.defaultParameterFilter];
@@ -131,6 +138,7 @@ export class SidebarComponent implements OnInit {
             this._loaderService.hideFullPageLoad();
             this.firstLoad = false;
             this._mapService.updateLegend();
+            this._mapService._toasterSubject.next('none');
         });
 
         // set up filter listeners
@@ -145,6 +153,7 @@ export class SidebarComponent implements OnInit {
     }
 
     getEventYears() {
+        // creates list of year options for event year filter from 1932 to today
         const years = [];
         let startDate = new Date(1932, 0, 1);
         const endDate = new Date();
@@ -156,24 +165,33 @@ export class SidebarComponent implements OnInit {
     }
 
     public setFilters() {
-        // change dropdown filters to match filters sent through url on load
+        // change site dropdown filters to match filters sent through url on load
         Object.keys(this.siteDropDownGroup.controls).forEach(key => {
-            const paramKey = this.urlParams.get(key);
-            if (paramKey !== null) { this.siteDropDownGroup.get(key).setValue(paramKey.split(',')); }
+            const paramKey = this.urlParams[key];
+            if (paramKey && paramKey !== null) { this.siteDropDownGroup.get(key).setValue(paramKey.split(',')); }
         });
     }
 
     public updateQueryParams() {
-        window.history.replaceState({}, '', decodeURIComponent(`${location.pathname}?${this.urlParams}`));
+        // cycle through each param to create query string
+        const params = this.urlParams;
+        Object.keys(params).forEach(key => {
+            if (params[key] instanceof Array) {
+                params[key] = params[key].join(',');
+            }
+        });
+        this.router.navigate([], {relativeTo: this.route, queryParams: params});
     }
 
     public setURLChar(characteristics) {
-        // shortened versions of the characteristic names are used in filter/url, this sends the correct value to the request
+        // get shortened/url-friendly versions of the characteristic names to use in the filter/url
         const copyChar = JSON.parse(JSON.stringify(characteristics));
         for (let i = 0; i < copyChar.length; i ++) {
             const char = copyChar[i];
+            // check for characteristic in lookup.json
             if (this.lookups.characteristic[char]) {copyChar[i] = this.lookups.characteristic[char]; }
         }
+        // update url and filter
         this.parameterDropDownGroup.get('characteristic').setValue(copyChar);
         this.parameterSelections.characteristic = copyChar;
         this._mapService._characteristicFilterSubject.next(copyChar);
@@ -184,13 +202,15 @@ export class SidebarComponent implements OnInit {
     }
 
     public setChar(characteristics) {
-        // shortened versions of the characteristic names are used in filter/url, this sends the correct value to the request
+        // shortened/url-friendly versions of the characteristic names are used in filter/url, this sends the correct value to the request
         const copyChar = JSON.parse(JSON.stringify(characteristics));
         for (let i = 0; i < copyChar.length; i ++) {
             const char = copyChar[i];
+            // check for characteristic in lookup.json
             if (this.lookups.characteristic[char]) {copyChar[i] = this.lookups.characteristic[char]; }
         }
-        this.urlParams.set('characteristic', copyChar);
+        // update url and filter
+        this.urlParams['characteristic'] = copyChar;
         this._mapService._characteristicFilterSubject.next(characteristics);
         const characteristic = characteristics.join('|');
         // update search params
@@ -207,15 +227,15 @@ export class SidebarComponent implements OnInit {
         // on site dropdown change just re-filter geojson
         this.siteDropDownGroup.valueChanges.subscribe(selections => {
             // remove selected sites from url
-            this.urlParams.delete('site');
+            delete this.urlParams['site'];
             if (!this.firstLoad) {
                 // if site filters are changed after load, update the url
                 Object.keys(selections).forEach(key => {
-                    this.urlParams.delete(key);
+                    delete this.urlParams[key];
                     if (selections[key].length > 0) {
-                        this.urlParams.set(key, selections[key].join(','));
+                        this.urlParams[key] = selections[key].join(',');
                     } else {
-                        this.urlParams.delete(key);
+                        delete this.urlParams[key];
                     }
                 });
             }
@@ -225,31 +245,42 @@ export class SidebarComponent implements OnInit {
         });
     }
 
+    public getUrlParam(name) {
+        // because IE doesn't support URLSearchParams, this function reads the param value from the url
+        const results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results == null) {
+            return null;
+        } else {
+            return decodeURI(results[1]) || 0;
+        }
+    }
+
     public updateParamFilters(selections) {
         if (selections.characteristic.length === 0) {
             // if no characteristics are selected, clear all map sites, update url, and alert the user
-            this.urlParams.delete('characteristic');
+            delete this.urlParams['characteristic'];
             this.updateQueryParams();
             return;
         }
-        // reset url params so only characteristic is listed
-        this.urlParams = new URLSearchParams([]);
-        this.urlParams.set('characteristic', selections.characteristic.join(','));
+        // reset url params so only param filters (characteristic, eventYear, minResults) are listed
+        this.urlParams = {};
+        this.urlParams['characteristic'] = selections.characteristic.join(',');
         this.setChar(selections.characteristic);
+        // check for eventYear selection
         if (!selections.eventYear || selections.eventYear == null) {
-            this.urlParams.delete('eventYear');
+            delete this.urlParams['eventYear'];
             this._mapService._eventYearSubject.next();
         } else {
-            this.urlParams.set('eventYear', selections.eventYear);
+            this.urlParams['eventYear'] = selections.eventYear;
             this._mapService._eventYearSubject.next(selections.eventYear);
             this._mapService.URLparams.SEARCHPARAMS += ';startDateLo:01-01-' + selections.eventYear +
                 ';startDateHi:12-31-' + selections.eventYear;
         }
-
+        // check for minResults selection
         if (!selections.minResults || selections.minResults == null) {
             this.parameterDropDownGroup.get('minResults').setValue(this.defaultMinResults);
         } else {
-            this.urlParams.set('minResults', selections.minResults);
+            this.urlParams['minResults'] = selections.minResults;
             this._mapService._minResultsSubject.next(selections.minResults);
             this._mapService.URLparams.SEARCHPARAMS += ';minresults:' + selections.minResults;
         }

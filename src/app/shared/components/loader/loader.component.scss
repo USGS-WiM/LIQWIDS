@@ -10,7 +10,7 @@
     height: 100%;
     top:0;
     left: 0;
-    z-index: 500000;
+	z-index: 500000;
 }
 .page-loader {
     position: fixed!important;
@@ -78,7 +78,8 @@
     top: 0;
     left: 0;
     position: absolute;
-    z-index: 1;
+	z-index: 1;
+	border-radius: 10px;
 }
 .dataloader-hidden {
     visibility: hidden;
@@ -86,6 +87,7 @@
 
 .data-loader {
     position: absolute;
+	border-radius: 10px;
     width:100%;
     height: 100%;
     z-index: 5000;
@@ -95,8 +97,8 @@
     background-color: rgba(0,0,30,0.8);
     background-image: url(https://wim.usgs.gov/website-assets/branding/usgsanimated.svg);
     background-repeat: no-repeat;
-    background-size: 120px auto;
-    background-position: center 50px;
+    background-size: 100px auto;
+    background-position: center 30px;
     min-height: 715px;
     
     &:after{
@@ -107,7 +109,8 @@
         font-size: 18px;
         color: white;
         box-sizing: border-box;
-        padding-top: 20px;
-        font-weight: 400;
+        padding-top: 130px;
+		font-weight: 400;
+		letter-spacing: 0.1px;
     }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import packageJson from 'package.json';
+import { MapService } from './shared/services/map.service';
 
 @Component({
     selector: 'app-root',
@@ -11,12 +12,16 @@ export class AppComponent implements OnInit {
     pack = packageJson;
     expandSidebar;
     aboutModal;
-    showToast;
+    toastType = 'firstLoadWarning';
     userGuideModal;
 
-    constructor() {}
+    constructor(public mapService: MapService) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.mapService.ToasterSubject.subscribe(toastType => {
+            this.toastType = toastType;
+        });
+    }
 
     // in sidebar
 }
