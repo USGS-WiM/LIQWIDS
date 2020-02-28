@@ -3,7 +3,7 @@
 
 # LIQWIDS
 
----About---
+--- About LIQWIDS---
 
 ### Prerequisites
 
@@ -24,13 +24,13 @@ npm install
 
 ## Building and testing
 
+Run basic server with
+```
+npm run start
+```
 Serve files with hot module replacement (live reload)
 ```
 npm run live
-```
-Basic server with
-```
-npm run start
 ```
 
 To build a production version of the app:

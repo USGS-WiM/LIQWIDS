@@ -1,5 +1,31 @@
 @import '../../variables.scss';
 
+
+#printArea{
+}
+// Print media queries. Hide everything except printArea.
+// Then adjust printarea to take up full height and width
+@media print {
+
+	#printArea{
+		position: fixed;
+		display: block;
+		top: 0px;
+		left: 0px;
+		width: 100% !important;
+		min-height: 100%;
+		background-color: white;
+		z-index: 50000;
+		height: fit-content !important;
+	}
+
+}
+
+
+
+
+// Go through this eventually,
+// A lot of it probably is not needed
 #noData{
     color: $red;
     font-size: 14px;
@@ -171,12 +197,10 @@ i{
 }
 
 :host ::ng-deep #reportModal{
-    min-width: 60% !important;
-    min-height: 80%;
-    max-height: max-content;
-    .modal-content{
-        max-height: max-content;
-    }
+	width: 90%;
+	max-width: 800px;
+	height: 100%;
+
     h4{
         margin: 10px 20px;
         font-weight: 500;
@@ -188,10 +212,6 @@ i{
     }
 }
 
-.modal-wrapper .modal .modal-content{
-    overflow-x: hidden;
-    overflow-y: auto;
-}
 
 #modalTable {
     margin: 5px;
@@ -245,7 +265,6 @@ i{
     
         #modalTable{
             page-break-inside: auto;
-            width: 120%;
             border: none;
             tr, td, th{
                 page-break-before: auto;

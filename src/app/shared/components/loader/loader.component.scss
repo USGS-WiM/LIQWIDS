@@ -93,6 +93,7 @@
     z-index: 5000;
     /*margin-left: -20px;
     margin-top: -20px;*/
+	backdrop-filter: blur(3px);
     opacity: 1;
     background-color: rgba(0,0,30,0.8);
     background-image: url(https://wim.usgs.gov/website-assets/branding/usgsanimated.svg);

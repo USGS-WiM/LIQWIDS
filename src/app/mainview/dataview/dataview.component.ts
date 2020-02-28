@@ -36,7 +36,6 @@ export class DataviewComponent implements OnInit {
     public selectedSites = [];
     public noData = false;
     public noGraphData = false;
-    public dataLoading = false;
     private selectedChar;
     private fractionTypes;
     public showModal = false;
@@ -344,7 +343,6 @@ export class DataviewComponent implements OnInit {
         // get result query, gets back a csv
         if (this.subscription) { this.subscription.unsubscribe(); }
         this._loaderService.showDataLoad();
-        this.dataLoading = true;
 
         // add site, characteristic and event years to request parameters
         this.resultParams['siteid'] = this.selectedSites;
@@ -381,7 +379,6 @@ export class DataviewComponent implements OnInit {
                 } else { this.noData = true; } // if response csv has no actual data, show no data message
                 // clear loaders when done
                 this._loaderService.hideDataLoad();
-                this.dataLoading = false;
                 return;
             }, (error) => {
                 this._loaderService.hideDataLoad();
@@ -698,7 +695,6 @@ export class DataviewComponent implements OnInit {
     public setYaxisType(newType: string) {
         // add ability to switch from linear to logarithimic scale
         if (this.chartType === newType) { return; }
-        this.dataLoading = true;
         this.chartType = newType;
         for (let i = 0; i < this.charts.length; i++) {
             if (newType === 'logarithmic') {
@@ -721,7 +717,6 @@ export class DataviewComponent implements OnInit {
                 }
             }
         }
-        this.dataLoading = false;
     }
 
 }// END class
