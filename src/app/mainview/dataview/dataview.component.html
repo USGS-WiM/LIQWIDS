@@ -24,34 +24,39 @@
     </div>
 
     <div [class.hidden]="!showSiteData || noData || selectMultSites">
-        <div class="dataview-padding">
+		
+		<div class="dataview-padding">
             <div *ngIf="charTypes.length > 1">
                 <label class="charType">Measurement Type:</label>
                 <select [(ngModel)]="selectedChar" (change)="createCharts($event.target.value, false)">
                     <option *ngFor="let char of charTypes" [value]="char">{{char}}</option>
                 </select>
-            </div>
-            <div class="chartButtons" [class.hidden]="noGraphData">
+			</div>
+			
+            <div class="chart-options" [class.hidden]="noGraphData">
                 <label class="charType">Chart Type (Y-Axis):</label>
-                <div style="display: inline-block;">
-                    <span style="padding-right:10px">
-                        <input type="radio" (click)="setYaxisType('linear')" value="linear" [checked]="chartType === 'linear' ? true : false"/>Linear
-                    </span>
-                    <span>
-                        <input type="radio" (click)="setYaxisType('logarithmic')" value="logarithmic" [checked]="chartType === 'logarithmic' ? true : false"/>Logarithmic
-                    </span>
-                </div>
+				<span style="padding-right:10px">
+					<input type="radio" (click)="setYaxisType('linear')" value="linear" [checked]="chartType === 'linear' ? true : false"/>Linear
+				</span>
+				<span>
+					<input type="radio" (click)="setYaxisType('logarithmic')" value="logarithmic" [checked]="chartType === 'logarithmic' ? true : false"/>Logarithmic
+				</span>
             </div>
         </div>
-        
+		
+		<!-- Charts -->
         <div class="chart-wrapper" id="charts"></div>
-
+		<!-- No data to graph -->
         <div class="dataview-padding" *ngIf="noGraphData" id="noGraphData">
-                <h5>No data points to graph.</h5>
-            </div>
+            <h5>No data points to graph.</h5>
+        </div>
 
-        <div style="text-align: center;" [class.hidden]="noGraphData"><i class="fa fa-mouse-pointer"></i>Drag a box around points on the graph to
-            zoom in</div>
+		<div style="text-align: center;" [class.hidden]="noGraphData">
+			<i class="fa fa-mouse-pointer"></i>
+			Drag a box around points on the graph to zoom in
+		</div>
+
+
         <div class="dataview-padding">
             <button (click)="downloadFile()"><i class="fa fa-file-download"></i>Download Results CSV</button>
             <button (click)="makeModalChart()"><i class="fa fa-book-open"></i>Report</button>
@@ -104,24 +109,28 @@
            
 			<!-- Print area -->
 			<div id="printArea">
-				<h4><b>Sites:</b> {{selectedSites.join(", ")}}</h4>
-				<h4><b>Characteristics:</b> {{charsWithData.join(", ")}}</h4>
+				<h4>Sites: {{selectedSites.join(", ")}}</h4>
+				<h4>Characteristics: {{charsWithData.join(", ")}}</h4>
 				<h4 *ngIf="eventYear"><b>Event Year: </b>{{eventYear}}</h4>
-				<div *ngIf="charTypes.length > 1">
-					<label class="charType">Measurement Type:</label>
+
+				<!-- Measurement type -->
+				<div *ngIf="charTypes.length > 1" class="chart-options">
+					<div class="chart-options-title">Measurement Type: </div>
 					<select [(ngModel)]="selectedChar" (change)="createCharts($event.target.value, true)">
 						<option *ngFor="let char of charTypes" [value]="char">{{char}}</option>
 					</select>
 				</div>
-				<div class="chartButtons" [class.hidden]="noGraphData">
-					<label class="charType">Chart Type (Y-Axis):</label>
-					<div style="display: inline-block;">
-						<span style="padding-right:10px">
-							<input type="radio" (click)="setYaxisType('linear')" value="linear" [checked]="chartType === 'linear' ? true : false"/>Linear
-						</span>
-						<span>
-							<input type="radio" (click)="setYaxisType('logarithmic')" value="logarithmic" [checked]="chartType === 'logarithmic' ? true : false"/>Logarithmic
-						</span>
+
+				<!-- Chart type -->
+				<div class="chart-options" [class.hidden]="noGraphData">
+					<div class="chart-options-title">Chart Type (Y-Axis): </div>
+					<div class="chart-options-radio">
+						<input type="radio" id="chartTypeLinear" (click)="setYaxisType('linear')" value="linear" [checked]="chartType === 'linear' ? true : false"/>
+						<label for="chartTypeLinear">Linear</label>
+					</div>
+					<div class="chart-options-radio">
+						<input type="radio" id="charttTypeLogarithmic" (click)="setYaxisType('logarithmic')" value="logarithmic" [checked]="chartType === 'logarithmic' ? true : false"/>
+						<label for="charttTypeLogarithmic">Logarithmic</label>
 					</div>
 				</div>
 				<div class="chart" id="modalCharts"></div>
