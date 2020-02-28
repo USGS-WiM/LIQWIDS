@@ -10,12 +10,6 @@
     left: 0;
 }
 
-// Add class blur to any element you want blurred
-// Best use: add to outer body wrapper when modal is visible
-.blur{
-    filter: blur(6px);
-    transition: 0s;
-}
 
 
 // Modal Structure
@@ -33,6 +27,7 @@
     padding: 0 6%;
     background-color: fade-out($black, 0.4);
     z-index: 10000;
+	backdrop-filter: blur(3px);
 
     @media only screen and (max-width: $fullMobile) {
         justify-content: flex-end;
@@ -104,7 +99,6 @@
             padding: 0 0;
             margin-bottom: 10px;
             flex-grow: 3;
-            max-height: 45vh;
             overflow: auto;
 
             &.nopadding{
@@ -185,7 +179,8 @@
             display: flex;
             justify-content: space-between;
             box-sizing: border-box;
-            padding: 15px 17px;
+			padding: 15px 17px;
+			border-top: 1px solid #e5e5e5;
 
             @media only screen and (max-width: $fullMobile) {
                 padding: 0;
@@ -195,6 +190,9 @@
             }
             &.right{
                 justify-content: flex-end;
+            }
+            &.center{
+                justify-content: center;
             }
 
             button{

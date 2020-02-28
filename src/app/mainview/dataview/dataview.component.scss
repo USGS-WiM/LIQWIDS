@@ -1,5 +1,73 @@
 @import '../../variables.scss';
 
+// Modal adjusttmenst
+:host ::ng-deep #reportModal{
+	width: 90%;
+	max-width: 800px;
+	height: 100%;
+}
+
+// Print area
+#printArea{
+	padding: 30px 30px 0 30px;
+	box-sizing: border-box;
+
+	// Chart options
+	.chart-options{
+		display: block;
+		margin: 0 auto;
+
+		// group title
+		.chart-options-title{
+			display: block;
+			margin: 15px 0 5px 0;
+			font-size: 14px;
+			font-weight: 400;
+		}
+		
+		// Contains inputs
+		.chart-options-radio,
+		.chart-options-checkbox{
+			margin: 0 12px 5px 0;
+			display: inline-flex;
+
+			label{
+				font-size: 12px;
+			}
+		}
+
+	}
+
+	// Charts
+	#modalCharts{
+		display: flex;
+		justify-content: space-between;
+	}
+}
+// Print media queries. Hide everything except printArea.
+// Then adjust printarea to take up full height and width
+@media print {
+
+	#printArea{
+		position: fixed;
+		display: block;
+		top: 0px;
+		left: 0px;
+		padding: 0;
+		width: 100% !important;
+		min-height: 100%;
+		background-color: white;
+		z-index: 50000;
+		height: fit-content !important;
+	}
+
+}
+
+
+
+
+// Go through this eventually,
+// A lot of it probably is not needed
 #noData{
     color: $red;
     font-size: 14px;
@@ -53,22 +121,25 @@
             font-size: 18px;
             font-weight: 500;
         }
-    }
-    .dataview-padding{
+	}
+	
+	// Padding around different elements
+	.dataview-padding{
         padding: 15px 25px;
     }
+    
 }
 
 .chart-wrapper{
+    box-sizing: border-box;
+	padding: 20px 0;
     display: flex;
     justify-content: space-between;
-    box-sizing: border-box;
-    padding: 20px 25px 10px 25px;
-    margin: 10px;
+    margin: 10px auto;
+    max-width: 90%;
 
     @media only screen and (max-width: 700px) {
-        display: block !important;
-        margin-bottom: 50px;
+		flex-direction: column;
     }
 }
 
@@ -141,12 +212,6 @@
     }
 }
 
-.charType {
-    color: black;
-    display: inline-block;
-    padding: 15px 0px;
-    font-size: 14px;
-}
 
 select {
     border: 0;
@@ -170,28 +235,7 @@ i{
     padding: 5px;
 }
 
-:host ::ng-deep #reportModal{
-    min-width: 60% !important;
-    min-height: 80%;
-    max-height: max-content;
-    .modal-content{
-        max-height: max-content;
-    }
-    h4{
-        margin: 10px 20px;
-        font-weight: 500;
-    }
-    .new-charts{
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-    }
-}
 
-.modal-wrapper .modal .modal-content{
-    overflow-x: hidden;
-    overflow-y: auto;
-}
 
 #modalTable {
     margin: 5px;
@@ -245,7 +289,6 @@ i{
     
         #modalTable{
             page-break-inside: auto;
-            width: 120%;
             border: none;
             tr, td, th{
                 page-break-before: auto;
