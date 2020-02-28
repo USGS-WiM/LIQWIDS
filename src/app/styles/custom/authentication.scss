@@ -1,0 +1,52 @@
+#authBlock{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	background-color: $black;
+	height: 100%;
+	width: 100%;
+
+	// Body of auth with text, pass input, button
+	.auth-body{
+		display: block;
+		width: 90%;
+		max-width: 280px;
+		margin: 0 auto;
+		background-color: #EFF4FF;
+		box-sizing: border-box;
+		padding: 24px 30px 30px 30px;
+		border-radius: 5px;
+
+		// Title above password
+		.title{
+			display: block;
+			font-size: 20px;
+			font-weight: bold;
+			text-align: center;
+			margin: 0 0 20px 0;
+			color: $black;
+			padding: 0;
+		}
+		// Pass input
+		input{
+			display: block;
+			width: 100%;
+			text-align: center;
+			font-size: 18px;
+			padding: 10px 10px;
+			letter-spacing: 0.5px;
+			box-sizing: border-box;
+			border-radius: 5px;
+			border: 1px solid $black;
+			background-color: white;
+		}
+		// "Enter" button
+		button{
+			display: block;
+			width: 100%;
+			margin: 12px auto 0 auto;
+			font-size: 16px;
+			letter-spacing: 1px;
+		}
+	}
+}
