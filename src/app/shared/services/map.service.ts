@@ -456,7 +456,7 @@ export class MapService {
     public updateLegend() {
         // rewrites legend div with updated colors
         const div = L.DomUtil.get('legend');
-        let item = '<div id="legendHeader"><span><i id="legendIcon" class="fa fa-list"></i>Explanation</span>' +
+        let item = '<div id="legendHeader"><i id="legendIcon" class="fa fa-list"></i>Explanation' +
             '</div><div id="legendDiv"> <label>Symbolize sites by:</label>';
         if (this.colorBy === 'orgName') {
             item += '<input type="radio" id="siteRadio"><label>Keyword</label> <input type="radio" id="orgRadio" checked="checked">' +
