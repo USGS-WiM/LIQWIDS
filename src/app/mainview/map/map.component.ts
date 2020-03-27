@@ -48,7 +48,7 @@ export class MapComponent implements OnInit {
         this._mapService.legend.onAdd = function(map) {
             const div = L.DomUtil.create('div', 'info legend'); let item = '';
 
-            item += '<div id="legendHeader" ><span><i class="fa fa-list"></i>Explanation</span></div>' +
+            item += '<div id="legendHeader" ><i class="fa fa-list"></i>Explanation</div>' +
                 '<div id="legendDiv"><label>Symbolize sites by:</label><input type="radio" id="siteRadio" checked="checked">' +
                 '<label>Keyword</label><input type="radio" id="orgRadio"><label>Organization</label><br>';
             item += '<i class="site multiple-types"></i>Multiple</div>';
@@ -58,7 +58,7 @@ export class MapComponent implements OnInit {
             L.DomEvent.on(div, 'click', (event) => {
                 // if click is in Explanation title, collapse/expand it.
                 const id = event.target['id'];
-                if ('legendHeader') {
+                if (id === 'legendHeader') {
                     const classes = document.getElementById('legendDiv').classList;
                     if (classes.contains('legendDiv-collapsed')) {
                         classes.remove('legendDiv-collapsed');
