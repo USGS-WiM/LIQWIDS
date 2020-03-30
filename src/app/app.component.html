@@ -1,8 +1,8 @@
 <div *ngIf="!authenticated" id="authBlock">
 	<div class="auth-body">
 		<div class="title">Password Required</div>
-		<input type="password" [(ngModel)]="authPassword" placeholder="Password" />
-		<button (click)="authenticate()">Enter</button>
+		<input type="password" [(ngModel)]="authPassword" (keyup.enter)="authenticate()" placeholder="Password" />
+		<button type="submit" (click)="authenticate()">Enter</button>
 	</div>
 </div>
 
