@@ -13,7 +13,10 @@ export class AppComponent implements OnInit {
     expandSidebar;
     aboutModal;
     toastType = 'firstLoadWarning';
-    userGuideModal;
+	userGuideModal;
+	
+	authenticated = false;
+	authPassword = "";
 
     constructor(public mapService: MapService) {}
 
@@ -21,6 +24,15 @@ export class AppComponent implements OnInit {
         this.mapService.ToasterSubject.subscribe(toastType => {
             this.toastType = toastType;
         });
+    }
+
+    // Authentication before load
+    authenticate() {
+        if (this.authPassword && this.authPassword === 'LINAP1') {
+            this.authenticated = true;
+        } else {
+            alert('Password Incorrect');
+        }
     }
 
     // in sidebar
