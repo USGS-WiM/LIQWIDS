@@ -38,7 +38,7 @@
     "leaflet.markercluster": "^1.4.1",
     "leaflet.markercluster.freezable": "^1.0.0",
     "node": "^10.16.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^7.0.0",
     "regression": "^2.0.1",
     "rxjs": "~6.5.2",
     "sync-request": "^6.1.0",
